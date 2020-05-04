@@ -142,7 +142,6 @@ class YOLOLayer(nn.Module):
         self.img_dim = img_dim
         num_samples = x.size(0)
         grid_size = x.size(2)
-        grid_size = 7
         print(x.shape)
 
         prediction = (
