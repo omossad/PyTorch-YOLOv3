@@ -121,7 +121,8 @@ class YOLOLayer(nn.Module):
         self.grid_size = 0  # grid size
 
     def compute_grid_offsets(self, grid_size, cuda=True):
-        self.grid_size = grid_size
+        #self.grid_size = grid_size
+        self.grid_size = 7
         g = self.grid_size
         FloatTensor = torch.cuda.FloatTensor if cuda else torch.FloatTensor
         self.stride = self.img_dim / self.grid_size
