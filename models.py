@@ -121,8 +121,7 @@ class YOLOLayer(nn.Module):
         self.grid_size = 0  # grid size
 
     def compute_grid_offsets(self, grid_size, cuda=True):
-        #self.grid_size = grid_size
-        self.grid_size = 7
+        self.grid_size = grid_size
         g = self.grid_size
         FloatTensor = torch.cuda.FloatTensor if cuda else torch.FloatTensor
         self.stride = self.img_dim / self.grid_size
@@ -258,13 +257,13 @@ class Darknet(nn.Module):
                 layer_i = int(module_def["from"])
                 x = layer_outputs[-1] + layer_outputs[layer_i]
             elif module_def["type"] == "yolo":
-                #print(x)
-                print(x.shape)
                 x, layer_loss = module[0](x, targets, img_dim)
+                print(x.shape)
                 loss += layer_loss
                 yolo_outputs.append(x)
             layer_outputs.append(x)
         yolo_outputs = to_cpu(torch.cat(yolo_outputs, 1))
+        print(yolo_outputs.shape)
         return yolo_outputs if targets is None else (loss, yolo_outputs)
 
     def load_darknet_weights(self, weights_path):
