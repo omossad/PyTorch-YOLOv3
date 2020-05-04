@@ -142,6 +142,7 @@ class YOLOLayer(nn.Module):
         self.img_dim = img_dim
         num_samples = x.size(0)
         grid_size = x.size(2)
+        print(grid_size)
 
         prediction = (
             x.view(num_samples, self.num_anchors, self.num_classes + 5, grid_size, grid_size)
@@ -256,7 +257,7 @@ class Darknet(nn.Module):
                 layer_i = int(module_def["from"])
                 x = layer_outputs[-1] + layer_outputs[layer_i]
             elif module_def["type"] == "yolo":
-                print(x)
+                #print(x)
                 print(x.shape)
                 x, layer_loss = module[0](x, targets, img_dim)
                 loss += layer_loss
