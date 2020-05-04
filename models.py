@@ -12,6 +12,8 @@ from utils.utils import build_targets, to_cpu, non_max_suppression
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 
+import warnings
+warnings.filterwarnings("ignore", category=UserWarning)
 
 def create_modules(module_defs):
     """
