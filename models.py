@@ -167,7 +167,7 @@ class YOLOLayer(nn.Module):
         print(y.shape)
         print(w.shape)
         print(h.shape)
-        print(pref_conf.shape)
+        print(pred_conf.shape)
         print(pred_cls.shape)
         # If grid size does not match current we compute new offsets
         if grid_size != self.grid_size:
