@@ -163,12 +163,12 @@ class YOLOLayer(nn.Module):
         pred_conf = torch.sigmoid(prediction[..., 4])  # Conf
         pred_cls = torch.sigmoid(prediction[..., 5:])  # Cls pred.
         print('OUT')
-        print(x.shape)
-        print(y.shape)
-        print(w.shape)
-        print(h.shape)
-        print(pred_conf.shape)
-        print(pred_cls.shape)
+        print(prediction[..., 0])
+        print(prediction[..., 1])
+        print(prediction[..., 2])
+        print(prediction[..., 3])
+        print(prediction[..., 4])
+        print(prediction[..., 5:])
         # If grid size does not match current we compute new offsets
         if grid_size != self.grid_size:
             self.compute_grid_offsets(grid_size, cuda=x.is_cuda)
