@@ -130,6 +130,8 @@ class YOLOLayer(nn.Module):
         # Calculate offsets for each grid
         self.grid_x = torch.arange(g).repeat(g, 1).view([1, 1, g, g]).type(FloatTensor)
         self.grid_y = torch.arange(g).repeat(g, 1).t().view([1, 1, g, g]).type(FloatTensor)
+        print('GRID')
+        print(self.grid_x)
         self.scaled_anchors = FloatTensor([(a_w / self.stride, a_h / self.stride) for a_w, a_h in self.anchors])
         self.anchor_w = self.scaled_anchors[:, 0:1].view((1, self.num_anchors, 1, 1))
         self.anchor_h = self.scaled_anchors[:, 1:2].view((1, self.num_anchors, 1, 1))
@@ -144,13 +146,15 @@ class YOLOLayer(nn.Module):
         self.img_dim = img_dim
         num_samples = x.size(0)
         grid_size = x.size(2)
-
+        print('BEFORE')
+        print(x.shape)
         prediction = (
             x.view(num_samples, self.num_anchors, self.num_classes + 5, grid_size, grid_size)
             .permute(0, 1, 3, 4, 2)
             .contiguous()
         )
-
+        print('AFTER')
+        print(prediction.shape)
         # Get outputs
         x = torch.sigmoid(prediction[..., 0])  # Center x
         y = torch.sigmoid(prediction[..., 1])  # Center y
@@ -158,7 +162,13 @@ class YOLOLayer(nn.Module):
         h = prediction[..., 3]  # Height
         pred_conf = torch.sigmoid(prediction[..., 4])  # Conf
         pred_cls = torch.sigmoid(prediction[..., 5:])  # Cls pred.
-
+        print('OUT')
+        print(x.shape)
+        print(y.shape)
+        print(w.shape)
+        print(h.shape)
+        print(pref_conf.shape)
+        print(pred_cls.shape)
         # If grid size does not match current we compute new offsets
         if grid_size != self.grid_size:
             self.compute_grid_offsets(grid_size, cuda=x.is_cuda)
