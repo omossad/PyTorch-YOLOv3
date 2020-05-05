@@ -94,6 +94,7 @@ if __name__ == "__main__":
     ]
 
     for epoch in range(opt.epochs):
+        print(model)
         model.train()
         start_time = time.time()
         for batch_i, (_, imgs, targets) in enumerate(dataloader):
