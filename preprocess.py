@@ -59,7 +59,7 @@ for i in range(num_files):
         else:
             command = command + 'test/'
         command = command + filename + '.jpg \n'
-        command = command + "echo '"+ str(s_tile) +" 0.1 0.1 0.1 0.1 > '" + out_dir + 'labels/'
+        command = command + "echo '"+ str(s_tile) +" 0.1 0.1 0.1 0.1' > " + out_dir + 'labels/'
         command = command + filename + '.txt \n'
         f.write(command)
         current_frame = current_frame + 1
