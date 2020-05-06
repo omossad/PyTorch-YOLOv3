@@ -53,14 +53,16 @@ for i in range(num_files):
     for lbl in labels:
         s_tile = get_tile(lbl[0],lbl[1])
         filename = 'ha_' + str(i) + '_frame_' + str(current_frame).zfill(5)
-        command = 'cp ' + frame_dir + 'ha_' + str(i) + '/frame_' + str(current_frame).zfill(5) + '.jpg ' + out_dir + 'frames/'
+        command = 'cp ' + frame_dir + 'ha_' + str(i) + '/frame_' + str(current_frame).zfill(5) + '.jpg ' + out_dir + 'images/'
+        filelist = "echo '" + out_dir + 'images/' + filename + ".jpg' >> " + out_dir
         if i < num_files - 2:
-            command = command + 'train/'
+            filelist = filelist + 'train.txt \n'
         else:
-            command = command + 'test/'
+            filelist = filelist + 'valid.txt \n'
         command = command + filename + '.jpg \n'
         command = command + "echo '"+ str(s_tile) +" 0.1 0.1 0.1 0.1' > " + out_dir + 'labels/'
         command = command + filename + '.txt \n'
+        command = command + filelist 
         f.write(command)
         current_frame = current_frame + 1
 f.close()
