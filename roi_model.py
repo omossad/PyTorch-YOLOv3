@@ -162,13 +162,13 @@ class YOLOLayer(nn.Module):
         h = prediction[..., 3]  # Height
         pred_conf = torch.sigmoid(prediction[..., 4])  # Conf
         pred_cls = torch.sigmoid(prediction[..., 5:])  # Cls pred.
-        print('OUT')
-        print(prediction[..., 0].shape)
-        print(prediction[..., 1].shape)
-        print(prediction[..., 2].shape)
-        print(prediction[..., 3].shape)
-        print(prediction[..., 4].shape)
-        print(prediction[..., 5:].shape)
+        #print('OUT')
+        #print(prediction[..., 0].shape)
+        #print(prediction[..., 1].shape)
+        #print(prediction[..., 2].shape)
+        #print(prediction[..., 3].shape)
+        #print(prediction[..., 4].shape)
+        #print(prediction[..., 5:].shape)
         # If grid size does not match current we compute new offsets
         if grid_size != self.grid_size:
             self.compute_grid_offsets(grid_size, cuda=x.is_cuda)
@@ -208,6 +208,8 @@ class YOLOLayer(nn.Module):
             loss_conf_obj = self.bce_loss(pred_conf[obj_mask], tconf[obj_mask])
             loss_conf_noobj = self.bce_loss(pred_conf[noobj_mask], tconf[noobj_mask])
             loss_conf = self.obj_scale * loss_conf_obj + self.noobj_scale * loss_conf_noobj
+            print('PREDICTED')
+            print(pred_cls[obj_mask])
             loss_cls = self.bce_loss(pred_cls[obj_mask], tcls[obj_mask])
             total_loss = loss_x + loss_y + loss_w + loss_h + loss_conf + loss_cls
             total_loss = loss_x + loss_y
