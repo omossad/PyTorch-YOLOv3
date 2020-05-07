@@ -188,11 +188,8 @@ class YOLOLayer(nn.Module):
             ),
             -1,
         )
-        targets = None
+        #targets = None
         if targets is None:
-            print('OUTPUT SHAPE')
-            print(output.shape)
-            print(output)
             return output, 0
         else:
             iou_scores, class_mask, obj_mask, noobj_mask, tx, ty, tw, th, tcls, tconf = build_targets(
@@ -247,7 +244,9 @@ class YOLOLayer(nn.Module):
                 "conf_noobj": to_cpu(conf_noobj).item(),
                 "grid_size": grid_size,
             }
-
+            print('OUTPUT SHAPE')
+            print(output.shape)
+            print(output)
             return output, total_loss
 
 
