@@ -31,6 +31,7 @@ def resize(image, size):
 
 
 def random_resize(images, min_size=288, max_size=448):
+    new_size = 416
     new_size = random.sample(list(range(min_size, max_size + 1, 32)), 1)[0]
     images = F.interpolate(images, size=new_size, mode="nearest")
     return images
