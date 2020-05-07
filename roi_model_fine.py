@@ -193,7 +193,7 @@ class YOLOLayer(nn.Module):
         #pred_boxes[..., 1] = y.data + self.grid_y
         #pred_boxes[..., 2] = torch.exp(w.data) * self.anchor_w
         #pred_boxes[..., 3] = torch.exp(h.data) * self.anchor_h
-        
+
 
         output = torch.cat(
             (
