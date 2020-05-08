@@ -192,6 +192,11 @@ class YOLOLayer(nn.Module):
         )
         print('OUT SHAPE')
         print(output.shape)
+        conf_thres = 0.8
+        nms_thres = 0.4
+        temp = non_max_suppression(output, conf_thres, nms_thres)
+        print('TEMP')
+        print(temp)
         if targets is None:
             return output, 0
         else:
@@ -206,7 +211,7 @@ class YOLOLayer(nn.Module):
             )
             print('OBJ MASK')
             print(obj_mask.shape)
-            
+
             # Loss : Mask outputs to ignore non-existing objects (except with conf. loss)
             loss_x = self.mse_loss(x[obj_mask], tx[obj_mask])
             loss_y = self.mse_loss(y[obj_mask], ty[obj_mask])
