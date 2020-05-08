@@ -144,6 +144,8 @@ class YOLOLayer(nn.Module):
         ByteTensor = torch.cuda.ByteTensor if x.is_cuda else torch.ByteTensor
 
         self.img_dim = img_dim
+        print('IMAGE DIMENSION')
+        print(img_dim)
         num_samples = x.size(0)
         grid_size = x.size(2)
         #print('BEFORE')
