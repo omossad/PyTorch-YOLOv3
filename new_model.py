@@ -357,14 +357,15 @@ class Darknet(nn.Module):
             elif module_def["type"] == "yolo":
                 print('BEFORE')
                 print(x.shape)
-                #x, layer_loss = module[0](x, targets, img_dim)
-                x, layer_loss = module[0](x, img_dim=img_dim)
-                loss += 0.01
+                x, layer_loss = module[0](x, targets, img_dim)
+                #x, layer_loss = module[0](x, img_dim=img_dim)
+                loss += layer_loss
                 yolo_outputs.append(x)
             layer_outputs.append(x)
         yolo_outputs = to_cpu(torch.cat(yolo_outputs, 1))
         print('AFTER')
         print(yolo_outputs.shape)
+        print(loss)
         return (loss, yolo_outputs)
         #return yolo_outputs if targets is None else (loss, yolo_outputs)
 
