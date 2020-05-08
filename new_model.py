@@ -190,7 +190,8 @@ class YOLOLayer(nn.Module):
             ),
             -1,
         )
-
+        print('OUT SHAPE')
+        print(output.shape)
         if targets is None:
             return output, 0
         else:
