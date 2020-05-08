@@ -23,7 +23,7 @@ def create_modules(module_defs):
     output_filters = [int(hyperparams["channels"])]
     module_list = nn.ModuleList()
     for module_i, module_def in enumerate(module_defs):
-        modules = nn.Sequential().to('cuda:0')
+        modules = nn.Sequential()
 
         if module_def["type"] == "convolutional":
             bn = int(module_def["batch_normalize"])
