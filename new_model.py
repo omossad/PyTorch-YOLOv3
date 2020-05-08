@@ -108,7 +108,7 @@ class EmptyLayer(nn.Module):
 class YOLOLayer(nn.Module):
     """Detection layer"""
 
-    def __init__(self, anchors, num_classes, img_dim=416):
+    def __init__(self, anchors, num_classes, img_dim=608):
         super(YOLOLayer, self).__init__()
         self.anchors = anchors
         self.num_anchors = len(anchors)
@@ -252,7 +252,7 @@ class YOLOLayer(nn.Module):
 class ROILayer(nn.Module):
     """ROI layer"""
 
-    def __init__(self, num_classes, tile_size=8, img_dim=416):
+    def __init__(self, num_classes=80, tile_size=8, img_dim=608):
         super(ROILayer, self).__init__()
         self.num_classes = num_classes
         self.mse_loss = nn.MSELoss()
@@ -281,7 +281,7 @@ class ROILayer(nn.Module):
 class Darknet(nn.Module):
     """YOLOv3 object detection model"""
 
-    def __init__(self, config_path, img_size=416):
+    def __init__(self, config_path, img_size=608):
         super(Darknet, self).__init__()
         self.module_defs = parse_model_config(config_path)
         self.hyperparams, self.module_list = create_modules(self.module_defs)
