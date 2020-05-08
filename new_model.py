@@ -255,9 +255,9 @@ class YOLOLayer(nn.Module):
             return output, total_loss
 
 class ROILayer(nn.Module):
-    """Detection layer"""
+    """ROI layer"""
 
-    def __init__(self, tile_size=8, num_classes, img_dim=416):
+    def __init__(self, num_classes, tile_size=8, img_dim=416):
         super(ROILayer, self).__init__()
         self.num_classes = num_classes
         self.mse_loss = nn.MSELoss()
