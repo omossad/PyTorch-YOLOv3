@@ -252,16 +252,17 @@ class YOLOLayer(nn.Module):
 class ROILayer(nn.Module):
     """ROI layer"""
 
-    def __init__(self, num_classes=80, tile_size=8, img_dim=608, conf_thes=0.6, nms_thes=0.2):
+    def __init__(self, num_classes=80, num_tiles=8, img_dim=608, conf_thes=0.6, nms_thes=0.2):
         super(ROILayer, self).__init__()
         self.num_classes = num_classes
         self.img_dim = img_dim
-        self.tile_size = tile_size
+        self.num_tiles = num_tiles
         self.conf_thres = conf_thes
         self.nms_thres = nms_thes
         self.mse_loss = nn.MSELoss()
         self.bce_loss = nn.BCELoss()
         self.metrics = {}
+        self.tile_size = self.img_dim // self.num_tiles
 
     def forward(self, x, targets=None, img_dim=None):
         print('INPUT SHAPE')
@@ -278,7 +279,7 @@ class ROILayer(nn.Module):
         #print(objects)
         print('FIRST ROW')
         sico = objects[0]
-        print(sico[...,0]//8)
+        print(sico[...,0] // self.tile_size)
         return objects, total_loss
 
 
