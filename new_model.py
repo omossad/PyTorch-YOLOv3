@@ -195,6 +195,8 @@ class YOLOLayer(nn.Module):
         if targets is None:
             return output, 0
         else:
+            print('TARGETS')
+            print(targets.shape)
             iou_scores, class_mask, obj_mask, noobj_mask, tx, ty, tw, th, tcls, tconf = build_targets(
                 pred_boxes=pred_boxes,
                 pred_cls=pred_cls,
@@ -202,7 +204,9 @@ class YOLOLayer(nn.Module):
                 anchors=self.scaled_anchors,
                 ignore_thres=self.ignore_thres,
             )
-
+            print('OBJ MASK')
+            print(obj_mask.shape)
+            
             # Loss : Mask outputs to ignore non-existing objects (except with conf. loss)
             loss_x = self.mse_loss(x[obj_mask], tx[obj_mask])
             loss_y = self.mse_loss(y[obj_mask], ty[obj_mask])
