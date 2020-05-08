@@ -162,13 +162,13 @@ class YOLOLayer(nn.Module):
         h = prediction[..., 3]  # Height
         pred_conf = torch.sigmoid(prediction[..., 4])  # Conf
         pred_cls = torch.sigmoid(prediction[..., 5:])  # Cls pred.
-        print('OUT')
-        print(prediction[..., 0].shape)
-        print(prediction[..., 1].shape)
-        print(prediction[..., 2].shape)
-        print(prediction[..., 3].shape)
-        print(prediction[..., 4].shape)
-        print(prediction[..., 5:].shape)
+        #print('OUT')
+        #print(prediction[..., 0].shape)
+        #print(prediction[..., 1].shape)
+        #print(prediction[..., 2].shape)
+        #print(prediction[..., 3].shape)
+        #print(prediction[..., 4].shape)
+        #print(prediction[..., 5:].shape)
         # If grid size does not match current we compute new offsets
         if grid_size != self.grid_size:
             self.compute_grid_offsets(grid_size, cuda=x.is_cuda)
@@ -179,7 +179,9 @@ class YOLOLayer(nn.Module):
         pred_boxes[..., 1] = y.data + self.grid_y
         pred_boxes[..., 2] = torch.exp(w.data) * self.anchor_w
         pred_boxes[..., 3] = torch.exp(h.data) * self.anchor_h
-
+        print('X DATA')
+        print(pred_boxes[..., 0].shape)
+        print(pred_boxes[..., 0])
         output = torch.cat(
             (
                 pred_boxes.view(num_samples, -1, 4) * self.stride,
