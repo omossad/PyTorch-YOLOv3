@@ -252,16 +252,16 @@ class YOLOLayer(nn.Module):
 class ROILayer(nn.Module):
     """ROI layer"""
 
-    def __init__(self, num_classes=80, tile_size=8, img_dim=608):
+    def __init__(self, num_classes=80, tile_size=8, img_dim=608, conf_thes=0.8, nms_thes=0.4):
         super(ROILayer, self).__init__()
         self.num_classes = num_classes
+        self.img_dim = img_dim
+        self.tile_size = tile_size
+        self.conf_thres = conf_thes
+        self.nms_thres = nms_thes
         self.mse_loss = nn.MSELoss()
         self.bce_loss = nn.BCELoss()
         self.metrics = {}
-        self.img_dim = img_dim
-        #self.tile_size = tile_size
-        self.conf_thres = 0.8
-        self.nms_thres = 0.4
 
     def forward(self, x, targets=None, img_dim=None):
 
@@ -270,9 +270,11 @@ class ROILayer(nn.Module):
         LongTensor = torch.cuda.LongTensor if x.is_cuda else torch.LongTensor
         ByteTensor = torch.cuda.ByteTensor if x.is_cuda else torch.ByteTensor
         total_loss = 0
-        temp = non_max_suppression(x, self.conf_thres, self.nms_thres)
+        objects = non_max_suppression(x, self.conf_thres, self.nms_thres)
         print('TEMP')
         print(temp)
+        print('FIRST ROW')
+        print(objects[...,0])
         return temp, total_loss
 
 
