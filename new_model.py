@@ -246,7 +246,7 @@ class YOLOLayer(nn.Module):
             }
             print('OUTPUT SHAPE')
             print(output.shape)
-            print(output)
+            #print(output)
             return output, total_loss
 
 
@@ -277,6 +277,8 @@ class Darknet(nn.Module):
             elif module_def["type"] == "yolo":
                 #print('BEFORE')
                 #print(x.shape)
+                print('DIMENSION')
+                print(img_dim)
                 x, layer_loss = module[0](x, targets, img_dim)
                 loss += layer_loss
                 yolo_outputs.append(x)
