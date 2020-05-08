@@ -260,7 +260,7 @@ class ROILayer(nn.Module):
         self.metrics = {}
         self.img_dim = img_dim
         #self.tile_size = tile_size
-        self.conf_thres = 0.6
+        self.conf_thres = 0.8
         self.nms_thres = 0.4
 
     def forward(self, x, targets=None, img_dim=None):
