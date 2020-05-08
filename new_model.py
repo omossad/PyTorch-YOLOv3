@@ -192,11 +192,6 @@ class YOLOLayer(nn.Module):
         )
         #print('OUT SHAPE')
         #print(output.shape)
-        conf_thres = 0.8
-        nms_thres = 0.4
-        #temp = non_max_suppression(output, conf_thres, nms_thres)
-        #print('TEMP')
-        #print(temp)
         if targets is None:
             return output, 0
         else:
@@ -363,9 +358,8 @@ class Darknet(nn.Module):
                 print('BEFORE')
                 print(x.shape)
                 #x, layer_loss = module[0](x, targets, img_dim)
-                x = module[0](x, img_dim=img_dim)
-                #loss += layer_loss
-                loss = 0
+                x, layer_loss = module[0](x, img_dim=img_dim)
+                loss += layer_loss
                 yolo_outputs.append(x)
             layer_outputs.append(x)
         yolo_outputs = to_cpu(torch.cat(yolo_outputs, 1))
