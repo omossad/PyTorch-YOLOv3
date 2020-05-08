@@ -366,8 +366,8 @@ class Darknet(nn.Module):
         print('AFTER')
         print(yolo_outputs.shape)
         print(loss)
-        return (loss, yolo_outputs)
-        #return yolo_outputs if targets is None else (loss, yolo_outputs)
+        #return (loss, yolo_outputs)
+        return yolo_outputs if targets is None else (loss, yolo_outputs)
 
     def load_darknet_weights(self, weights_path):
         """Parses and loads the weights stored in 'weights_path'"""
