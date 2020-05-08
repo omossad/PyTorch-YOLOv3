@@ -78,6 +78,8 @@ if __name__ == "__main__":
             print('DETECTIONS')
             print(detections.shape)
             detections = non_max_suppression(detections, opt.conf_thres, opt.nms_thres)
+            print('NMS DETECTIONS')
+            print(detections.shape)
 
         # Log progress
         current_time = time.time()
