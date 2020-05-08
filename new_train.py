@@ -93,7 +93,7 @@ if __name__ == "__main__":
         "conf_obj",
         "conf_noobj",
     ]
-    model = torch.nn.DataParallel(model, device_ids=[0, 1]).cuda()
+    #model = torch.nn.DataParallel(model, device_ids=[0, 1]).cuda()
     for epoch in range(opt.epochs):
         #print(model)
         model.train()

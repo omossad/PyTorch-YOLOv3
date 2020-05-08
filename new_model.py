@@ -39,12 +39,12 @@ def create_modules(module_defs):
                     stride=int(module_def["stride"]),
                     padding=pad,
                     bias=not bn,
-                ),
+                ).to('cuda:0'),
             )
             if bn:
-                modules.add_module(f"batch_norm_{module_i}", nn.BatchNorm2d(filters, momentum=0.9, eps=1e-5))
+                modules.add_module(f"batch_norm_{module_i}", nn.BatchNorm2d(filters, momentum=0.9, eps=1e-5).to('cuda:0'))
             if module_def["activation"] == "leaky":
-                modules.add_module(f"leaky_{module_i}", nn.LeakyReLU(0.1))
+                modules.add_module(f"leaky_{module_i}", nn.LeakyReLU(0.1).to('cuda:0'))
 
         elif module_def["type"] == "maxpool":
             kernel_size = int(module_def["size"])
