@@ -55,7 +55,6 @@ if __name__ == "__main__":
 
     # Initiate model
     model = Darknet(opt.model_def).to(device)
-    model = torch.nn.DataParallel(model, device_ids=[0, 1]).cuda()
     model.apply(weights_init_normal)
 
     # If specified we start from checkpoint
@@ -94,7 +93,7 @@ if __name__ == "__main__":
         "conf_obj",
         "conf_noobj",
     ]
-
+    model = torch.nn.DataParallel(model, device_ids=[0, 1]).cuda()
     for epoch in range(opt.epochs):
         #print(model)
         model.train()
