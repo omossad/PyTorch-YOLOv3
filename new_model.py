@@ -363,7 +363,7 @@ class Darknet(nn.Module):
                 print('BEFORE')
                 print(x.shape)
                 #x, layer_loss = module[0](x, targets, img_dim)
-                x = module[0](x, targets=None, img_dim)
+                x = module[0](x, img_dim, targets=None)
                 #loss += layer_loss
                 loss = 0
                 yolo_outputs.append(x)
