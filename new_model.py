@@ -264,15 +264,18 @@ class ROILayer(nn.Module):
         self.metrics = {}
 
     def forward(self, x, targets=None, img_dim=None):
-
+        print('INPUT SHAPE')
+        print(x.shape)
         # Tensors for cuda support
         FloatTensor = torch.cuda.FloatTensor if x.is_cuda else torch.FloatTensor
         LongTensor = torch.cuda.LongTensor if x.is_cuda else torch.LongTensor
         ByteTensor = torch.cuda.ByteTensor if x.is_cuda else torch.ByteTensor
         total_loss = 0
         objects = non_max_suppression(x, self.conf_thres, self.nms_thres)
-        print('TEMP')
-        print(objects)
+        print('OBJECTS SHAPE')
+        print(len(objects))
+        #print('TEMP')
+        #print(objects)
         print('FIRST ROW')
         sico = objects[0]
         print(sico[...,0])
