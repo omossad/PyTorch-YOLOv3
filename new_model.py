@@ -269,63 +269,11 @@ class ROILayer(nn.Module):
         FloatTensor = torch.cuda.FloatTensor if x.is_cuda else torch.FloatTensor
         LongTensor = torch.cuda.LongTensor if x.is_cuda else torch.LongTensor
         ByteTensor = torch.cuda.ByteTensor if x.is_cuda else torch.ByteTensor
-
-        self.img_dim = img_dim
-        num_samples = x.size(0)
-        grid_size = x.size(2)
-        #print('BEFORE')
-        #print(x.shape)
-        temp = non_max_suppression(x, conf_thres, nms_thres)
+        total_loss = 0
+        temp = non_max_suppression(x, self.conf_thres, self.nms_thres)
         print('TEMP')
-
-        prediction = (
-            x.view(num_samples, self.num_anchors, self.num_classes + 5, grid_size, grid_size)
-            .permute(0, 1, 3, 4, 2)
-            .contiguous()
-        )
-        print('AFTER')
-        print(prediction.shape)
-        # Get outputs
-
-
-        # If grid size does not match current we compute new offsets
-
-        # Add offset and scale with anchors
-
-
-        output = torch.cat(
-            (
-                pred_boxes.view(num_samples, -1, 4) * self.stride,
-                pred_conf.view(num_samples, -1, 1),
-                pred_cls.view(num_samples, -1, self.num_classes),
-            ),
-            -1,
-        )
-
-        if targets is None:
-            return output, 0
-        else:
-            print('TARGETS')
-            print(targets.shape)
-            iou_scores, class_mask, obj_mask, noobj_mask, tx, ty, tw, th, tcls, tconf = build_targets(
-                pred_boxes=pred_boxes,
-                pred_cls=pred_cls,
-                target=targets,
-                anchors=self.scaled_anchors,
-                ignore_thres=self.ignore_thres,
-            )
-            print('OBJ MASK')
-            print(obj_mask.shape)
-
-            # Loss : Mask outputs to ignore non-existing objects (except with conf. loss)
-
-            # Metrics
-
-
-            self.metrics = {
-            }
-
-            return output, total_loss
+        print(temp)
+        return temp, total_loss
 
 
 
@@ -363,6 +311,8 @@ class Darknet(nn.Module):
                 yolo_outputs.append(x)
             layer_outputs.append(x)
         yolo_outputs = to_cpu(torch.cat(yolo_outputs, 1))
+        roi_layer = ROILayer(80)
+        temp, temp_loss = roi_layer(x)
         print('AFTER')
         print(yolo_outputs.shape)
         print(loss)
