@@ -23,7 +23,7 @@ def create_modules(module_defs):
     output_filters = [int(hyperparams["channels"])]
     module_list = nn.ModuleList()
     for module_i, module_def in enumerate(module_defs):
-        modules = nn.Sequential()
+        modules = nn.Sequential().to('cuda:0')
 
         if module_def["type"] == "convolutional":
             bn = int(module_def["batch_normalize"])
@@ -39,12 +39,12 @@ def create_modules(module_defs):
                     stride=int(module_def["stride"]),
                     padding=pad,
                     bias=not bn,
-                ).to('cuda:0'),
+                ),
             )
             if bn:
-                modules.add_module(f"batch_norm_{module_i}", nn.BatchNorm2d(filters, momentum=0.9, eps=1e-5).to('cuda:0'))
+                modules.add_module(f"batch_norm_{module_i}", nn.BatchNorm2d(filters, momentum=0.9, eps=1e-5))
             if module_def["activation"] == "leaky":
-                modules.add_module(f"leaky_{module_i}", nn.LeakyReLU(0.1).to('cuda:0'))
+                modules.add_module(f"leaky_{module_i}", nn.LeakyReLU(0.1))
 
         elif module_def["type"] == "maxpool":
             kernel_size = int(module_def["size"])
