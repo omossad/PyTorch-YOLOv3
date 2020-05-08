@@ -195,8 +195,8 @@ class YOLOLayer(nn.Module):
         if targets is None:
             return output, 0
         else:
-            print('TARGETS')
-            print(targets.shape)
+            #print('TARGETS')
+            #print(targets.shape)
             iou_scores, class_mask, obj_mask, noobj_mask, tx, ty, tw, th, tcls, tconf = build_targets(
                 pred_boxes=pred_boxes,
                 pred_cls=pred_cls,
@@ -204,8 +204,8 @@ class YOLOLayer(nn.Module):
                 anchors=self.scaled_anchors,
                 ignore_thres=self.ignore_thres,
             )
-            print('OBJ MASK')
-            print(obj_mask.shape)
+            #print('OBJ MASK')
+            #print(obj_mask.shape)
 
             # Loss : Mask outputs to ignore non-existing objects (except with conf. loss)
             loss_x = self.mse_loss(x[obj_mask], tx[obj_mask])
@@ -272,10 +272,10 @@ class ROILayer(nn.Module):
         total_loss = 0
         objects = non_max_suppression(x, self.conf_thres, self.nms_thres)
         print('TEMP')
-        print(temp)
+        print(objects)
         print('FIRST ROW')
         print(objects[...,0])
-        return temp, total_loss
+        return objects, total_loss
 
 
 
@@ -315,9 +315,9 @@ class Darknet(nn.Module):
         yolo_outputs = to_cpu(torch.cat(yolo_outputs, 1))
         roi_layer = ROILayer(80)
         temp, temp_loss = roi_layer(x)
-        print('AFTER')
-        print(yolo_outputs.shape)
-        print(loss)
+        #print('AFTER')
+        #print(yolo_outputs.shape)
+        #print(loss)
         #return (loss, yolo_outputs)
         return yolo_outputs if targets is None else (loss, yolo_outputs)
 
