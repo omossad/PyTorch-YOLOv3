@@ -274,7 +274,8 @@ class ROILayer(nn.Module):
         print('TEMP')
         print(objects)
         print('FIRST ROW')
-        print(objects[...,0])
+        sico = objects[0]
+        print(sico[...,0])
         return objects, total_loss
 
 
