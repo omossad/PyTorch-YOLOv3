@@ -108,7 +108,7 @@ class EmptyLayer(nn.Module):
 class YOLOLayer(nn.Module):
     """Detection layer"""
 
-    def __init__(self, anchors, num_classes, img_dim=256):
+    def __init__(self, anchors, num_classes, img_dim=416):
         super(YOLOLayer, self).__init__()
         self.anchors = anchors
         self.num_anchors = len(anchors)
@@ -130,8 +130,8 @@ class YOLOLayer(nn.Module):
         # Calculate offsets for each grid
         self.grid_x = torch.arange(g).repeat(g, 1).view([1, 1, g, g]).type(FloatTensor)
         self.grid_y = torch.arange(g).repeat(g, 1).t().view([1, 1, g, g]).type(FloatTensor)
-        #print('GRID')
-        #print(self.grid_x)
+        print('GRID')
+        print(self.grid_x)
         self.scaled_anchors = FloatTensor([(a_w / self.stride, a_h / self.stride) for a_w, a_h in self.anchors])
         self.anchor_w = self.scaled_anchors[:, 0:1].view((1, self.num_anchors, 1, 1))
         self.anchor_h = self.scaled_anchors[:, 1:2].view((1, self.num_anchors, 1, 1))
@@ -144,19 +144,17 @@ class YOLOLayer(nn.Module):
         ByteTensor = torch.cuda.ByteTensor if x.is_cuda else torch.ByteTensor
 
         self.img_dim = img_dim
-        print('IMAGE DIMENSION')
-        print(img_dim)
         num_samples = x.size(0)
         grid_size = x.size(2)
-        #print('BEFORE')
-        #print(x.shape)
+        print('BEFORE')
+        print(x.shape)
         prediction = (
             x.view(num_samples, self.num_anchors, self.num_classes + 5, grid_size, grid_size)
             .permute(0, 1, 3, 4, 2)
             .contiguous()
         )
-        #print('AFTER')
-        #print(prediction.shape)
+        print('AFTER')
+        print(prediction.shape)
         # Get outputs
         x = torch.sigmoid(prediction[..., 0])  # Center x
         y = torch.sigmoid(prediction[..., 1])  # Center y
@@ -164,13 +162,13 @@ class YOLOLayer(nn.Module):
         h = prediction[..., 3]  # Height
         pred_conf = torch.sigmoid(prediction[..., 4])  # Conf
         pred_cls = torch.sigmoid(prediction[..., 5:])  # Cls pred.
-        #print('OUT')
-        #print(prediction[..., 0].shape)
-        #print(prediction[..., 1].shape)
-        #print(prediction[..., 2].shape)
-        #print(prediction[..., 3].shape)
-        #print(prediction[..., 4].shape)
-        #print(prediction[..., 5:].shape)
+        print('OUT')
+        print(prediction[..., 0].shape)
+        print(prediction[..., 1].shape)
+        print(prediction[..., 2].shape)
+        print(prediction[..., 3].shape)
+        print(prediction[..., 4].shape)
+        print(prediction[..., 5:].shape)
         # If grid size does not match current we compute new offsets
         if grid_size != self.grid_size:
             self.compute_grid_offsets(grid_size, cuda=x.is_cuda)
@@ -190,7 +188,7 @@ class YOLOLayer(nn.Module):
             ),
             -1,
         )
-        #targets = None
+
         if targets is None:
             return output, 0
         else:
@@ -204,10 +202,6 @@ class YOLOLayer(nn.Module):
 
             # Loss : Mask outputs to ignore non-existing objects (except with conf. loss)
             loss_x = self.mse_loss(x[obj_mask], tx[obj_mask])
-            #print('SHAPE OF X IS')
-            #print(x[obj_mask].shape)
-            #print(tx[obj_mask])
-            #print(x[obj_mask])
             loss_y = self.mse_loss(y[obj_mask], ty[obj_mask])
             loss_w = self.mse_loss(w[obj_mask], tw[obj_mask])
             loss_h = self.mse_loss(h[obj_mask], th[obj_mask])
@@ -216,7 +210,6 @@ class YOLOLayer(nn.Module):
             loss_conf = self.obj_scale * loss_conf_obj + self.noobj_scale * loss_conf_noobj
             loss_cls = self.bce_loss(pred_cls[obj_mask], tcls[obj_mask])
             total_loss = loss_x + loss_y + loss_w + loss_h + loss_conf + loss_cls
-            total_loss = loss_cls
 
             # Metrics
             cls_acc = 100 * class_mask[obj_mask].mean()
@@ -246,16 +239,14 @@ class YOLOLayer(nn.Module):
                 "conf_noobj": to_cpu(conf_noobj).item(),
                 "grid_size": grid_size,
             }
-            print('OUTPUT SHAPE')
-            print(output.shape)
-            #print(output)
+
             return output, total_loss
 
 
 class Darknet(nn.Module):
     """YOLOv3 object detection model"""
 
-    def __init__(self, config_path, img_size=256):
+    def __init__(self, config_path, img_size=416):
         super(Darknet, self).__init__()
         self.module_defs = parse_model_config(config_path)
         self.hyperparams, self.module_list = create_modules(self.module_defs)
@@ -277,17 +268,15 @@ class Darknet(nn.Module):
                 layer_i = int(module_def["from"])
                 x = layer_outputs[-1] + layer_outputs[layer_i]
             elif module_def["type"] == "yolo":
-                #print('BEFORE')
-                #print(x.shape)
-                print('DIMENSION')
-                print(img_dim)
+                print('BEFORE')
+                print(x.shape)
                 x, layer_loss = module[0](x, targets, img_dim)
                 loss += layer_loss
                 yolo_outputs.append(x)
             layer_outputs.append(x)
         yolo_outputs = to_cpu(torch.cat(yolo_outputs, 1))
-        #print('AFTER')
-        #print(yolo_outputs.shape)
+        print('AFTER')
+        print(yolo_outputs.shape)
         return yolo_outputs if targets is None else (loss, yolo_outputs)
 
     def load_darknet_weights(self, weights_path):
