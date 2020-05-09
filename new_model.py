@@ -279,31 +279,32 @@ class ROILayer(nn.Module):
         for image_i, image_pred in enumerate(objects):
             num_pred = len(image_pred)
             x_coordinate = image_pred[..., 0].int()
-            print('X COR')
-            print(x_coordinate)
-            x_class = image_pred[..., 6].int()
-            x_conf = image_pred[..., 4]
-            print('IMAGE')
-            print(image_i)
+            y_coordinate = image_pred[..., 1].int()
+            x_tiles = x_coordinate // self.tile_size
+            y_tiles = y_coordinate // self.tile_size
+            obj_class    = image_pred[..., 6].int()
+            obj_conf     = image_pred[..., 4]
             for i in range(num_pred):
-                print('HERE')
-                s_tile = x_coordinate.data.tolist()[i] // self.tile_size
-                s_obj  = x_class.data.tolist()[i]
-                s_conf = x_conf.data.tolist()[i]
-                print(s_tile)
-                print(s_obj)
-                print(s_conf)
-                x_inpt[image_i][s_tile][s_obj] += s_conf
+                #x_tile = x_coordinate.data.tolist()[i] // self.tile_size
+                #y_tile = y_coordinate.data.tolist()[i] // self.tile_size
+                x_tile = x_tiles.data.tolist()[i]
+                y_tile = y_tiles.data.tolist()[i]
+                s_obj  = obj_class.data.tolist()[i]
+                s_conf = obj_conf.data.tolist()[i]
+                x_inpt[image_i][x_tile][s_obj] += s_conf
+                x_inpt[image_i][y_tile][s_obj] += s_conf
 
         print('OBJECTS SHAPE')
         print(len(objects))
         print('X after processing')
-        print(x_input)
+        print(x_inpt)
+        print('Y after processing')
+        print(y_inpt)
         #print('TEMP')
         #print(objects)
-        print('FIRST ROW')
-        sico = objects[0]
-        print(sico[...,0] // self.tile_size)
+        #print('FIRST ROW')
+        #sico = objects[0]
+        #print(sico[...,0] // self.tile_size)
         return objects, total_loss
 
 
