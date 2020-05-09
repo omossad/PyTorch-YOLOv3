@@ -72,9 +72,9 @@ for i in range(num_files):
         #    filelist = filelist + 'valid.txt \n'
         #command = command + filename + '.jpg \n'
         #command = command + "echo '"+ str(s_tile) +" 0.1 0.1 0.1 0.1' > " + out_dir + 'labels/'
-        command = command + "echo '"+ str(sx_tile) +' '+ str(sy_tile) + "' > " + out_dir + 'labels/'
+        command = "echo '"+ str(sx_tile) +' '+ str(sy_tile) + "' > " + out_dir + 'labels/'
         command = command + filename + '.txt \n'
-        command = command + filelist
+        #command = command + filelist
         f.write(command)
         current_frame = current_frame + 1
 f.close()
