@@ -352,7 +352,7 @@ class ROILayer(nn.Module):
                 "loss_y": to_cpu(loss_y).item(),
                 "loss": to_cpu(total_loss).item(),
             }
-            
+
             return x,y, total_loss
 
 
@@ -365,6 +365,7 @@ class Darknet(nn.Module):
         self.module_defs = parse_model_config(config_path)
         self.hyperparams, self.module_list = create_modules(self.module_defs)
         self.yolo_layers = [layer[0] for layer in self.module_list if hasattr(layer[0], "metrics")]
+        self.roi_layer = ROILayer(80)
         self.img_size = img_size
         self.seen = 0
         self.header_info = np.array([0, 0, 0, self.seen, 0], dtype=np.int32)
@@ -389,7 +390,7 @@ class Darknet(nn.Module):
                 yolo_outputs.append(x)
             layer_outputs.append(x)
         yolo_outputs = to_cpu(torch.cat(yolo_outputs, 1))
-        roi_layer = ROILayer(80)
+
         roi_x, roi_y, roi_loss = roi_layer(yolo_outputs)
         loss = roi_loss
         print('ROI LOSS')
