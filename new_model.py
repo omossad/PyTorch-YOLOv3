@@ -260,7 +260,7 @@ class ROILayer(nn.Module):
         self.conf_thres = conf_thes
         self.nms_thres = nms_thes
         #self.mse_loss = nn.MSELoss()
-        #self.bce_loss = nn.BCELoss()
+        self.bce_loss = nn.BCELoss()
         self.metrics = {}
         self.tile_size = self.img_dim // self.num_tiles
         self.loss_func = nn.CrossEntropyLoss()
@@ -342,8 +342,10 @@ class ROILayer(nn.Module):
             print(x)
             print(y)
             print(targets_x)
-            loss_x = self.loss_func(x, targets_x)
-            loss_y = self.loss_func(y, targets_y)
+            loss_x = self.bce_loss(x, tx)
+            loss_y = self.bce_loss(x, ty)
+            #loss_x = self.loss_func(x, targets_x)
+            #loss_y = self.loss_func(y, targets_y)
             total_loss = loss_x + loss_y
 
             return x,y, total_loss
