@@ -346,8 +346,8 @@ class ROILayer(nn.Module):
             print(targets)
             #new_target = torch.zeros([num_samples, self.num_tiles])
             #new_target[..., 4] = 1
-            x_label = targets[..., 1].transpose_(0, 1).type(LongTensor)
-            y_label = targets[..., 2].transpose_(0, 1).type(LongTensor)
+            x_label = targets[..., 1].view(num_samples,-1).type(LongTensor)
+            y_label = targets[..., 2].view(num_samples,-1).type(LongTensor)
             print('X TARGETS')
             print(x_label)
             #y = torch.LongTensor(batch_size,3).random_() % nb_digits
