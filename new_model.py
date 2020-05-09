@@ -263,7 +263,7 @@ class ROILayer(nn.Module):
         #self.bce_loss = nn.BCELoss()
         self.metrics = {}
         self.tile_size = self.img_dim // self.num_tiles
-        self.ce_loss = nn.CrossEntropyLoss()
+        self.loss_func = nn.BCEWithLogitsLoss()
         self.fc_net_x = nn.Sequential(
             nn.Dropout(),
             nn.Linear(self.num_classes * self.num_tiles, 256),
@@ -324,7 +324,7 @@ class ROILayer(nn.Module):
         x = x_inpt.view(x_inpt.size(0), -1)
         x = self.fc_net_x(x)
         y = y_inpt.view(y_inpt.size(0), -1)
-        y = self.fc_net_x(y)
+        y = self.fc_net_y(y)
         #print('X after MODEL')
         #print(x.shape)
 
@@ -345,8 +345,9 @@ class ROILayer(nn.Module):
             print(x.shape)
             print('SHAPE of TARGET')
             print(tx.shape)
-            loss_x = self.ce_loss(x, tx)
-            loss_y = self.ce_loss(y, ty)
+            #_, targets = y1.max(dim=0)
+            loss_x = self.loss_func(x, tx)
+            loss_y = self.loss_func(y, ty)
             total_loss = loss_x + loss_y
 
             return x,y, total_loss
