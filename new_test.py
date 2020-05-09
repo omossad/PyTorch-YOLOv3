@@ -34,8 +34,8 @@ def evaluate(model, path, conf_thres, nms_thres, img_size, batch_size):
 
     #labels = []
     #sample_metrics = []  # List of tuples (TP, confs, pred)
-    sample_metrics = torch.zeros((1,3)).type(Tensor)
-    #sample_metrics = Tensor
+    #sample_metrics = torch.zeros((1,3)).type(Tensor)
+    sample_metrics = Tensor
     for batch_i, (_, imgs, targets) in enumerate(tqdm.tqdm(dataloader, desc="Detecting objects")):
 
         # Extract labels
@@ -51,7 +51,7 @@ def evaluate(model, path, conf_thres, nms_thres, img_size, batch_size):
             #outputs = non_max_suppression(outputs, conf_thres=conf_thres, nms_thres=nms_thres)
 
         #sample_metrics += get_batch_statistic(outputs_x, outputs_y, targets)
-        sample_metrics = torch.cat((sample_metrics, get_batch_statistic(outputs_x, outputs_y, targets)))
+        sample_metrics = torch.stack((sample_metrics, get_batch_statistic(outputs_x, outputs_y, targets)))
     print('RESULTS')
     print(sample_metrics)
     # Concatenate sample statistics
