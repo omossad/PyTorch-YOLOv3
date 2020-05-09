@@ -152,16 +152,16 @@ def get_batch_statistic(outputs_x, outputs_y, targets):
     """ Compute Horizontal, Vertical and Combined tile accuracy per sample """
     FloatTensor = torch.cuda.FloatTensor if outputs_x.is_cuda else torch.FloatTensor
     LongTensor = torch.cuda.LongTensor if outputs_x.is_cuda else torch.LongTensor
-    print('AS RECEIVED')
-    print('Outputs x')
-    print(outputs_x.shape)
-    print(outputs_x)
-    print('Outputs y')
-    print(outputs_y.shape)
-    print(outputs_y)
-    print('Targets')
-    print(targets.shape)
-    print(targets)
+    #print('AS RECEIVED')
+    #print('Outputs x')
+    #print(outputs_x.shape)
+    #print(outputs_x)
+    #print('Outputs y')
+    #print(outputs_y.shape)
+    #print(outputs_y)
+    #print('Targets')
+    #print(targets.shape)
+    #print(targets)
     batch_metrics = []
     num_samples = outputs_x.size(0)
     num_tiles = outputs_x.size(1)
@@ -175,6 +175,10 @@ def get_batch_statistic(outputs_x, outputs_y, targets):
     _, pred_y = torch.max(outputs_y, 1)
     _, corr_x = torch.max(tx, 1)
     _, corr_y = torch.max(tx, 1)
+    print('PREDICTED')
+    print(pred_x)
+    print('ACCURATE')
+    print(corr_x)
     x_score = torch.eq(pred_x, corr_x).type(FloatTensor)
     y_score = torch.eq(pred_y, corr_y).type(FloatTensor)
     overall = x_score * y_score
