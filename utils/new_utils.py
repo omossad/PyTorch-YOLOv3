@@ -179,9 +179,9 @@ def get_batch_statistic(outputs_x, outputs_y, targets):
     y_score = torch.eq(pred_y, corr_y).type(FloatTensor)
     overall = x_score * y_score
     overall = overall.type(FloatTensor)
-    acc_x = x_score.mean()
-    acc_y = y_score.mean()
-    acc   = overall.mean()
+    acc_x = to_cpu(x_score.mean())
+    acc_y = to_cpu(y_score.mean())
+    acc   = to_cpu(overall.mean())
     batch_metrics.append([acc, acc_x, acc_y])
 
     #for sample_i in range(len(outputs)):
