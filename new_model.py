@@ -280,8 +280,8 @@ class ROILayer(nn.Module):
             num_pred = len(image_pred)
             x_coordinate = image_pred[..., 0].int()
             y_coordinate = image_pred[..., 1].int()
-            x_tiles = x_coordinate // self.tile_size
-            y_tiles = y_coordinate // self.tile_size
+            x_tiles = (x_coordinate-1) // self.tile_size
+            y_tiles = (y_coordinate-1) // self.tile_size
             obj_class    = image_pred[..., 6].int()
             obj_conf     = image_pred[..., 4]
             for i in range(num_pred):
