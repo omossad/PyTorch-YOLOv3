@@ -342,12 +342,14 @@ class ROILayer(nn.Module):
         #if 1 == 2:
             return x,y, 0
         else:
+            print('RECEIVED TARGETS')
+            print(targets)
             new_target = torch.zeros([num_samples, self.num_tiles])
             new_target[..., 4] = 1
             tx = new_target.type(FloatTensor)
             ty = new_target.type(FloatTensor)
-            #print('TARGETS')
-            #print(targets.shape)
+            print('REQUIRED TARGETS')
+            print(tx)
 
 
             # Loss : Mask outputs to ignore non-existing objects (except with conf. loss)

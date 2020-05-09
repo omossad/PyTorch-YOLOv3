@@ -104,8 +104,8 @@ class ListDataset(Dataset):
 
         targets = None
         if os.path.exists(label_path):
-            print('READ')
-            print(np.loadtxt(label_path))
+            #print('READ')
+            #print(np.loadtxt(label_path))
             #boxes = torch.from_numpy(np.loadtxt(label_path).reshape(-1, 5))
             targets = torch.from_numpy(np.loadtxt(label_path).reshape(-1, 2))
             #print('RESHAPE')
@@ -129,7 +129,7 @@ class ListDataset(Dataset):
             #targets = torch.zeros((len(boxes), 6))
             #targets[:, 1:] = boxes
             print('FINAL')
-            print(targets.shape)
+            #print(targets.shape)
             print(targets)
 
         # Apply augmentations
