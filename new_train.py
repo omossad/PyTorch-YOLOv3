@@ -108,8 +108,8 @@ if __name__ == "__main__":
 
             imgs = Variable(imgs.to(device))
             targets = Variable(targets.to(device), requires_grad=False)
-            #print('TARGET VAR')
-            #print(targets)
+            print('TARGET VAR')
+            print(targets)
             #loss, outputs = model(imgs, targets)
             loss, outputs_x, outputs_y = model(imgs, targets)
             loss.backward()
