@@ -389,8 +389,8 @@ class Darknet(nn.Module):
                 #loss += layer_loss
                 yolo_outputs.append(x)
             layer_outputs.append(x)
-        yolo_outputs = to_cpu(torch.cat(yolo_outputs, 1))
-
+        #yolo_outputs = to_cpu(torch.cat(yolo_outputs, 1))
+        yolo_outputs = torch.cat(yolo_outputs, 1)
         roi_x, roi_y, roi_loss = self.roi_layer(yolo_outputs)
         loss = roi_loss
         print('ROI LOSS')
