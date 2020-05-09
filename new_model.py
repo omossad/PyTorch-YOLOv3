@@ -387,15 +387,11 @@ class ROILayer(nn.Module):
             x_score = torch.eq(pred_x, corr_x).type(FloatTensor)
             y_score = torch.eq(pred_y, corr_y).type(FloatTensor)
             overall = x_score * y_score
-            print('OVERALL')
-            print(overall)
             #overall = overall.bool()
             #overall = overall.type(FloatTensor)
             acc_x = x_score.mean()
             acc_y = y_score.mean()
             acc   = overall.mean()
-            print('ACCURACY')
-            print(acc)
             #print(pred)
             #print('ACTUAL')
             #print(tx)
@@ -410,7 +406,7 @@ class ROILayer(nn.Module):
                 "loss"  : to_cpu(total_loss).item(),
                 "acc_x" : to_cpu(acc_x).item(),
                 "acc_y" : to_cpu(acc_y).item(),
-                "acc  " : to_cpu(acc).item(),
+                "acc"   : to_cpu(acc).item(),
             }
 
             return x,y, total_loss
