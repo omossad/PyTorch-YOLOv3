@@ -265,24 +265,24 @@ class ROILayer(nn.Module):
         self.tile_size = self.img_dim // self.num_tiles
         self.fc_net_x = nn.Sequential(
             nn.Dropout(),
-            nn.Linear(self.num_classes * elf.num_tiles, 256),
+            nn.Linear(self.num_classes * self.num_tiles, 256),
             nn.BatchNorm1d(256),
             nn.ReLU(inplace=True),
             nn.Linear(256, 128),
             nn.BatchNorm1d(128),
             nn.ReLU(inplace=True),
-            nn.Linear(self.num_tiles, TOTAL_CLASSES)
+            nn.Linear(128, self.num_tiles)
         )
 
         elf.fc_net_y = nn.Sequential(
             nn.Dropout(),
-            nn.Linear(self.num_classes * elf.num_tiles, 256),
+            nn.Linear(self.num_classes * self.num_tiles, 256),
             nn.BatchNorm1d(256),
             nn.ReLU(inplace=True),
             nn.Linear(256, 128),
             nn.BatchNorm1d(128),
             nn.ReLU(inplace=True),
-            nn.Linear(self.num_tiles, TOTAL_CLASSES)
+            nn.Linear(128, self.num_tiles)
         )
 
     def forward(self, x, targets=None, img_dim=None):
