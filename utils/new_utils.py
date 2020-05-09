@@ -186,6 +186,9 @@ def get_batch_statistic(outputs_x, outputs_y, targets):
     acc_x = x_score.mean()
     acc_y = y_score.mean()
     acc   = overall.mean()
+    print('HEROS')
+    print(acc)
+    print(acc_x)
     batch_metrics = torch.cat((acc, acc_x, acc_y)).view(1,-1)
     #batch_metrics.append([acc, acc_x, acc_y])
     #for sample_i in range(len(outputs)):
