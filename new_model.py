@@ -401,7 +401,8 @@ class Darknet(nn.Module):
                 #loss += layer_loss
                 yolo_outputs.append(x)
             elif module_def["type"] == "roi":
-                yolo_outputs = torch.cat(yolo_outputs, 1)
+                print(yolo_outputs)
+                yolo_outputs = torch.cat(yolo_outputs, 1).cuda()
                 roi_x, roi_y, roi_loss = module[0](yolo_outputs)
                 loss = roi_loss
                 print('ROI LOSS')
