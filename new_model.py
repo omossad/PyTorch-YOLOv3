@@ -252,7 +252,7 @@ class YOLOLayer(nn.Module):
 class ROILayer(nn.Module):
     """ROI layer"""
 
-    def __init__(self, num_classes=80, num_tiles=8, img_dim=608, conf_thes=0.6, nms_thes=0.2):
+    def __init__(self, num_classes=80, num_tiles=8, img_dim=608, conf_thes=0.5, nms_thes=0.2):
         super(ROILayer, self).__init__()
         self.num_classes = num_classes
         self.img_dim = img_dim
@@ -267,18 +267,30 @@ class ROILayer(nn.Module):
     def forward(self, x, targets=None, img_dim=None):
         print('INPUT SHAPE')
         print(x.shape)
+        num_samples = x.size(0)
         # Tensors for cuda support
         FloatTensor = torch.cuda.FloatTensor if x.is_cuda else torch.FloatTensor
         LongTensor = torch.cuda.LongTensor if x.is_cuda else torch.LongTensor
         ByteTensor = torch.cuda.ByteTensor if x.is_cuda else torch.ByteTensor
         total_loss = 0
-        prediction = x
-        for image_i, image_pred in enumerate(prediction):
-            image_pred = image_pred[image_pred[:, 4] >= self.conf_thres]
-            score = image_pred[:, 4] * image_pred[:, 5:].max(1)[0]
         objects = non_max_suppression(x, self.conf_thres, self.nms_thres)
+        x_inpt = torch.zeros([num_samples, self.num_tiles, self.num_classes], dtype=torch.int32)
+        y_inpt = torch.zeros([num_samples, self.num_tiles, self.num_classes], dtype=torch.int32)
+        for image_i, image_pred in enumerate(objects):
+            x_coordinate = image_pred[..., 0]
+            print('X COR')
+            print(x_coordinate)
+            x_class = image[..., 6]
+            print('X CLASS')
+            print(x_class)
+            x_conf = image[..., 4]
+            print('X CONF')
+            print(x_conf)
+            x_input[image_i, ...][x_class // self.tile_size]][x_class] += x_conf
         print('OBJECTS SHAPE')
         print(len(objects))
+        print('X after processing')
+        print(x_input)
         #print('TEMP')
         #print(objects)
         print('FIRST ROW')
