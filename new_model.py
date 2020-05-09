@@ -377,7 +377,7 @@ class ROILayer(nn.Module):
             #print(targets_x)
             loss_x = self.loss_func(x, tx)
             loss_y = self.loss_func(y, ty)
-            print('PREDICTED')
+            #print('PREDICTED')
             #print(x)
             _, pred_x = torch.max(x, 1)
             _, pred_y = torch.max(y, 1)
