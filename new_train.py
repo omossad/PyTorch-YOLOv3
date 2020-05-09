@@ -164,6 +164,15 @@ if __name__ == "__main__":
         if epoch % opt.evaluation_interval == 0:
             print("\n---- Evaluating Model ----")
             # Evaluate the model on the validation set
+            tot_acc, x_acc, y_acc = evaluate(
+                model,
+                path=valid_path,
+                conf_thres=0.5,
+                nms_thres=0.5,
+                img_size=opt.img_size,
+                batch_size=8,
+            )
+
             #precision, recall, AP, f1, ap_class = evaluate(
             #    model,
             #    path=valid_path,
@@ -173,6 +182,13 @@ if __name__ == "__main__":
             #    img_size=opt.img_size,
             #    batch_size=8,
             #)
+            evaluation_metrics = [
+                ("total_Accuracy", tot_acc.mean()),
+                ("grid_x Accuracy", x_acc.mean()),
+                ("grid_y Accuracy", y_acc.mean()),
+            ]
+            logger.list_of_scalars_summary(evaluation_metrics, epoch)
+
             #evaluation_metrics = [
             #    ("val_precision", precision.mean()),
             #    ("val_recall", recall.mean()),

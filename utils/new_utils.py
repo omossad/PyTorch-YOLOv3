@@ -148,8 +148,18 @@ def compute_ap(recall, precision):
     ap = np.sum((mrec[i + 1] - mrec[i]) * mpre[i + 1])
     return ap
 
-def get_batch_statistic(outputs, targets, iou_threshold):
-    """ Compute true positives, predicted scores and predicted labels per sample """
+def get_batch_statistic(outputs_x, outputs_y, targets, iou_threshold):
+    """ Compute Horizontal, Vertical and Combined tile accuracy per sample """
+    print('AS RECEIVED')
+    print('Outputs x')
+    print(outputs_x.shape)
+    print(outputs_x)
+    print('Outputs y')
+    print(outputs_y.shape)
+    print(outputs_y)
+    print('Targets')
+    print(targets.shape)
+    print(targets)
     batch_metrics = []
     for sample_i in range(len(outputs)):
 
