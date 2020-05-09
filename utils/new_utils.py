@@ -161,7 +161,7 @@ def get_batch_statistic(outputs_x, outputs_y, targets):
     print(targets.shape)
     print(targets)
     batch_metrics = []
-
+    num_samples = targets.shape(0)
     x_label = targets[..., 1].view(num_samples,-1).type(LongTensor)
     y_label = targets[..., 2].view(num_samples,-1).type(LongTensor)
     tx = torch.zeros([num_samples, self.num_tiles]).type(FloatTensor)
