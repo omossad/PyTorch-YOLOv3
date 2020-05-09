@@ -335,10 +335,11 @@ class ROILayer(nn.Module):
             print('SHAPE of LABEL')
             print(x.shape)
 
-            _, targets_x = tx.max(dim=0)
-            _, targets_y = ty.max(dim=0)
+            _, targets_x = tx.max(dim=1)
+            _, targets_y = ty.max(dim=1)
             print('SHAPE of TARGET')
             print(targets_x.shape)
+            print(targets_x)
             loss_x = self.loss_func(x, targets_x)
             loss_y = self.loss_func(y, targets_y)
             total_loss = loss_x + loss_y
