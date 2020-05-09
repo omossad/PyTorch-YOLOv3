@@ -263,6 +263,27 @@ class ROILayer(nn.Module):
         self.bce_loss = nn.BCELoss()
         self.metrics = {}
         self.tile_size = self.img_dim // self.num_tiles
+        self.fc_net_x = nn.Sequential(
+            nn.Dropout(),
+            nn.Linear(self.num_classes * elf.num_tiles, 256),
+            nn.BatchNorm1d(256),
+            nn.ReLU(inplace=True),
+            nn.Linear(256, 128),
+            nn.BatchNorm1d(128),
+            nn.ReLU(inplace=True),
+            nn.Linear(self.num_tiles, TOTAL_CLASSES)
+        )
+
+        elf.fc_net_y = nn.Sequential(
+            nn.Dropout(),
+            nn.Linear(self.num_classes * elf.num_tiles, 256),
+            nn.BatchNorm1d(256),
+            nn.ReLU(inplace=True),
+            nn.Linear(256, 128),
+            nn.BatchNorm1d(128),
+            nn.ReLU(inplace=True),
+            nn.Linear(self.num_tiles, TOTAL_CLASSES)
+        )
 
     def forward(self, x, targets=None, img_dim=None):
         print('INPUT SHAPE')
@@ -296,16 +317,22 @@ class ROILayer(nn.Module):
                 y_tile = min(y_tiles.data.tolist()[i], self.num_tiles-1)
                 s_obj  = obj_class.data.tolist()[i]
                 s_conf = obj_conf.data.tolist()[i]
-                print(str(x_coordinate.data.tolist()[i]) + ' ' + str(x_coordinate.data.tolist()[i]))
-                print(str(image_i) + ' ' + str(x_tile) + ' ' + str(y_tile) + ' ' + str(s_obj) + ' ' + str(s_conf) + '\n')
+                #print(str(x_coordinate.data.tolist()[i]) + ' ' + str(x_coordinate.data.tolist()[i]))
+                #print(str(image_i) + ' ' + str(x_tile) + ' ' + str(y_tile) + ' ' + str(s_obj) + ' ' + str(s_conf) + '\n')
                 x_inpt[image_i][x_tile][s_obj] += s_conf
                 y_inpt[image_i][y_tile][s_obj] += s_conf
-        print('OBJECTS SHAPE')
-        print(len(objects))
+        #print('OBJECTS SHAPE')
+        #print(len(objects))
         print('X after processing')
-        print(x_inpt)
+        print(x_inpt.shape)
         print('Y after processing')
-        print(y_inpt)
+        print(y_inpt.shape)
+        x = x_inpt.view(x_inpt.size(0), -1)
+        x = self.fc_net_x(x)
+        y = y_inpt.view(y_inpt.size(0), -1)
+        y = self.fc_net_x(y)
+        print('AFTER MODEL')
+        print(x.shape)
         #print('TEMP')
         #print(objects)
         #print('FIRST ROW')
