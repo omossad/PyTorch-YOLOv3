@@ -378,20 +378,34 @@ class ROILayer(nn.Module):
             loss_x = self.loss_func(x, tx)
             loss_y = self.loss_func(y, ty)
             print('PREDICTED')
-            print(x)
-            _, pred = torch.max(x, 1)
-            print(pred)
-            print('ACTUAL')
-            print(tx)
-            _, corr = torch.max(tx, 1)
-            print(corr)
+            #print(x)
+            _, pred_x = torch.max(x, 1)
+            _, pred_y = torch.max(y, 1)
+            _, corr_x = torch.max(tx, 1)
+            _, corr_y = torch.max(tx, 1)
+            x_score = torch.eq(pred_x, corr_x).type(FloatTensor)
+            y_score = torch.eq(pred_y, corr_y).type(FloatTensor)
+            overall = x_score + y_score
+            overall = overall.bool()
+            overall = overall.type(FloatTensor)
+            acc_x = 100 * x_score.mean()
+            acc_y = 100 * y_score.mean()
+            acc   = 100 * overall.mean()
+            #print(pred)
+            #print('ACTUAL')
+            #print(tx)
+
+            #print(corr)
             #loss_x = self.loss_func(x, targets_x)
             #loss_y = self.loss_func(y, targets_y)
             total_loss = loss_x + loss_y
             self.metrics = {
                 "loss_x": to_cpu(loss_x).item(),
                 "loss_y": to_cpu(loss_y).item(),
-                "loss": to_cpu(total_loss).item(),
+                "loss"  : to_cpu(total_loss).item(),
+                "acc_x" : to_cpu(acc_x).item(),
+                "acc_y" : to_cpu(acc_y).item(),
+                "acc  " : to_cpu(acc).item(),
             }
 
             return x,y, total_loss
