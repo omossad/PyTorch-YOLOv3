@@ -189,7 +189,7 @@ def get_batch_statistic(outputs_x, outputs_y, targets):
     print('HEROS')
     print(acc)
     print(acc_x)
-    batch_metrics = torch.stack((acc, acc_x, acc_y)).view(1,-1)
+    batch_metrics = torch.stack((to_cpu(acc), to_cpu(acc_x), to_cpu(acc_y))).view(1,-1)
     #batch_metrics.append([acc, acc_x, acc_y])
     #for sample_i in range(len(outputs)):
 
