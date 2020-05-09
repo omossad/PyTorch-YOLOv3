@@ -323,7 +323,7 @@ class ROILayer(nn.Module):
         if 1 == 2:
             return x,y, 0
         else:
-            new_target = torch.zeros([num_samples, self.num_tiles], dtype=torch.int32)
+            new_target = torch.zeros([num_samples, self.num_tiles])
             new_target[..., 4] = 1
             tx = new_target
             ty = new_target
