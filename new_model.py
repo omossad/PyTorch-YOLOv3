@@ -342,8 +342,8 @@ class ROILayer(nn.Module):
             print(x)
             print(y)
             print(targets_x)
-            loss_x = self.bce_loss(x, tx)
-            loss_y = self.bce_loss(x, ty)
+            loss_x = self.bce_loss(x, targets_x)
+            loss_y = self.bce_loss(x, targets_y)
             #loss_x = self.loss_func(x, targets_x)
             #loss_y = self.loss_func(y, targets_y)
             total_loss = loss_x + loss_y
