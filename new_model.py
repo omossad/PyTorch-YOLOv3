@@ -274,8 +274,8 @@ class ROILayer(nn.Module):
         ByteTensor = torch.cuda.ByteTensor if x.is_cuda else torch.ByteTensor
         total_loss = 0
         objects = non_max_suppression(x, self.conf_thres, self.nms_thres)
-        x_inpt = torch.zeros([num_samples, self.num_tiles, self.num_classes], dtype=torch.int32)
-        y_inpt = torch.zeros([num_samples, self.num_tiles, self.num_classes], dtype=torch.int32)
+        x_inpt = torch.zeros([num_samples, self.num_tiles, self.num_classes])
+        y_inpt = torch.zeros([num_samples, self.num_tiles, self.num_classes])
         for image_i, image_pred in enumerate(objects):
             num_pred = len(image_pred)
             x_coordinate = image_pred[..., 0].int()
@@ -287,10 +287,13 @@ class ROILayer(nn.Module):
             print(image_i)
             for i in range(num_pred):
                 print('HERE')
-                print(x_coordinate.data.tolist()[i])
                 s_tile = x_coordinate.data.tolist()[i] // self.tile_size
                 s_obj  = x_class.data.tolist()[i]
-                x_inpt[image_i][s_tile][s_obj] += x_conf.data.tolist()[i]
+                s_conf = x_conf.data.tolist()[i]
+                print(s_tile)
+                print(s_obj)
+                print(s_conf)
+                x_inpt[image_i][s_tile][s_obj] += s_conf
 
         print('OBJECTS SHAPE')
         print(len(objects))
