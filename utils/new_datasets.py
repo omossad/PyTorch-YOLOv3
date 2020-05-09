@@ -107,7 +107,7 @@ class ListDataset(Dataset):
             print('READ')
             print(np.loadtxt(label_path))
             #boxes = torch.from_numpy(np.loadtxt(label_path).reshape(-1, 5))
-            targets = torch.from_numpy(np.loadtxt(label_path).reshape(-1, 3))
+            targets = torch.from_numpy(np.loadtxt(label_path).reshape(-1, 2))
             #print('RESHAPE')
             #print(labels)
             # Extract coordinates for unpadded + unscaled image
