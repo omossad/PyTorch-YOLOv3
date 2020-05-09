@@ -263,8 +263,8 @@ class ROILayer(nn.Module):
         #self.bce_loss = nn.BCELoss()
         self.metrics = {}
         self.tile_size = self.img_dim // self.num_tiles
-        self.loss_func = nn.BCEWithLogitsLoss()
-        self.fc_net_x = nn.Sequential(
+        self.loss_func = nn.CrossEntropyLoss()
+        self.fully_connected = nn.Sequential(
             nn.Dropout(),
             nn.Linear(self.num_classes * self.num_tiles, 256),
             nn.BatchNorm1d(256),
@@ -274,17 +274,8 @@ class ROILayer(nn.Module):
             nn.ReLU(inplace=True),
             nn.Linear(128, self.num_tiles)
         )
-
-        self.fc_net_y = nn.Sequential(
-            nn.Dropout(),
-            nn.Linear(self.num_classes * self.num_tiles, 256),
-            nn.BatchNorm1d(256),
-            nn.ReLU(inplace=True),
-            nn.Linear(256, 128),
-            nn.BatchNorm1d(128),
-            nn.ReLU(inplace=True),
-            nn.Linear(128, self.num_tiles)
-        )
+        self.fc_net_x = self.fully_connected
+        self.fc_net_y = self.fully_connected
 
     def forward(self, x, targets=None, img_dim=None):
         print('INPUT SHAPE')
