@@ -104,8 +104,8 @@ class ListDataset(Dataset):
 
         targets = None
         if os.path.exists(label_path):
-            print('READ')
-            print(np.loadtxt(label_path))
+            #print('READ')
+            #print(np.loadtxt(label_path))
             #boxes = torch.from_numpy(np.loadtxt(label_path).reshape(-1, 5))
             tiles = torch.from_numpy(np.loadtxt(label_path).reshape(-1, 2))
             #print('RESHAPE')
