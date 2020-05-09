@@ -385,8 +385,8 @@ class ROILayer(nn.Module):
             _, corr_y = torch.max(tx, 1)
             x_score = torch.eq(pred_x, corr_x).type(FloatTensor)
             y_score = torch.eq(pred_y, corr_y).type(FloatTensor)
-            overall = x_score + y_score
-            overall = overall.bool()
+            overall = x_score * y_score
+            #overall = overall.bool()
             overall = overall.type(FloatTensor)
             acc_x = 100 * x_score.mean()
             acc_y = 100 * y_score.mean()
