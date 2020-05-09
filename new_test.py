@@ -33,7 +33,9 @@ def evaluate(model, path, conf_thres, nms_thres, img_size, batch_size):
     Tensor = torch.cuda.FloatTensor if torch.cuda.is_available() else torch.FloatTensor
 
     #labels = []
-    sample_metrics = []  # List of tuples (TP, confs, pred)
+    #sample_metrics = []  # List of tuples (TP, confs, pred)
+    #sample_metrics = torch.zeros((1,3)).type(Tensor)
+    sample_metrics = Tensor
     for batch_i, (_, imgs, targets) in enumerate(tqdm.tqdm(dataloader, desc="Detecting objects")):
 
         # Extract labels
@@ -48,12 +50,17 @@ def evaluate(model, path, conf_thres, nms_thres, img_size, batch_size):
             outputs_x, outputs_y = model(imgs)
             #outputs = non_max_suppression(outputs, conf_thres=conf_thres, nms_thres=nms_thres)
 
-        sample_metrics += get_batch_statistic(outputs_x, outputs_y, targets)
+        #sample_metrics += get_batch_statistic(outputs_x, outputs_y, targets)
+        sample_metrics = torch.cat((sample_metrics, get_batch_statistic(outputs_x, outputs_y, targets)))
     print('RESULTS')
     print(sample_metrics)
     # Concatenate sample statistics
     #tot_acc, x_acc, y_acc = [np.concatenate(x, 0) for x in list(zip(*sample_metrics))]
-    tot_acc, x_acc, y_acc = [torch.cat(x, 0) for x in list(zip(*sample_metrics))]
+    #tot_acc, x_acc, y_acc = [torch.cat(x, 0) for x in list(zip(*sample_metrics))]
+    tot_acc = sample_metrics[..., 0].mean()
+    x_acc   = sample_metrics[..., 1].mean()
+    y_acc   = sample_metrics[..., 2].mean()
+
     #tot_acc = x_acc = y_acc = 0
     #true_positives, pred_scores, pred_labels = [np.concatenate(x, 0) for x in list(zip(*sample_metrics))]
     #precision, recall, AP, f1, ap_class = ap_per_class(true_positives, pred_scores, pred_labels, labels)

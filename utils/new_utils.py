@@ -162,7 +162,7 @@ def get_batch_statistic(outputs_x, outputs_y, targets):
     #print('Targets')
     #print(targets.shape)
     #print(targets)
-    batch_metrics = []
+    #batch_metrics = []
     num_samples = outputs_x.size(0)
     num_tiles = outputs_x.size(1)
     x_label = targets[..., 1].view(num_samples,-1).type(LongTensor)
@@ -186,8 +186,8 @@ def get_batch_statistic(outputs_x, outputs_y, targets):
     acc_x = x_score.mean()
     acc_y = y_score.mean()
     acc   = overall.mean()
-    batch_metrics.append([acc, acc_x, acc_y])
-
+    batch_metrics = torch.cat((acc, acc_x, acc_y)).view(1,-1)
+    #batch_metrics.append([acc, acc_x, acc_y])
     #for sample_i in range(len(outputs)):
 
     #    if outputs[sample_i] is None:
