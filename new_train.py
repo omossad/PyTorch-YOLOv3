@@ -133,7 +133,6 @@ if __name__ == "__main__":
                 formats = {m: "%.6f" for m in metrics}
                 #formats["grid_size"] = "%2d"
                 #formats["cls_acc"] = "%.2f%%"
-                print(model.roi_layer[0].metrics.get)
                 row_metrics = [formats[metric] % roi.metrics.get(metric, 0)]
                 #row_metrics = [formats[metric] % roi.metrics.get(metric, 0) for roi in model.roi_layer]
                 metric_table += [[metric, *row_metrics]]
@@ -147,7 +146,7 @@ if __name__ == "__main__":
             tensorboard_log += [("loss", loss.item())]
             #logger.list_of_scalars_summary(tensorboard_log, batches_done)
 
-            #log_str += AsciiTable(metric_table).table
+            log_str += AsciiTable(metric_table).table
             log_str += f"\nTotal loss {loss.item()}"
 
             # Determine approximate time left for epoch
