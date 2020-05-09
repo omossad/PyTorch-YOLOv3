@@ -1,7 +1,7 @@
 from __future__ import division
 
 from new_model import *
-from utils.logger import *
+#from utils.logger import *
 from utils.new_utils import *
 from utils.new_datasets import *
 from utils.parse_config import *
@@ -40,7 +40,7 @@ if __name__ == "__main__":
     opt = parser.parse_args()
     print(opt)
 
-    logger = Logger("logs")
+    #logger = Logger("logs")
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -125,28 +125,27 @@ if __name__ == "__main__":
 
             log_str = "\n---- [Epoch %d/%d, Batch %d/%d] ----\n" % (epoch, opt.epochs, batch_i, len(dataloader))
 
-            metric_table = [["Metrics", *[f"ROI Layer {i}" for i in range(1)]]]
-
+            #metric_table = [["Metrics", *[f"ROI Layer {i}" for i in range(1)]]]
+            metric_table = [["Metrics", *["ROI Layer"]]]
             # Log metrics at each YOLO layer
+            roi = model.roi_layer[0]
             for i, metric in enumerate(metrics):
                 formats = {m: "%.6f" for m in metrics}
                 #formats["grid_size"] = "%2d"
                 #formats["cls_acc"] = "%.2f%%"
-                print('THIS IS I')
-                print(i)
-                print(metric)
-                print(model.roi_layer[0].metrics)
-                row_metrics = [formats[metric] % roi.metrics.get(metric, 0) for roi in model.roi_layer]
+                print(model.roi_layer[0].metrics.get)
+                row_metrics = [formats[metric] % roi.metrics.get(metric, 0)]
+                #row_metrics = [formats[metric] % roi.metrics.get(metric, 0) for roi in model.roi_layer]
                 metric_table += [[metric, *row_metrics]]
 
                 # Tensorboard logging
                 tensorboard_log = []
-                for j, roi in enumerate(model.roi_layer):
-                    for name, metric in roi.metrics.items():
+                #for j, roi in enumerate(model.roi_layer):
+            for name, metric in roi.metrics.items():
                         #if name != "grid_size":
-                        tensorboard_log += [(f"{name}_{j+1}", metric)]
-                tensorboard_log += [("loss", loss.item())]
-                logger.list_of_scalars_summary(tensorboard_log, batches_done)
+                tensorboard_log += [(f"{name} ", metric)]
+            tensorboard_log += [("loss", loss.item())]
+            #logger.list_of_scalars_summary(tensorboard_log, batches_done)
 
             #log_str += AsciiTable(metric_table).table
             log_str += f"\nTotal loss {loss.item()}"
