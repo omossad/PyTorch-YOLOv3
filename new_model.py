@@ -278,10 +278,12 @@ class ROILayer(nn.Module):
         y_inpt = torch.zeros([num_samples, self.num_tiles, self.num_classes])
         for image_i, image_pred in enumerate(objects):
             num_pred = len(image_pred)
-            x_coordinate = image_pred[..., 0].int()
-            y_coordinate = image_pred[..., 1].int()
-            x_tiles = (x_coordinate-1) // self.tile_size
-            y_tiles = (y_coordinate-1) // self.tile_size
+            x_coordinate = image_pred[..., 0]
+            y_coordinate = image_pred[..., 1]
+            x_tiles = x_coordinate // self.tile_size
+            y_tiles = y_coordinate // self.tile_size
+            x_tiles = x_tiles.int()
+            y_tiles = y_tiles.int()
             obj_class    = image_pred[..., 6].int()
             obj_conf     = image_pred[..., 4]
             for i in range(num_pred):
@@ -291,6 +293,7 @@ class ROILayer(nn.Module):
                 y_tile = y_tiles.data.tolist()[i]
                 s_obj  = obj_class.data.tolist()[i]
                 s_conf = obj_conf.data.tolist()[i]
+                print(str(x_tiles.data.tolist()[i]) + ' ' + str(x_tiles.data.tolist()[i]))
                 print(str(image_i) + ' ' + str(x_tile) + ' ' + str(y_tile) + ' ' + str(s_obj) + ' ' + str(s_conf) + '\n')
                 x_inpt[image_i][x_tile][s_obj] += s_conf
                 x_inpt[image_i][y_tile][s_obj] += s_conf
