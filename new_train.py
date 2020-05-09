@@ -95,6 +95,9 @@ if __name__ == "__main__":
         "loss_x",
         "loss_y",
         "loss",
+        "acc_x",
+        "acc_y",
+        "acc",
     ]
     #model = torch.nn.DataParallel(model, device_ids=[0, 1]).cuda()
     for epoch in range(opt.epochs):
