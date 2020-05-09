@@ -382,8 +382,8 @@ class Darknet(nn.Module):
         super(Darknet, self).__init__()
         self.module_defs = parse_model_config(config_path)
         self.hyperparams, self.module_list = create_modules(self.module_defs)
-        print("MODULES")
-        print(self.module_list)
+        #print("MODULES")
+        #print(self.module_list)
         self.yolo_layers = [layer[0] for layer in self.module_list if hasattr(layer[0], "metrics")]
         self.roi_layer = [layer[0] for layer in self.module_list if hasattr(layer[0], "metrics")]
         self.img_size = img_size
@@ -409,12 +409,12 @@ class Darknet(nn.Module):
                 #loss += layer_loss
                 yolo_outputs.append(x)
             elif module_def["type"] == "roi":
-                print(yolo_outputs)
+                #print(yolo_outputs)
                 yolo_outputs = torch.cat(yolo_outputs, 1)
                 roi_x, roi_y, roi_loss = module[0](yolo_outputs)
                 loss = roi_loss
-                print('ROI LOSS')
-                print(roi_loss)
+                #print('ROI LOSS')
+                #print(roi_loss)
             layer_outputs.append(x)
         #yolo_outputs = to_cpu(torch.cat(yolo_outputs, 1))
         yolo_outputs = to_cpu(yolo_outputs)
