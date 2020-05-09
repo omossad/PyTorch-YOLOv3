@@ -146,8 +146,8 @@ class YOLOLayer(nn.Module):
         self.anchor_w = self.scaled_anchors[:, 0:1].view((1, self.num_anchors, 1, 1))
         self.anchor_h = self.scaled_anchors[:, 1:2].view((1, self.num_anchors, 1, 1))
 
-    def forward(self, x, targets=None, img_dim=None):
-
+    #def forward(self, x, targets=None, img_dim=None):
+    def forward(self, x, img_dim=None):
         # Tensors for cuda support
         FloatTensor = torch.cuda.FloatTensor if x.is_cuda else torch.FloatTensor
         LongTensor = torch.cuda.LongTensor if x.is_cuda else torch.LongTensor
@@ -407,7 +407,7 @@ class Darknet(nn.Module):
                 #print('BEFORE')
                 #print(x.shape)
                 #x, layer_loss = module[0](x, targets, img_dim)
-                x = module[0](x, img_dim=img_dim)
+                x = module[0](x, img_dim)
                 #loss += layer_loss
                 yolo_outputs.append(x)
             elif module_def["type"] == "roi":
