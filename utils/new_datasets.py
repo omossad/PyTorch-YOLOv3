@@ -104,7 +104,11 @@ class ListDataset(Dataset):
 
         targets = None
         if os.path.exists(label_path):
+            print('READ')
+            print(np.loadtxt(label_path))
             boxes = torch.from_numpy(np.loadtxt(label_path).reshape(-1, 5))
+            print('RESHAPE')
+            print(boxes)
             # Extract coordinates for unpadded + unscaled image
             x1 = w_factor * (boxes[:, 1] - boxes[:, 3] / 2)
             y1 = h_factor * (boxes[:, 2] - boxes[:, 4] / 2)
@@ -123,6 +127,9 @@ class ListDataset(Dataset):
 
             targets = torch.zeros((len(boxes), 6))
             targets[:, 1:] = boxes
+            print('FINAL')
+            print(targets.shape)
+            print(targets)
 
         # Apply augmentations
         if self.augment:
