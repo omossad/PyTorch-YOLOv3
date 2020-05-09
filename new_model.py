@@ -259,10 +259,11 @@ class ROILayer(nn.Module):
         self.num_tiles = num_tiles
         self.conf_thres = conf_thes
         self.nms_thres = nms_thes
-        self.mse_loss = nn.MSELoss()
-        self.bce_loss = nn.BCELoss()
+        #self.mse_loss = nn.MSELoss()
+        #self.bce_loss = nn.BCELoss()
         self.metrics = {}
         self.tile_size = self.img_dim // self.num_tiles
+        self.ce_loss = nn.CrossEntropyLoss()
         self.fc_net_x = nn.Sequential(
             nn.Dropout(),
             nn.Linear(self.num_classes * self.num_tiles, 256),
@@ -300,17 +301,11 @@ class ROILayer(nn.Module):
         for image_i, image_pred in enumerate(objects):
             num_pred = len(image_pred)
             image_pred[..., :4] = xyxy2xywh(image_pred[..., :4])
-            x_coordinate = image_pred[..., 0]
-            y_coordinate = image_pred[..., 1]
-            x_tiles = x_coordinate // self.tile_size
-            y_tiles = y_coordinate // self.tile_size
-            x_tiles = x_tiles.int()
-            y_tiles = y_tiles.int()
+            x_tiles = (image_pred[..., 0] // self.tile_size).int()
+            y_tiles = (image_pred[..., 1] // self.tile_size).int()
             obj_class    = image_pred[..., 6].int()
             obj_conf     = image_pred[..., 4]
             for i in range(num_pred):
-                #x_tile = x_coordinate.data.tolist()[i] // self.tile_size
-                #y_tile = y_coordinate.data.tolist()[i] // self.tile_size
                 x_tile = max(x_tiles.data.tolist()[i], 0)
                 y_tile = max(y_tiles.data.tolist()[i], 0)
                 x_tile = min(x_tiles.data.tolist()[i], self.num_tiles-1)
@@ -321,25 +316,36 @@ class ROILayer(nn.Module):
                 #print(str(image_i) + ' ' + str(x_tile) + ' ' + str(y_tile) + ' ' + str(s_obj) + ' ' + str(s_conf) + '\n')
                 x_inpt[image_i][x_tile][s_obj] += s_conf
                 y_inpt[image_i][y_tile][s_obj] += s_conf
-        #print('OBJECTS SHAPE')
-        #print(len(objects))
-        print('X after processing')
+
+        print('X before model')
         print(x_inpt.shape)
-        print('Y after processing')
+        print('Y before model')
         print(y_inpt.shape)
         x = x_inpt.view(x_inpt.size(0), -1)
         x = self.fc_net_x(x)
         y = y_inpt.view(y_inpt.size(0), -1)
         y = self.fc_net_x(y)
-        print('AFTER MODEL')
+        print('X after MODEL')
         print(x.shape)
-        #print('TEMP')
-        #print(objects)
-        #print('FIRST ROW')
-        #sico = objects[0]
-        #print(sico[...,0] // self.tile_size)
-        return objects, total_loss
 
+        #if targets is None:
+        if 1 == 2:
+            return x,y, 0
+        else:
+            new_target = torch.zeros([2,8], dtype=torch.int32)
+            new_target[..., 4] = 1
+            tx = new_target
+            ty = new_target
+            #print('TARGETS')
+            #print(targets.shape)
+
+
+            # Loss : Mask outputs to ignore non-existing objects (except with conf. loss)
+            loss_x = self.ce_loss(x, tx)
+            loss_y = self.ce_loss(y ty)
+            total_loss = loss_x + loss_y
+
+            return x,y, total_loss
 
 
 
@@ -371,13 +377,14 @@ class Darknet(nn.Module):
                 print('BEFORE')
                 print(x.shape)
                 x, layer_loss = module[0](x, targets, img_dim)
-                #x, layer_loss = module[0](x, img_dim=img_dim)
-                loss += layer_loss
+                #loss += layer_loss
                 yolo_outputs.append(x)
             layer_outputs.append(x)
         yolo_outputs = to_cpu(torch.cat(yolo_outputs, 1))
         roi_layer = ROILayer(80)
-        temp, temp_loss = roi_layer(yolo_outputs)
+        roi_x, roi_y, roi_loss = roi_layer(yolo_outputs)
+        print('ROI LOSS')
+        print(roi_loss)
         #print('AFTER')
         #print(yolo_outputs.shape)
         #print(loss)
