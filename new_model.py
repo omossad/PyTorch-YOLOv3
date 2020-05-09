@@ -280,10 +280,10 @@ class ROILayer(nn.Module):
             x_coordinate = image_pred[..., 0]
             print('X COR')
             print(x_coordinate)
-            x_class = image[..., 6]
+            x_class = image_pred[..., 6]
             print('X CLASS')
             print(x_class)
-            x_conf = image[..., 4]
+            x_conf = image_pred[..., 4]
             print('X CONF')
             print(x_conf)
             x_input[image_i, ...][x_class // self.tile_size][x_class] += x_conf
