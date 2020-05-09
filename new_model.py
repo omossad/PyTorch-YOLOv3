@@ -277,16 +277,15 @@ class ROILayer(nn.Module):
         x_inpt = torch.zeros([num_samples, self.num_tiles, self.num_classes], dtype=torch.int32)
         y_inpt = torch.zeros([num_samples, self.num_tiles, self.num_classes], dtype=torch.int32)
         for image_i, image_pred in enumerate(objects):
+            num_pred = len(image_pred)
             x_coordinate = image_pred[..., 0].int()
             print('X COR')
             print(x_coordinate)
             x_class = image_pred[..., 6].int()
-            print('X CLASS')
-            print(x_class)
             x_conf = image_pred[..., 4]
-            print('X CONF')
-            print(x_conf)
-            x_inpt[image_i, ...][x_coordinate // self.tile_size][x_class] += x_conf
+            for i in range(num_pred)
+                x_inpt[image_i][x_coordinate[i] // self.tile_size][x_class[i]] += x_conf[i]
+
         print('OBJECTS SHAPE')
         print(len(objects))
         print('X after processing')
