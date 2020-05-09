@@ -283,12 +283,14 @@ class ROILayer(nn.Module):
             print(x_coordinate)
             x_class = image_pred[..., 6].int()
             x_conf = image_pred[..., 4]
+            print('IMAGE')
+            print(image_i)
             for i in range(num_pred):
                 print('HERE')
                 print(x_coordinate.data.tolist()[i])
                 s_tile = x_coordinate.data.tolist()[i] // self.tile_size
                 s_obj  = x_class.data.tolist()[i]
-                x_inpt[image_i.int()][s_tile][s_obj] += x_conf.data.tolist()[i]
+                x_inpt[image_i][s_tile][s_obj] += x_conf.data.tolist()[i]
 
         print('OBJECTS SHAPE')
         print(len(objects))
