@@ -342,7 +342,7 @@ class ROILayer(nn.Module):
 
             # Loss : Mask outputs to ignore non-existing objects (except with conf. loss)
             loss_x = self.ce_loss(x, tx)
-            loss_y = self.ce_loss(y ty)
+            loss_y = self.ce_loss(y, ty)
             total_loss = loss_x + loss_y
 
             return x,y, total_loss
