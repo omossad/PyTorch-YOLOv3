@@ -305,8 +305,11 @@ class ROILayer(nn.Module):
         ByteTensor = torch.cuda.ByteTensor if x.is_cuda else torch.ByteTensor
         total_loss = 0
         objects = non_max_suppression(x, self.conf_thres, self.nms_thres)
-        x_inpt = torch.zeros([num_samples, self.num_tiles, self.num_classes]).cuda()
-        y_inpt = torch.zeros([num_samples, self.num_tiles, self.num_classes]).cuda()
+        x_inpt, y_inpt = FloatTensor
+        x_inpt.new_zeros((num_samples, self.num_tiles, self.num_classes))
+        y_inpt.new_zeros((num_samples, self.num_tiles, self.num_classes))
+        #x_inpt = torch.zeros([num_samples, self.num_tiles, self.num_classes]).cuda()
+        #y_inpt = torch.zeros([num_samples, self.num_tiles, self.num_classes]).cuda()
         for image_i, image_pred in enumerate(objects):
             num_pred = len(image_pred)
             image_pred[..., :4] = xyxy2xywh(image_pred[..., :4])
