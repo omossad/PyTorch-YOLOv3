@@ -150,6 +150,8 @@ def compute_ap(recall, precision):
 
 def get_batch_statistic(outputs_x, outputs_y, targets):
     """ Compute Horizontal, Vertical and Combined tile accuracy per sample """
+    FloatTensor = torch.cuda.FloatTensor if outputs_x.is_cuda else torch.FloatTensor
+    LongTensor = torch.cuda.LongTensor if outputs_x.is_cuda else torch.LongTensor
     print('AS RECEIVED')
     print('Outputs x')
     print(outputs_x.shape)
