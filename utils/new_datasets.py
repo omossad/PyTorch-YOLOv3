@@ -7,7 +7,7 @@ from PIL import Image
 import torch
 import torch.nn.functional as F
 
-from utils.new_augmentations import horisontal_flip
+from utils.new_augmentations import horizontal_flip
 from torch.utils.data import Dataset
 import torchvision.transforms as transforms
 
@@ -104,10 +104,10 @@ class ListDataset(Dataset):
 
         targets = None
         if os.path.exists(label_path):
-            #print('READ')
-            #print(np.loadtxt(label_path))
+            print('READ')
+            print(np.loadtxt(label_path))
             #boxes = torch.from_numpy(np.loadtxt(label_path).reshape(-1, 5))
-            targets = torch.from_numpy(np.loadtxt(label_path).reshape(-1, 2))
+            targets = torch.from_numpy(np.loadtxt(label_path).reshape(-1, 3))
             #print('RESHAPE')
             #print(labels)
             # Extract coordinates for unpadded + unscaled image
@@ -135,7 +135,7 @@ class ListDataset(Dataset):
         # Apply augmentations
         if self.augment:
             if np.random.random() < 0.5:
-                img, targets = horisontal_flip(img, targets)
+                img, targets = horizontal_flip(img, targets)
 
         return img_path, img, targets
 
