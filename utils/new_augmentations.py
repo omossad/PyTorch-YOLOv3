@@ -7,5 +7,6 @@ def horizontal_flip(images, targets, num_tiles=8):
     images = torch.flip(images, [-1])
     print('IMAGE FLIP')
     print(targets)
-    targets[:, 0] = (num_tiles-1) - targets[:, 0]
+    targets[:, 1] = (num_tiles-1) - targets[:, 1]
+    print(targets)
     return images, targets
