@@ -53,7 +53,7 @@ def evaluate(model, path, conf_thres, nms_thres, img_size, batch_size):
     print(sample_metrics)
     # Concatenate sample statistics
     #tot_acc, x_acc, y_acc = [np.concatenate(x, 0) for x in list(zip(*sample_metrics))]
-    tot_acc, x_acc, y_acc = [x for x in list(zip(*sample_metrics))]
+    tot_acc, x_acc, y_acc = [torch.cat(x, 0) for x in list(zip(*sample_metrics))]
     #tot_acc = x_acc = y_acc = 0
     #true_positives, pred_scores, pred_labels = [np.concatenate(x, 0) for x in list(zip(*sample_metrics))]
     #precision, recall, AP, f1, ap_class = ap_per_class(true_positives, pred_scores, pred_labels, labels)
