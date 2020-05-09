@@ -308,9 +308,7 @@ class ROILayer(nn.Module):
         objects = non_max_suppression(x, self.conf_thres, self.nms_thres)
         x_inpt = torch.zeros([num_samples, self.num_tiles, self.num_classes]).type(FloatTensor)
         y_inpt = torch.zeros([num_samples, self.num_tiles, self.num_classes]).type(FloatTensor)
-        if objects is None:
-            continue
-        else:
+        if objects is not None:
             for image_i, image_pred in enumerate(objects):
                 num_pred = len(image_pred)
                 image_pred[..., :4] = xyxy2xywh(image_pred[..., :4])
