@@ -339,6 +339,8 @@ class ROILayer(nn.Module):
             _, targets_y = ty.max(dim=1)
             print('SHAPE of TARGET')
             print(targets_x.shape)
+            print(x)
+            print(y)
             print(targets_x)
             loss_x = self.loss_func(x, targets_x)
             loss_y = self.loss_func(y, targets_y)
