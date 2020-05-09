@@ -342,14 +342,14 @@ class ROILayer(nn.Module):
         #if 1 == 2:
             return x,y, 0
         else:
-            print('RECEIVED TARGETS')
-            print(targets)
+            #print('RECEIVED TARGETS')
+            #print(targets)
             #new_target = torch.zeros([num_samples, self.num_tiles])
             #new_target[..., 4] = 1
             x_label = targets[..., 1].view(num_samples,-1).type(LongTensor)
             y_label = targets[..., 2].view(num_samples,-1).type(LongTensor)
-            print('X TARGETS')
-            print(x_label)
+            #print('X TARGETS')
+            #print(x_label)
             #y = torch.LongTensor(batch_size,3).random_() % nb_digits
             tx = torch.zeros([num_samples, self.num_tiles]).type(FloatTensor)
             ty = torch.zeros([num_samples, self.num_tiles]).type(FloatTensor)
@@ -360,8 +360,8 @@ class ROILayer(nn.Module):
             ty.scatter_(1, y_label, 1)
             #tx = new_target.type(FloatTensor)
             #ty = new_target.type(FloatTensor)
-            print('ONE HOT TARGETS')
-            print(tx)
+            #print('ONE HOT TARGETS')
+            #print(tx)
 
 
             # Loss : Mask outputs to ignore non-existing objects (except with conf. loss)
@@ -370,13 +370,19 @@ class ROILayer(nn.Module):
 
             #_, targets_x = tx.max(dim=1)
             #_, targets_y = ty.max(dim=1)
-            print('SHAPE of TARGET')
-            print(x.shape)
-            print(x)
+            #print('SHAPE of TARGET')
+            #print(x.shape)
+            #print(x)
             #print(y)
             #print(targets_x)
             loss_x = self.loss_func(x, tx)
             loss_y = self.loss_func(y, ty)
+            print('PREDICTED')
+            _, pred = torch.max(x, 0)
+            print(pred)
+            print('ACTUAL')
+            _, corr = torch.max(tx, 0)
+            print(corr)
             #loss_x = self.loss_func(x, targets_x)
             #loss_y = self.loss_func(y, targets_y)
             total_loss = loss_x + loss_y

@@ -271,6 +271,7 @@ def non_max_suppression(prediction, conf_thres=0.5, nms_thres=0.4):
     return output
 
 
+
 def build_targets(pred_boxes, pred_cls, target, anchors, ignore_thres):
     #print('TARGET')
     #print(target)
