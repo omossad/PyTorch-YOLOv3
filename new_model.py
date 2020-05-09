@@ -324,6 +324,8 @@ class ROILayer(nn.Module):
         #print(y_inpt.shape)
         x = x_inpt.view(x_inpt.size(0), -1)
         x = x.cuda()
+        print('X before model')
+        print(x_inpt)
         x = self.fc_net_x(x)
         y = y_inpt.view(y_inpt.size(0), -1)
         y = y.cuda()
@@ -337,8 +339,8 @@ class ROILayer(nn.Module):
         else:
             new_target = torch.zeros([num_samples, self.num_tiles])
             new_target[..., 4] = 1
-            tx = new_target
-            ty = new_target
+            tx = new_target.cuda()
+            ty = new_target.cuda()
             #print('TARGETS')
             #print(targets.shape)
 
