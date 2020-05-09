@@ -22,6 +22,16 @@ def get_tile(x,y):
         tile = int(x_dis + y_dis * W_tiles)
         return tile
 
+def get_tileXY(x,y):
+        x = x*W_ref
+        y = y*H_ref
+        x_cor = np.minimum(x, W_ref-1)
+        y_cor = np.minimum(y, H_ref-1)
+        x_dis = int(x_cor / tile_width)
+        y_dis = int(y_cor / tile_height)
+        #tile = int(x_dis + y_dis * W_tiles)
+        return x_dis,y_dis
+
 num_files = 10
 base_dir  = '/home/omossad/scratch/temp/labels/ha_labels/'
 out_dir   = '/home/omossad/scratch/temp/roi/'
@@ -51,18 +61,20 @@ for i in range(num_files):
     end_frame = int(frame_info[i][1])
     current_frame = start_frame
     for lbl in labels:
-        s_tile = get_tile(lbl[0],lbl[1])
+        #s_tile = get_tile(lbl[0],lbl[1])
+        sx_tile, sy_tile = get_tileXY(lbl[0],lbl[1])
         filename = 'ha_' + str(i) + '_frame_' + str(current_frame).zfill(5)
-        command = 'cp ' + frame_dir + 'ha_' + str(i) + '/frame_' + str(current_frame).zfill(5) + '.jpg ' + out_dir + 'images/'
-        filelist = "echo '" + out_dir + 'images/' + filename + ".jpg' >> " + out_dir
-        if i < num_files - 2:
-            filelist = filelist + 'train.txt \n'
-        else:
-            filelist = filelist + 'valid.txt \n'
-        command = command + filename + '.jpg \n'
-        command = command + "echo '"+ str(s_tile) +" 0.1 0.1 0.1 0.1' > " + out_dir + 'labels/'
+        #command = 'cp ' + frame_dir + 'ha_' + str(i) + '/frame_' + str(current_frame).zfill(5) + '.jpg ' + out_dir + 'images/'
+        #filelist = "echo '" + out_dir + 'images/' + filename + ".jpg' >> " + out_dir
+        #if i < num_files - 2:
+        #    filelist = filelist + 'train.txt \n'
+        #else:
+        #    filelist = filelist + 'valid.txt \n'
+        #command = command + filename + '.jpg \n'
+        #command = command + "echo '"+ str(s_tile) +" 0.1 0.1 0.1 0.1' > " + out_dir + 'labels/'
+        command = command + "echo '"+ str(sx_tile) +' '+ str(sy_tile) + "' > " + out_dir + 'labels/'
         command = command + filename + '.txt \n'
-        command = command + filelist 
+        command = command + filelist
         f.write(command)
         current_frame = current_frame + 1
 f.close()
