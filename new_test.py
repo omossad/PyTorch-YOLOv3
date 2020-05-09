@@ -82,7 +82,7 @@ def evaluate(model, path, conf_thres, nms_thres, img_size, batch_size):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--batch_size", type=int, default=8, help="size of each image batch")
+    parser.add_argument("--batch_size", type=int, default=4, help="size of each image batch")
     parser.add_argument("--model_def", type=str, default="config/yolov3.cfg", help="path to model definition file")
     parser.add_argument("--data_config", type=str, default="config/coco.data", help="path to data config file")
     parser.add_argument("--weights_path", type=str, default="weights/yolov3.weights", help="path to weights file")
@@ -128,7 +128,7 @@ if __name__ == "__main__":
         conf_thres=0.5,
         nms_thres=0.5,
         img_size=opt.img_size,
-        batch_size=8,
+        batch_size=4,
     )
 
     #print("Average Precisions:")
