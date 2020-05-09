@@ -7,7 +7,7 @@ from torch.autograd import Variable
 import numpy as np
 
 from utils.parse_config import *
-from utils.new_utils import build_targets, to_cpu, non_max_suppression
+from utils.new_utils import build_targets, to_cpu, non_max_suppression, xyxy2xywh
 
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
@@ -278,6 +278,7 @@ class ROILayer(nn.Module):
         y_inpt = torch.zeros([num_samples, self.num_tiles, self.num_classes])
         for image_i, image_pred in enumerate(objects):
             num_pred = len(image_pred)
+            image_pred[..., :4] = xyxy2xywh(image_pred[..., :4])
             x_coordinate = image_pred[..., 0]
             y_coordinate = image_pred[..., 1]
             x_tiles = x_coordinate // self.tile_size
