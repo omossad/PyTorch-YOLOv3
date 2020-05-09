@@ -323,7 +323,7 @@ class ROILayer(nn.Module):
         if 1 == 2:
             return x,y, 0
         else:
-            new_target = torch.zeros([num_samples,8], dtype=torch.int32)
+            new_target = torch.zeros([num_samples, self.num_tiles], dtype=torch.int32)
             new_target[..., 4] = 1
             tx = new_target
             ty = new_target
@@ -334,11 +334,11 @@ class ROILayer(nn.Module):
             # Loss : Mask outputs to ignore non-existing objects (except with conf. loss)
             print('SHAPE of LABEL')
             print(x.shape)
-            print('SHAPE of TARGET')
-            print(tx.shape)
+
             _, targets_x = tx.max(dim=0)
             _, targets_y = ty.max(dim=0)
-
+            print('SHAPE of TARGET')
+            print(targets_x.shape)
             loss_x = self.loss_func(x, targets_x)
             loss_y = self.loss_func(y, targets_y)
             total_loss = loss_x + loss_y
