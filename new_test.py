@@ -48,7 +48,7 @@ def evaluate(model, path, conf_thres, nms_thres, img_size, batch_size):
             outputs_x, outputs_y = model(imgs)
             #outputs = non_max_suppression(outputs, conf_thres=conf_thres, nms_thres=nms_thres)
 
-        sample_metrics += get_batch_statistic(outputs_x, outputs_y, targets, iou_threshold=iou_thres)
+        sample_metrics += get_batch_statistic(outputs_x, outputs_y, targets)
 
     # Concatenate sample statistics
     tot_acc, x_acc, y_acc = [np.concatenate(x, 0) for x in list(zip(*sample_metrics))]

@@ -148,7 +148,7 @@ def compute_ap(recall, precision):
     ap = np.sum((mrec[i + 1] - mrec[i]) * mpre[i + 1])
     return ap
 
-def get_batch_statistic(outputs_x, outputs_y, targets, iou_threshold):
+def get_batch_statistic(outputs_x, outputs_y, targets):
     """ Compute Horizontal, Vertical and Combined tile accuracy per sample """
     print('AS RECEIVED')
     print('Outputs x')
