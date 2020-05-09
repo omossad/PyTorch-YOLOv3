@@ -456,7 +456,7 @@ class Darknet(nn.Module):
             layer_outputs.append(x)
         #yolo_outputs = to_cpu(torch.cat(yolo_outputs, 1))
         #yolo_outputs = to_cpu(yolo_outputs)
-        return roi_x, roi_y if targets is None else (roi_loss, roi_x, roi_y)
+        return (roi_x, roi_y) if targets is None else (roi_loss, roi_x, roi_y)
         #print('AFTER')
         #print(yolo_outputs.shape)
         #print(loss)
