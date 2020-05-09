@@ -131,6 +131,10 @@ if __name__ == "__main__":
                 formats = {m: "%.6f" for m in metrics}
                 #formats["grid_size"] = "%2d"
                 #formats["cls_acc"] = "%.2f%%"
+                print('THIS IS I')
+                print(i)
+                print(metric)
+                print(model.roi_layer)
                 row_metrics = [formats[metric] % roi.metrics.get(metric, 0) for roi in model.roi_layer]
                 metric_table += [[metric, *row_metrics]]
 
