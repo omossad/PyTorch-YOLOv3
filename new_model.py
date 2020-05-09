@@ -202,7 +202,7 @@ class YOLOLayer(nn.Module):
         )
         #print('OUT SHAPE')
         #print(output.shape)
-        return output, 0
+        return output
         #if targets is None:
         #    return output, 0
         #else:
@@ -338,8 +338,8 @@ class ROILayer(nn.Module):
         #print('X after MODEL')
         #print(x.shape)
 
-        #if targets is None:
-        if 1 == 2:
+        if targets is None:
+        #if 1 == 2:
             return x,y, 0
         else:
             new_target = torch.zeros([num_samples, self.num_tiles])
@@ -406,13 +406,14 @@ class Darknet(nn.Module):
             elif module_def["type"] == "yolo":
                 #print('BEFORE')
                 #print(x.shape)
-                x, layer_loss = module[0](x, targets, img_dim)
+                #x, layer_loss = module[0](x, targets, img_dim)
+                x = module[0](x, img_dim=img_dim)
                 #loss += layer_loss
                 yolo_outputs.append(x)
             elif module_def["type"] == "roi":
                 #print(yolo_outputs)
                 yolo_outputs = torch.cat(yolo_outputs, 1)
-                roi_x, roi_y, roi_loss = module[0](yolo_outputs)
+                roi_x, roi_y, roi_loss = module[0](yolo_outputs, targets)
                 loss = roi_loss
                 #print('ROI LOSS')
                 #print(roi_loss)
