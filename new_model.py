@@ -291,8 +291,8 @@ class ROILayer(nn.Module):
                 #y_tile = y_coordinate.data.tolist()[i] // self.tile_size
                 x_tile = max(x_tiles.data.tolist()[i], 0)
                 y_tile = max(y_tiles.data.tolist()[i], 0)
-                x_tile = min(x_tiles.data.tolist()[i], self.num_tiles)
-                y_tile = min(y_tiles.data.tolist()[i], self.num_tiles)
+                x_tile = min(x_tiles.data.tolist()[i], self.num_tiles-1)
+                y_tile = min(y_tiles.data.tolist()[i], self.num_tiles-1)
                 s_obj  = obj_class.data.tolist()[i]
                 s_conf = obj_conf.data.tolist()[i]
                 print(str(x_coordinate.data.tolist()[i]) + ' ' + str(x_coordinate.data.tolist()[i]))
