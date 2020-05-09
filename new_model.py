@@ -263,7 +263,7 @@ class YOLOLayer(nn.Module):
 class ROILayer(nn.Module):
     """ROI layer"""
 
-    def __init__(self, num_classes=80, num_tiles=8, img_dim=608, conf_thes=0.3, nms_thes=0.2):
+    def __init__(self, num_classes=80, num_tiles=8, img_dim=608, conf_thes=0.5, nms_thes=0.2):
         super(ROILayer, self).__init__()
         self.num_classes = num_classes
         self.img_dim = img_dim
@@ -308,24 +308,27 @@ class ROILayer(nn.Module):
         objects = non_max_suppression(x, self.conf_thres, self.nms_thres)
         x_inpt = torch.zeros([num_samples, self.num_tiles, self.num_classes]).type(FloatTensor)
         y_inpt = torch.zeros([num_samples, self.num_tiles, self.num_classes]).type(FloatTensor)
-        for image_i, image_pred in enumerate(objects):
-            num_pred = len(image_pred)
-            image_pred[..., :4] = xyxy2xywh(image_pred[..., :4])
-            x_tiles = (image_pred[..., 0] // self.tile_size).int()
-            y_tiles = (image_pred[..., 1] // self.tile_size).int()
-            obj_class    = image_pred[..., 6].int()
-            obj_conf     = image_pred[..., 4]
-            for i in range(num_pred):
-                x_tile = max(x_tiles.data.tolist()[i], 0)
-                y_tile = max(y_tiles.data.tolist()[i], 0)
-                x_tile = min(x_tiles.data.tolist()[i], self.num_tiles-1)
-                y_tile = min(y_tiles.data.tolist()[i], self.num_tiles-1)
-                s_obj  = obj_class.data.tolist()[i]
-                s_conf = obj_conf.data.tolist()[i]
-                #print(str(x_coordinate.data.tolist()[i]) + ' ' + str(x_coordinate.data.tolist()[i]))
-                #print(str(image_i) + ' ' + str(x_tile) + ' ' + str(y_tile) + ' ' + str(s_obj) + ' ' + str(s_conf) + '\n')
-                x_inpt[image_i][x_tile][s_obj] += s_conf
-                y_inpt[image_i][y_tile][s_obj] += s_conf
+        if objects is None:
+            continue
+        else:
+            for image_i, image_pred in enumerate(objects):
+                num_pred = len(image_pred)
+                image_pred[..., :4] = xyxy2xywh(image_pred[..., :4])
+                x_tiles = (image_pred[..., 0] // self.tile_size).int()
+                y_tiles = (image_pred[..., 1] // self.tile_size).int()
+                obj_class    = image_pred[..., 6].int()
+                obj_conf     = image_pred[..., 4]
+                for i in range(num_pred):
+                    x_tile = max(x_tiles.data.tolist()[i], 0)
+                    y_tile = max(y_tiles.data.tolist()[i], 0)
+                    x_tile = min(x_tiles.data.tolist()[i], self.num_tiles-1)
+                    y_tile = min(y_tiles.data.tolist()[i], self.num_tiles-1)
+                    s_obj  = obj_class.data.tolist()[i]
+                    s_conf = obj_conf.data.tolist()[i]
+                    #print(str(x_coordinate.data.tolist()[i]) + ' ' + str(x_coordinate.data.tolist()[i]))
+                    #print(str(image_i) + ' ' + str(x_tile) + ' ' + str(y_tile) + ' ' + str(s_obj) + ' ' + str(s_conf) + '\n')
+                    x_inpt[image_i][x_tile][s_obj] += s_conf
+                    y_inpt[image_i][y_tile][s_obj] += s_conf
 
         #print('X before model')
         #print(x_inpt)
