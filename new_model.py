@@ -274,7 +274,7 @@ class ROILayer(nn.Module):
         self.metrics = {}
         self.tile_size = self.img_dim // self.num_tiles
         #self.loss_func = nn.CrossEntropyLoss()
-        self.fully_connected = nn.Sequential(
+        self.fc_net_x = nn.Sequential(
             nn.Dropout(),
             nn.Linear(self.num_classes * self.num_tiles, 256),
             nn.BatchNorm1d(256),
@@ -284,8 +284,16 @@ class ROILayer(nn.Module):
             nn.ReLU(inplace=True),
             nn.Linear(128, self.num_tiles)
         )
-        self.fc_net_x = self.fully_connected
-        self.fc_net_y = self.fully_connected
+        self.fc_net_y = nn.Sequential(
+            nn.Dropout(),
+            nn.Linear(self.num_classes * self.num_tiles, 256),
+            nn.BatchNorm1d(256),
+            nn.ReLU(inplace=True),
+            nn.Linear(256, 128),
+            nn.BatchNorm1d(128),
+            nn.ReLU(inplace=True),
+            nn.Linear(128, self.num_tiles)
+        )
 
     def forward(self, x, targets=None, img_dim=None):
         #print('INPUT SHAPE')
@@ -297,8 +305,8 @@ class ROILayer(nn.Module):
         ByteTensor = torch.cuda.ByteTensor if x.is_cuda else torch.ByteTensor
         total_loss = 0
         objects = non_max_suppression(x, self.conf_thres, self.nms_thres)
-        x_inpt = torch.zeros([num_samples, self.num_tiles, self.num_classes])
-        y_inpt = torch.zeros([num_samples, self.num_tiles, self.num_classes])
+        x_inpt = torch.zeros([num_samples, self.num_tiles, self.num_classes]).cuda()
+        y_inpt = torch.zeros([num_samples, self.num_tiles, self.num_classes]).cuda()
         for image_i, image_pred in enumerate(objects):
             num_pred = len(image_pred)
             image_pred[..., :4] = xyxy2xywh(image_pred[..., :4])
@@ -323,12 +331,8 @@ class ROILayer(nn.Module):
         #print('Y before model')
         #print(y_inpt.shape)
         x = x_inpt.view(x_inpt.size(0), -1)
-        x = x.cuda()
-        print('X before model')
-        print(x_inpt)
         x = self.fc_net_x(x)
         y = y_inpt.view(y_inpt.size(0), -1)
-        y = y.cuda()
         y = self.fc_net_y(y)
         #print('X after MODEL')
         #print(x.shape)
@@ -412,8 +416,8 @@ class Darknet(nn.Module):
                 print('ROI LOSS')
                 print(roi_loss)
             layer_outputs.append(x)
-        yolo_outputs = to_cpu(torch.cat(yolo_outputs, 1))
-
+        #yolo_outputs = to_cpu(torch.cat(yolo_outputs, 1))
+        yolo_outputs = to_cpu(yolo_outputs)
 
         #print('AFTER')
         #print(yolo_outputs.shape)
