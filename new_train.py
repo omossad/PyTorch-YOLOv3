@@ -78,20 +78,23 @@ if __name__ == "__main__":
     optimizer = torch.optim.Adam(model.parameters())
 
     metrics = [
-        "grid_size",
+    #    "grid_size",
+    #    "loss",
+    #    "x",
+    #    "y",
+    #    "w",
+    #    "h",
+    #    "conf",
+    #    "cls",
+    #    "cls_acc",
+    #    "recall50",
+    #    "recall75",
+    #    "precision",
+    #    "conf_obj",
+    #    "conf_noobj",
+        "loss_x",
+        "loss_y",
         "loss",
-        "x",
-        "y",
-        "w",
-        "h",
-        "conf",
-        "cls",
-        "cls_acc",
-        "recall50",
-        "recall75",
-        "precision",
-        "conf_obj",
-        "conf_noobj",
     ]
     #model = torch.nn.DataParallel(model, device_ids=[0, 1]).cuda()
     for epoch in range(opt.epochs):
@@ -121,26 +124,28 @@ if __name__ == "__main__":
 
             log_str = "\n---- [Epoch %d/%d, Batch %d/%d] ----\n" % (epoch, opt.epochs, batch_i, len(dataloader))
 
-            metric_table = [["Metrics", *[f"YOLO Layer {i}" for i in range(len(model.yolo_layers))]]]
+            #metric_table = [["Metrics", *[f"YOLO Layer {i}" for i in range(len(model.yolo_layers))]]]
 
             # Log metrics at each YOLO layer
             for i, metric in enumerate(metrics):
-                formats = {m: "%.6f" for m in metrics}
-                formats["grid_size"] = "%2d"
-                formats["cls_acc"] = "%.2f%%"
-                row_metrics = [formats[metric] % yolo.metrics.get(metric, 0) for yolo in model.yolo_layers]
-                metric_table += [[metric, *row_metrics]]
+            #    formats = {m: "%.6f" for m in metrics}
+            #    formats["grid_size"] = "%2d"
+            #    formats["cls_acc"] = "%.2f%%"
+            #    row_metrics = [formats[metric] % yolo.metrics.get(metric, 0) for yolo in model.yolo_layers]
+            #    metric_table += [[metric, *row_metrics]]
 
                 # Tensorboard logging
-                tensorboard_log = []
-                for j, yolo in enumerate(model.yolo_layers):
-                    for name, metric in yolo.metrics.items():
-                        if name != "grid_size":
-                            tensorboard_log += [(f"{name}_{j+1}", metric)]
-                tensorboard_log += [("loss", loss.item())]
-                logger.list_of_scalars_summary(tensorboard_log, batches_done)
+            #    tensorboard_log = []
+            #    for j, yolo in enumerate(model.yolo_layers):
+            #        for name, metric in yolo.metrics.items():
+            #            if name != "grid_size":
+            #                tensorboard_log += [(f"{name}_{j+1}", metric)]
+            #    tensorboard_log += [("loss", loss.item())]
+            #    logger.list_of_scalars_summary(tensorboard_log, batches_done)
 
-            log_str += AsciiTable(metric_table).table
+            #log_str += AsciiTable(metric_table).table
+            log_str += f"\nX loss {loss_x.item()}"
+            log_str += f"\nY loss {loss_y.item()}"
             log_str += f"\nTotal loss {loss.item()}"
 
             # Determine approximate time left for epoch
@@ -155,29 +160,29 @@ if __name__ == "__main__":
         if epoch % opt.evaluation_interval == 0:
             print("\n---- Evaluating Model ----")
             # Evaluate the model on the validation set
-            precision, recall, AP, f1, ap_class = evaluate(
-                model,
-                path=valid_path,
-                iou_thres=0.5,
-                conf_thres=0.5,
-                nms_thres=0.5,
-                img_size=opt.img_size,
-                batch_size=8,
-            )
-            evaluation_metrics = [
-                ("val_precision", precision.mean()),
-                ("val_recall", recall.mean()),
-                ("val_mAP", AP.mean()),
-                ("val_f1", f1.mean()),
-            ]
-            logger.list_of_scalars_summary(evaluation_metrics, epoch)
+            #precision, recall, AP, f1, ap_class = evaluate(
+            #    model,
+            #    path=valid_path,
+            #    iou_thres=0.5,
+            #    conf_thres=0.5,
+            #    nms_thres=0.5,
+            #    img_size=opt.img_size,
+            #    batch_size=8,
+            #)
+            #evaluation_metrics = [
+            #    ("val_precision", precision.mean()),
+            #    ("val_recall", recall.mean()),
+            #    ("val_mAP", AP.mean()),
+            #    ("val_f1", f1.mean()),
+            #]
+            #logger.list_of_scalars_summary(evaluation_metrics, epoch)
 
             # Print class APs and mAP
-            ap_table = [["Index", "Class name", "AP"]]
-            for i, c in enumerate(ap_class):
-                ap_table += [[c, class_names[c], "%.5f" % AP[i]]]
-            print(AsciiTable(ap_table).table)
-            print(f"---- mAP {AP.mean()}")
+            #ap_table = [["Index", "Class name", "AP"]]
+            #for i, c in enumerate(ap_class):
+            #    ap_table += [[c, class_names[c], "%.5f" % AP[i]]]
+            #print(AsciiTable(ap_table).table)
+            #print(f"---- mAP {AP.mean()}")
 
         if epoch % opt.checkpoint_interval == 0:
             torch.save(model.state_dict(), f"checkpoints/yolov3_ckpt_%d.pth" % epoch)

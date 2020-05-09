@@ -347,7 +347,12 @@ class ROILayer(nn.Module):
             #loss_x = self.loss_func(x, targets_x)
             #loss_y = self.loss_func(y, targets_y)
             total_loss = loss_x + loss_y
-
+            self.metrics = {
+                "loss_x": to_cpu(loss_x).item(),
+                "loss_y": to_cpu(loss_y).item(),
+                "loss": to_cpu(total_loss).item(),
+            }
+            
             return x,y, total_loss
 
 
