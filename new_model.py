@@ -272,6 +272,7 @@ class ROILayer(nn.Module):
         LongTensor = torch.cuda.LongTensor if x.is_cuda else torch.LongTensor
         ByteTensor = torch.cuda.ByteTensor if x.is_cuda else torch.ByteTensor
         total_loss = 0
+        prediction = x
         for image_i, image_pred in enumerate(prediction):
             image_pred = image_pred[image_pred[:, 4] >= conf_thres]
             score = image_pred[:, 4] * image_pred[:, 5:].max(1)[0]
