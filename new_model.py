@@ -317,16 +317,16 @@ class ROILayer(nn.Module):
                 x_inpt[image_i][x_tile][s_obj] += s_conf
                 y_inpt[image_i][y_tile][s_obj] += s_conf
 
-        print('X before model')
-        print(x_inpt.shape)
-        print('Y before model')
-        print(y_inpt.shape)
+        #print('X before model')
+        #print(x_inpt.shape)
+        #print('Y before model')
+        #print(y_inpt.shape)
         x = x_inpt.view(x_inpt.size(0), -1)
         x = self.fc_net_x(x)
         y = y_inpt.view(y_inpt.size(0), -1)
         y = self.fc_net_x(y)
-        print('X after MODEL')
-        print(x.shape)
+        #print('X after MODEL')
+        #print(x.shape)
 
         #if targets is None:
         if 1 == 2:
@@ -341,6 +341,10 @@ class ROILayer(nn.Module):
 
 
             # Loss : Mask outputs to ignore non-existing objects (except with conf. loss)
+            print('SHAPE of LABEL')
+            print(x.shape)
+            print('SHAPE of TARGET')
+            print(tx.shape)
             loss_x = self.ce_loss(x, tx)
             loss_y = self.ce_loss(y, ty)
             total_loss = loss_x + loss_y
