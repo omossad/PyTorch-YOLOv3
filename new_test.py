@@ -33,7 +33,7 @@ def evaluate(model, path, conf_thres, nms_thres, img_size, batch_size):
     Tensor = torch.cuda.FloatTensor if torch.cuda.is_available() else torch.FloatTensor
 
     #labels = []
-    sample_metrics = []  # List of tuples (TP, confs, pred)
+    temp_metrics = []  # List of tuples (TP, confs, pred)
     #sample_metrics = torch.zeros((1,3)).type(Tensor)
     #sample_metrics = torch.cuda.FloatTensor()
     for batch_i, (_, imgs, targets) in enumerate(tqdm.tqdm(dataloader, desc="Detecting objects")):
@@ -51,11 +51,13 @@ def evaluate(model, path, conf_thres, nms_thres, img_size, batch_size):
             #outputs = non_max_suppression(outputs, conf_thres=conf_thres, nms_thres=nms_thres)
         batch_statistics = get_batch_statistic(outputs_x, outputs_y, targets)
         print('HERE')
-        print(sample_metrics)
+        print(temp_metrics)
         print(batch_statistics)
-        sample_metrics.append(batch_statistics)
+        temp_metrics.append(batch_statistics)
         #sample_metrics += get_batch_statistic(outputs_x, outputs_y, targets)
         #sample_metrics = torch.stack((sample_metrics, batch_statistics.type(Tensor)))
+    sample_metrics = torch.Tensor(len(temp_metrics), 1, 3)
+    torch.cat(temp_metrics, out=sample_metrics)
     print('RESULTS')
     print(sample_metrics)
     sample_metrics = torch.FloatTensor(sample_metrics)
