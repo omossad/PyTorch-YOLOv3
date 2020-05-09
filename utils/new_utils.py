@@ -186,12 +186,12 @@ def get_batch_statistic(outputs_x, outputs_y, targets):
     acc_x = x_score.mean()
     acc_y = y_score.mean()
     acc   = overall.mean()
-    print('HEROS')
-    print(acc.item())
-    print(acc_x.data[0])
-    print(to_cpu(acc_y))
-    #batch_metrics =
-    batch_metrics = torch.stack((to_cpu(acc), to_cpu(acc_x), to_cpu(acc_y))).view(1,-1)
+    #print('HEROS')
+    #print(acc.item())
+    #print(acc_x.data[0])
+    #print(to_cpu(acc_y))
+    batch_metrics = torch.tensor([acc.item(), acc_x.item(), acc_y.item()])
+    #batch_metrics = torch.stack((to_cpu(acc), to_cpu(acc_x), to_cpu(acc_y))).view(1,-1)
     #batch_metrics.append([acc, acc_x, acc_y])
     #for sample_i in range(len(outputs)):
 
