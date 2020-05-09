@@ -49,9 +49,12 @@ def evaluate(model, path, conf_thres, nms_thres, img_size, batch_size):
         with torch.no_grad():
             outputs_x, outputs_y = model(imgs)
             #outputs = non_max_suppression(outputs, conf_thres=conf_thres, nms_thres=nms_thres)
-
+        batch_statistics = get_batch_statistic(outputs_x, outputs_y, targets)
+        print('HERE')
+        print(sample_metrics)
+        print(batch_statistics)
         #sample_metrics += get_batch_statistic(outputs_x, outputs_y, targets)
-        sample_metrics = torch.stack((sample_metrics, get_batch_statistic(outputs_x, outputs_y, targets)))
+        sample_metrics = torch.stack((sample_metrics, batch_statistics.type(Tensor)))
     print('RESULTS')
     print(sample_metrics)
     # Concatenate sample statistics
