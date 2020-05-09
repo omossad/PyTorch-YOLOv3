@@ -187,7 +187,7 @@ def get_batch_statistic(outputs_x, outputs_y, targets):
     acc_y = y_score.mean()
     acc   = overall.mean()
     print('HEROS')
-    print(acc.data[0])
+    print(acc.item())
     print(acc_x.data[0])
     print(to_cpu(acc_y))
     #batch_metrics =
