@@ -293,7 +293,7 @@ class ROILayer(nn.Module):
                 s_conf = obj_conf.data.tolist()[i]
                 x_inpt[image_i][x_tile][s_obj] += s_conf
                 x_inpt[image_i][y_tile][s_obj] += s_conf
-                print(str(image_i) + str(x_tile) + str(y_tile) + str(s_obj) + str(s_conf))
+                print(str(image_i) + ' ' + str(x_tile) + ' ' + str(y_tile) + ' ' + str(s_obj) + ' ' + str(s_conf) + '\n')
         print('OBJECTS SHAPE')
         print(len(objects))
         print('X after processing')
