@@ -110,7 +110,8 @@ if __name__ == "__main__":
             targets = Variable(targets.to(device), requires_grad=False)
             #print('TARGET VAR')
             #print(targets)
-            loss, outputs = model(imgs, targets)
+            #loss, outputs = model(imgs, targets)
+            loss, outputs_x, outputs_y = model(imgs, targets)
             loss.backward()
 
             if batches_done % opt.gradient_accumulations:
@@ -134,7 +135,7 @@ if __name__ == "__main__":
                 print('THIS IS I')
                 print(i)
                 print(metric)
-                print(model.roi_layer)
+                print(model.roi_layer[0].metrics)
                 row_metrics = [formats[metric] % roi.metrics.get(metric, 0) for roi in model.roi_layer]
                 metric_table += [[metric, *row_metrics]]
 

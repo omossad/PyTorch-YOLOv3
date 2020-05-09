@@ -418,13 +418,13 @@ class Darknet(nn.Module):
                 #print(roi_loss)
             layer_outputs.append(x)
         #yolo_outputs = to_cpu(torch.cat(yolo_outputs, 1))
-        yolo_outputs = to_cpu(yolo_outputs)
-
+        #yolo_outputs = to_cpu(yolo_outputs)
+        return (roi_loss, roi_x, roi_y)
         #print('AFTER')
         #print(yolo_outputs.shape)
         #print(loss)
         #return (loss, yolo_outputs)
-        return yolo_outputs if targets is None else (loss, yolo_outputs)
+        #return yolo_outputs if targets is None else (loss, yolo_outputs)
 
     def load_darknet_weights(self, weights_path):
         """Parses and loads the weights stored in 'weights_path'"""
