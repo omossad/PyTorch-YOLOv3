@@ -274,7 +274,7 @@ class ROILayer(nn.Module):
             nn.Linear(128, self.num_tiles)
         )
 
-        elf.fc_net_y = nn.Sequential(
+        self.fc_net_y = nn.Sequential(
             nn.Dropout(),
             nn.Linear(self.num_classes * self.num_tiles, 256),
             nn.BatchNorm1d(256),
