@@ -34,8 +34,8 @@ def evaluate(model, path, conf_thres, nms_thres, img_size, batch_size):
 
     #labels = []
     #sample_metrics = []  # List of tuples (TP, confs, pred)
-    #sample_metrics = torch.zeros((1,3)).type(Tensor)
-    sample_metrics = Tensor
+    sample_metrics = torch.zeros((1,3)).type(Tensor)
+    #sample_metrics = Tensor
     for batch_i, (_, imgs, targets) in enumerate(tqdm.tqdm(dataloader, desc="Detecting objects")):
 
         # Extract labels
