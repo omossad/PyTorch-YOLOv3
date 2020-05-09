@@ -274,7 +274,7 @@ class ROILayer(nn.Module):
         total_loss = 0
         prediction = x
         for image_i, image_pred in enumerate(prediction):
-            image_pred = image_pred[image_pred[:, 4] >= conf_thres]
+            image_pred = image_pred[image_pred[:, 4] >= self.conf_thres]
             score = image_pred[:, 4] * image_pred[:, 5:].max(1)[0]
         objects = non_max_suppression(x, self.conf_thres, self.nms_thres)
         print('OBJECTS SHAPE')
