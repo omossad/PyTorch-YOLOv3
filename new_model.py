@@ -387,6 +387,8 @@ class ROILayer(nn.Module):
             x_score = torch.eq(pred_x, corr_x).type(FloatTensor)
             y_score = torch.eq(pred_y, corr_y).type(FloatTensor)
             overall = x_score * y_score
+            print('OVERALL')
+            print(overall)
             #overall = overall.bool()
             overall = overall.type(FloatTensor)
             acc_x = x_score.mean()
