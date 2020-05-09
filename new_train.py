@@ -5,7 +5,7 @@ from new_model import *
 from utils.new_utils import *
 from utils.new_datasets import *
 from utils.parse_config import *
-from test import evaluate
+from new_test import evaluate
 
 from terminaltables import AsciiTable
 
