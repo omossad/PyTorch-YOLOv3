@@ -127,6 +127,7 @@ class ListDataset(Dataset):
             #boxes[:, 4] *= h_factor / padded_h
 
             #targets = torch.zeros((len(boxes), 6))
+            targets = torch.zeros(1, 3))
             targets[:, 1:] = tiles
             #print(targets.shape)
 
