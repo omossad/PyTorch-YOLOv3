@@ -318,8 +318,8 @@ class ROILayer(nn.Module):
                 x_inpt[image_i][x_tile][s_obj] += s_conf
                 y_inpt[image_i][y_tile][s_obj] += s_conf
 
-        #print('X before model')
-        #print(x_inpt.shape)
+        print('X before model')
+        print(x_inpt)
         #print('Y before model')
         #print(y_inpt.shape)
         x = x_inpt.view(x_inpt.size(0), -1)
