@@ -288,8 +288,8 @@ class ROILayer(nn.Module):
             obj_class    = image_pred[..., 6].int()
             obj_conf     = image_pred[..., 4]
             for i in range(num_pred):
-                #x_tile = x_coordinate.data.tolist()[i] // self.tile_size
-                #y_tile = y_coordinate.data.tolist()[i] // self.tile_size
+                x_tile = x_coordinate.data.tolist()[i] // self.tile_size
+                y_tile = y_coordinate.data.tolist()[i] // self.tile_size
                 #x_tile = max(x_tiles.data.tolist()[i], 0)
                 #y_tile = max(y_tiles.data.tolist()[i], 0)
                 #x_tile = min(x_tiles.data.tolist()[i], self.num_tiles-1)
