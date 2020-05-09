@@ -79,6 +79,16 @@ def create_modules(module_defs):
             yolo_layer = YOLOLayer(anchors, num_classes, img_size)
             modules.add_module(f"yolo_{module_i}", yolo_layer)
         # Register module list and number of output filters
+
+        elif module_def["type"] == "roi":
+            img_size = int(hyperparams["height"])
+            num_classes = int(module_def["classes"])
+            num_tiles = int(module_def["tiles"])
+            conf_thes = float(module_def["conf_thes"])
+            nms_thes = float(module_def["nms_thes"])
+            roi_layer = ROILayer(num_classes, num_tiles, img_size, conf_thes, nms_thes)
+            modules.add_module(f"roi_{module_i}", roi_layer)
+
         module_list.append(modules)
         output_filters.append(filters)
 
@@ -364,8 +374,10 @@ class Darknet(nn.Module):
         super(Darknet, self).__init__()
         self.module_defs = parse_model_config(config_path)
         self.hyperparams, self.module_list = create_modules(self.module_defs)
+        print("MODULES")
+        print(self.module_list)
         self.yolo_layers = [layer[0] for layer in self.module_list if hasattr(layer[0], "metrics")]
-        self.roi_layer = ROILayer(80).cuda()
+        self.roi_layer = [layer[0] for layer in self.module_list if hasattr(layer[0], "metrics")]
         self.img_size = img_size
         self.seen = 0
         self.header_info = np.array([0, 0, 0, self.seen, 0], dtype=np.int32)
@@ -388,13 +400,16 @@ class Darknet(nn.Module):
                 x, layer_loss = module[0](x, targets, img_dim)
                 #loss += layer_loss
                 yolo_outputs.append(x)
+            elif module_def["type"] == "roi":
+                yolo_outputs = torch.cat(yolo_outputs, 1)
+                roi_x, roi_y, roi_loss = self.roi_layer(yolo_outputs)
+                loss = roi_loss
+                print('ROI LOSS')
+                print(roi_loss)
             layer_outputs.append(x)
         #yolo_outputs = to_cpu(torch.cat(yolo_outputs, 1))
-        yolo_outputs = torch.cat(yolo_outputs, 1)
-        roi_x, roi_y, roi_loss = self.roi_layer(yolo_outputs)
-        loss = roi_loss
-        print('ROI LOSS')
-        print(roi_loss)
+
+
         #print('AFTER')
         #print(yolo_outputs.shape)
         #print(loss)
