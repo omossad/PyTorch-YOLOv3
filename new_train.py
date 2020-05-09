@@ -40,7 +40,7 @@ if __name__ == "__main__":
     opt = parser.parse_args()
     print(opt)
 
-    logger = Logger("logs")
+    #logger = Logger("logs")
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -187,7 +187,7 @@ if __name__ == "__main__":
                 ("grid_x Accuracy", x_acc.mean()),
                 ("grid_y Accuracy", y_acc.mean()),
             ]
-            logger.list_of_scalars_summary(evaluation_metrics, epoch)
+            #logger.list_of_scalars_summary(evaluation_metrics, epoch)
 
             #evaluation_metrics = [
             #    ("val_precision", precision.mean()),
