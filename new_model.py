@@ -153,8 +153,8 @@ class YOLOLayer(nn.Module):
             .permute(0, 1, 3, 4, 2)
             .contiguous()
         )
-        print('AFTER')
-        print(prediction.shape)
+        #print('AFTER')
+        #print(prediction.shape)
         # Get outputs
         x = torch.sigmoid(prediction[..., 0])  # Center x
         y = torch.sigmoid(prediction[..., 1])  # Center y
@@ -260,10 +260,10 @@ class ROILayer(nn.Module):
         self.conf_thres = conf_thes
         self.nms_thres = nms_thes
         #self.mse_loss = nn.MSELoss()
-        self.bce_loss = nn.BCEWithLogitsLoss()
+        self.loss_func = nn.BCEWithLogitsLoss()
         self.metrics = {}
         self.tile_size = self.img_dim // self.num_tiles
-        self.loss_func = nn.CrossEntropyLoss()
+        #self.loss_func = nn.CrossEntropyLoss()
         self.fully_connected = nn.Sequential(
             nn.Dropout(),
             nn.Linear(self.num_classes * self.num_tiles, 256),
@@ -278,8 +278,8 @@ class ROILayer(nn.Module):
         self.fc_net_y = self.fully_connected
 
     def forward(self, x, targets=None, img_dim=None):
-        print('INPUT SHAPE')
-        print(x.shape)
+        #print('INPUT SHAPE')
+        #print(x.shape)
         num_samples = x.size(0)
         # Tensors for cuda support
         FloatTensor = torch.cuda.FloatTensor if x.is_cuda else torch.FloatTensor
@@ -332,18 +332,18 @@ class ROILayer(nn.Module):
 
 
             # Loss : Mask outputs to ignore non-existing objects (except with conf. loss)
-            print('SHAPE of LABEL')
-            print(x.shape)
+            #print('SHAPE of LABEL')
+            #print(x.shape)
 
-            _, targets_x = tx.max(dim=1)
-            _, targets_y = ty.max(dim=1)
-            print('SHAPE of TARGET')
-            print(targets_x.shape)
-            print(x)
-            print(y)
-            print(targets_x)
-            loss_x = self.bce_loss(x, tx)
-            loss_y = self.bce_loss(x, ty)
+            #_, targets_x = tx.max(dim=1)
+            #_, targets_y = ty.max(dim=1)
+            #print('SHAPE of TARGET')
+            #print(targets_x.shape)
+            #print(x)
+            #print(y)
+            #print(targets_x)
+            loss_x = self.loss_func(x, tx)
+            loss_y = self.loss_func(y, ty)
             #loss_x = self.loss_func(x, targets_x)
             #loss_y = self.loss_func(y, targets_y)
             total_loss = loss_x + loss_y
@@ -377,8 +377,8 @@ class Darknet(nn.Module):
                 layer_i = int(module_def["from"])
                 x = layer_outputs[-1] + layer_outputs[layer_i]
             elif module_def["type"] == "yolo":
-                print('BEFORE')
-                print(x.shape)
+                #print('BEFORE')
+                #print(x.shape)
                 x, layer_loss = module[0](x, targets, img_dim)
                 #loss += layer_loss
                 yolo_outputs.append(x)
