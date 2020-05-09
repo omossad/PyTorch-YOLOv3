@@ -286,7 +286,7 @@ class ROILayer(nn.Module):
             x_conf = image_pred[..., 4]
             print('X CONF')
             print(x_conf)
-            x_input[image_i, ...][x_class // self.tile_size][x_class] += x_conf
+            x_inpt[image_i, ...][x_class // self.tile_size][x_class] += x_conf
         print('OBJECTS SHAPE')
         print(len(objects))
         print('X after processing')
