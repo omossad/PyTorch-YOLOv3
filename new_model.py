@@ -344,11 +344,23 @@ class ROILayer(nn.Module):
         else:
             print('RECEIVED TARGETS')
             print(targets)
-            new_target = torch.zeros([num_samples, self.num_tiles])
-            new_target[..., 4] = 1
-            tx = new_target.type(FloatTensor)
-            ty = new_target.type(FloatTensor)
-            print('REQUIRED TARGETS')
+            #new_target = torch.zeros([num_samples, self.num_tiles])
+            #new_target[..., 4] = 1
+            x_label = targets[..., 1]
+            y_label = targets[..., 2]
+            print('X TARGETS')
+            print(x_label)
+            #y = torch.LongTensor(batch_size,3).random_() % nb_digits
+            tx = torch.zeros([num_samples, self.num_tiles]).type(FloatTensor)
+            ty = torch.zeros([num_samples, self.num_tiles]).type(FloatTensor)
+            #y_onehot = torch.FloatTensor(batch_size, nb_digits)
+            #y_onehot.zero_()
+            #y_onehot.scatter_(1, y, 1)
+            tx.scatter_(1, x_label, 1)
+            ty.scatter_(1, y_label, 1)
+            #tx = new_target.type(FloatTensor)
+            #ty = new_target.type(FloatTensor)
+            print('ONE HOT TARGETS')
             print(tx)
 
 
