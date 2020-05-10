@@ -60,7 +60,7 @@ def evaluate(model, path, conf_thres, nms_thres, img_size, batch_size):
     torch.cat(temp_metrics, out=sample_metrics)
     print('OVERALL RESULTS')
     print(sample_metrics)
-    sample_metrics = torch.FloatTensor(sample_metrics)
+    sample_metrics = torch.FloatTensor(sample_metrics.view(-1,3))
     # Concatenate sample statistics
     #tot_acc, x_acc, y_acc = [np.concatenate(x, 0) for x in list(zip(*sample_metrics))]
     #tot_acc, x_acc, y_acc = [torch.cat(x, 0) for x in list(zip(*sample_metrics))]

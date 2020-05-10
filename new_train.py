@@ -167,8 +167,8 @@ if __name__ == "__main__":
             tot_acc, x_acc, y_acc = evaluate(
                 model,
                 path=valid_path,
-                conf_thres=0.5,
-                nms_thres=0.5,
+                conf_thres=0.3,
+                nms_thres=0.2,
                 img_size=opt.img_size,
                 batch_size=8,
             )
