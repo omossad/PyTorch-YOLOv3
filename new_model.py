@@ -271,10 +271,10 @@ class ROILayer(nn.Module):
         self.conf_thres = conf_thes
         self.nms_thres = nms_thes
         #self.mse_loss = nn.MSELoss()
-        self.loss_func = nn.BCEWithLogitsLoss()
+        #self.loss_func = nn.BCEWithLogitsLoss()
         self.metrics = {}
         self.tile_size = self.img_dim // self.num_tiles
-        #self.loss_func = nn.CrossEntropyLoss()
+        self.loss_func = nn.CrossEntropyLoss()
         self.fc_net_x = nn.Sequential(
             nn.Linear(self.num_classes * self.num_tiles, 256),
             nn.BatchNorm1d(256),
