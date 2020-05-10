@@ -65,12 +65,15 @@ if __name__ == "__main__":
             model.load_darknet_weights(opt.pretrained_weights)
     for name, param in model.named_parameters():
         param.requires_grad = False
+
+    print('ROI')
+    for name, param in model.roi_layer[0].named_parameters():
+        param.requires_grad = True
         if param.requires_grad:
             print('PARAM')
             print(name)
             print(param)
-    print('ROI')
-    print(model.roi_layer[0])
+
     # Get dataloader
     dataset = ListDataset(train_path, augment=True, multiscale=opt.multiscale_training)
     dataloader = torch.utils.data.DataLoader(
