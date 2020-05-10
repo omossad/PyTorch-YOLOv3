@@ -440,6 +440,9 @@ class Darknet(nn.Module):
         self.header_info = np.array([0, 0, 0, self.seen, 0], dtype=np.int32)
 
     def forward(self, x, targets=None):
+        for name, param in model.named_parameters():
+            if param.requires_grad:
+                print name, param.data
         img_dim = x.shape[2]
         loss = 0
         layer_outputs, yolo_outputs = [], []
