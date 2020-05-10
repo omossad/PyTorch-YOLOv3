@@ -442,7 +442,9 @@ class Darknet(nn.Module):
     def forward(self, x, targets=None):
         for name, param in model.named_parameters():
             if param.requires_grad:
-                print name, param.data
+                print('PARAM')
+                print(name)
+                print(param.data)
         img_dim = x.shape[2]
         loss = 0
         layer_outputs, yolo_outputs = [], []
