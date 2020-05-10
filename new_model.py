@@ -376,14 +376,15 @@ class ROILayer(nn.Module):
             #print(x)
             #print(y)
             #print(targets_x)
-            loss_x = self.loss_func(x, tx)
-            loss_y = self.loss_func(y, ty)
+            loss_x = self.loss_func(x.type(LongTensor), tx.type(LongTensor))
+            loss_y = self.loss_func(y.type(LongTensor), ty.type(LongTensor))
             #print('PREDICTED')
             #print(x)
             _, pred_x = torch.max(x, 1)
             _, pred_y = torch.max(y, 1)
             _, corr_x = torch.max(tx, 1)
             _, corr_y = torch.max(tx, 1)
+
             x_score = torch.eq(pred_x, corr_x).type(FloatTensor)
             y_score = torch.eq(pred_y, corr_y).type(FloatTensor)
             overall = x_score * y_score
