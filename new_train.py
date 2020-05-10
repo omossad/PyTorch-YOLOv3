@@ -67,7 +67,7 @@ if __name__ == "__main__":
         if param.requires_grad:
             print('PARAM')
             print(name)
-            print(param.data)
+            print(param)
     # Get dataloader
     dataset = ListDataset(train_path, augment=True, multiscale=opt.multiscale_training)
     dataloader = torch.utils.data.DataLoader(
@@ -78,8 +78,8 @@ if __name__ == "__main__":
         pin_memory=True,
         collate_fn=dataset.collate_fn,
     )
-
-    optimizer = torch.optim.Adam(model.parameters())
+    #optimizer = torch.optim.Adam(model.parameters())
+    optimizer = torch.optim.Adam(filter(lambda p: p.requires_grad, model.parameters()))
 
     metrics = [
     #    "grid_size",
