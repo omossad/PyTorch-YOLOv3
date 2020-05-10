@@ -66,13 +66,13 @@ if __name__ == "__main__":
     for name, param in model.named_parameters():
         param.requires_grad = False
 
-    print('ROI')
+        #print('ROI')
     for name, param in model.roi_layer[0].named_parameters():
         param.requires_grad = True
-        if param.requires_grad:
-            print('PARAM')
-            print(name)
-            print(param)
+        #if param.requires_grad:
+        #    print('PARAM')
+        #    print(name)
+        #    print(param)
 
     # Get dataloader
     dataset = ListDataset(train_path, augment=True, multiscale=opt.multiscale_training)
