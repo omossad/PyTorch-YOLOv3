@@ -263,7 +263,7 @@ class YOLOLayer(nn.Module):
 class ROILayer(nn.Module):
     """ROI layer"""
 
-    def __init__(self, num_classes=80, num_tiles=8, img_dim=608, conf_thes=0.5, nms_thes=0.2):
+    def __init__(self, num_classes=80, num_tiles=8, img_dim=608, conf_thes=0.3, nms_thes=0.2):
         super(ROILayer, self).__init__()
         self.num_classes = num_classes
         self.img_dim = img_dim
@@ -276,20 +276,20 @@ class ROILayer(nn.Module):
         self.tile_size = self.img_dim // self.num_tiles
         #self.loss_func = nn.CrossEntropyLoss()
         self.fc_net_x = nn.Sequential(
-            nn.Dropout(),
             nn.Linear(self.num_classes * self.num_tiles, 256),
             nn.BatchNorm1d(256),
             nn.ReLU(inplace=True),
+            nn.Dropout(),
             nn.Linear(256, 128),
             nn.BatchNorm1d(128),
             nn.ReLU(inplace=True),
             nn.Linear(128, self.num_tiles)
         )
         self.fc_net_y = nn.Sequential(
-            nn.Dropout(),
             nn.Linear(self.num_classes * self.num_tiles, 256),
             nn.BatchNorm1d(256),
             nn.ReLU(inplace=True),
+            nn.Dropout(),
             nn.Linear(256, 128),
             nn.BatchNorm1d(128),
             nn.ReLU(inplace=True),
