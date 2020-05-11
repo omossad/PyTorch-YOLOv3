@@ -349,11 +349,11 @@ class ROILayer(nn.Module):
         #x = self.fc_net_x(x)
         y_ = y_inpt.view(y_inpt.size(0), -1)
         x_cat = torch.cat((x_, y_), 1)
-        print(x_cat.shape)
         x_cat = self.fc_net(x_cat)
-        print(x_cat.shape)
-        x = x_cat[:self.num_tiles]
-        y = x_cat[self.num_tiles:]
+        x = x_cat[...,:self.num_tiles]
+        y = x_cat[...,self.num_tiles:]
+        print(x.shape)
+        print(y.shape)
         #y = self.fc_net_y(y)
         #print('X after MODEL')
         #print(x.shape)
