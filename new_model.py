@@ -423,8 +423,8 @@ class ROILayer(nn.Module):
                 "acc_y" : to_cpu(acc_y).item(),
                 "acc"   : to_cpu(acc).item(),
             }
-            return x,y, loss_x, loss_y
-            #return x,y, total_loss
+            #return x,y, loss_x, loss_y
+            return x,y, total_loss
 
 
 
@@ -472,8 +472,8 @@ class Darknet(nn.Module):
             layer_outputs.append(x)
         #yolo_outputs = to_cpu(torch.cat(yolo_outputs, 1))
         #yolo_outputs = to_cpu(yolo_outputs)
-        #return (roi_x, roi_y) if targets is None else (roi_loss, roi_x, roi_y)
-        return (roi_x, roi_y) if targets is None else (roi_lossX, roi_lossY, roi_x, roi_y)
+        return (roi_x, roi_y) if targets is None else (roi_loss, roi_x, roi_y)
+        #return (roi_x, roi_y) if targets is None else (roi_lossX, roi_lossY, roi_x, roi_y)
         #print('AFTER')
         #print(yolo_outputs.shape)
         #print(loss)

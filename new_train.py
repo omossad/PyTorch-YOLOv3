@@ -125,27 +125,28 @@ if __name__ == "__main__":
             #print('TARGET VAR')
             #print(targets)
             #loss, outputs = model(imgs, targets)
-            #loss, outputs_x, outputs_y = model(imgs, targets)
-            lossX, lossY, outputs_x, outputs_y = model(imgs, targets)
-            for name, param in model.roi_layer[0].named_parameters():
-                param.requires_grad = True
-            for name, param in model.roi_layer[0].fc_net_y.named_parameters():
-                print(name)
-                param.requires_grad = False
-            for name, param in model.roi_layer[0].fc_net_x.named_parameters():
-                param.requires_grad = True
-            lossX.backward()
+            loss, outputs_x, outputs_y = model(imgs, targets)
+            #lossX, lossY, outputs_x, outputs_y = model(imgs, targets)
+            #for name, param in model.roi_layer[0].named_parameters():
+            #    param.requires_grad = True
+            #for name, param in model.roi_layer[0].fc_net_y.named_parameters():
+            #    print(name)
+            #    param.requires_grad = False
+            #for name, param in model.roi_layer[0].fc_net_x.named_parameters():
+            #    param.requires_grad = True
+            #lossX.backward()
 
-            if batches_done % opt.gradient_accumulations:
+            #if batches_done % opt.gradient_accumulations:
                 # Accumulates gradient before each step
-                optimizer.step()
-                optimizer.zero_grad()
+            #    optimizer.step()
+            #    optimizer.zero_grad()
 
-            for name, param in model.roi_layer[0].named_parameters():
-                param.requires_grad = True
-            for name, param in model.roi_layer[0].fc_net_x.named_parameters():
-                param.requires_grad = False
-            lossY.backward()
+            #for name, param in model.roi_layer[0].named_parameters():
+            #    param.requires_grad = True
+            #for name, param in model.roi_layer[0].fc_net_x.named_parameters():
+            #    param.requires_grad = False
+            #lossY.backward()
+            loss.backward()
 
             if batches_done % opt.gradient_accumulations:
                 # Accumulates gradient before each step
@@ -176,13 +177,11 @@ if __name__ == "__main__":
             for name, metric in roi.metrics.items():
                         #if name != "grid_size":
                 tensorboard_log += [(f"{name} ", metric)]
-            tensorboard_log += [("loss", lossX.item())]
-            tensorboard_log += [("loss", lossY.item())]
+            tensorboard_log += [("loss", loss.item())]
             #logger.list_of_scalars_summary(tensorboard_log, batches_done)
 
             log_str += AsciiTable(metric_table).table
-            log_str += f"\nTotal lossX {lossX.item()}"
-            log_str += f"\nTotal lossY {lossX.item()}"
+            log_str += f"\nTotal loss {loss.item()}"
             # Determine approximate time left for epoch
             epoch_batches_left = len(dataloader) - (batch_i + 1)
             time_left = datetime.timedelta(seconds=epoch_batches_left * (time.time() - start_time) / (batch_i + 1))
