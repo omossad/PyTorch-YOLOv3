@@ -174,12 +174,12 @@ class YOLOLayer(nn.Module):
         # If grid size does not match current we compute new offsets
         if grid_size != self.grid_size:
             self.compute_grid_offsets(grid_size, cuda=x.is_cuda)
-
-        #print('AFTER COMPUTE')
-        #print('GRID X')
-        #print(self.grid_x)
-        #print('GRID Y')
-        #print(self.grid_y)
+        '''
+        print('AFTER COMPUTE')
+        print('GRID X')
+        print(self.grid_x)
+        print('GRID Y')
+        print(self.grid_y)
         print('ANCHORS W')
         print(self.anchor_w)
         print('ANCHORS H')
@@ -190,12 +190,15 @@ class YOLOLayer(nn.Module):
         print(torch.exp(w.data))
         print('ANCHOR W')
         print(self.anchor_w)
+        '''
         # Add offset and scale with anchors
         pred_boxes = FloatTensor(prediction[..., :4].shape)
         pred_boxes[..., 0] = x.data + self.grid_x
         pred_boxes[..., 1] = y.data + self.grid_y
-        pred_boxes[..., 2] = torch.exp(w.data) * self.anchor_w
-        pred_boxes[..., 3] = torch.exp(h.data) * self.anchor_h
+        #pred_boxes[..., 2] = torch.exp(w.data) * self.anchor_w
+        #pred_boxes[..., 3] = torch.exp(h.data) * self.anchor_h
+        pred_boxes[..., 2] = self.anchor_w
+        pred_boxes[..., 3] = self.anchor_h
         '''
         print('PRED BOXES')
         print(pred_boxes.shape)
@@ -243,8 +246,8 @@ class YOLOLayer(nn.Module):
             loss_conf_noobj = self.bce_loss(pred_conf[noobj_mask], tconf[noobj_mask])
             loss_conf = self.obj_scale * loss_conf_obj + self.noobj_scale * loss_conf_noobj
             loss_cls = self.bce_loss(pred_cls[obj_mask], tcls[obj_mask])
-            total_loss = loss_x + loss_y + loss_w + loss_h + loss_conf + loss_cls
-
+            #total_loss = loss_x + loss_y + loss_w + loss_h + loss_conf + loss_cls
+            total_loss = loss_x + loss_y + loss_conf
             # Metrics
             cls_acc = 100 * class_mask[obj_mask].mean()
             conf_obj = pred_conf[obj_mask].mean()
