@@ -128,8 +128,6 @@ class ListDataset(Dataset):
         if self.augment:
             if np.random.random() < 0.5:
                 img, targets = horisontal_flip(img, targets)
-        print('IMAGE')
-        print(img.shape)
         return img_path, img, targets
 
     def collate_fn(self, batch):
@@ -146,6 +144,8 @@ class ListDataset(Dataset):
         # Resize images to input shape
         imgs = torch.stack([resize(img, self.img_size) for img in imgs])
         self.batch_count += 1
+        print('IMAGE')
+        print(img.shape)
         return paths, imgs, targets
 
     def __len__(self):
