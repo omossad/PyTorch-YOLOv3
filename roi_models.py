@@ -134,7 +134,15 @@ class YOLOLayer(nn.Module):
         self.scaled_anchors = FloatTensor([(a_w / self.stride, a_h / self.stride) for a_w, a_h in self.anchors])
         self.anchor_w = self.scaled_anchors[:, 0:1].view((1, self.num_anchors, 1, 1))
         self.anchor_h = self.scaled_anchors[:, 1:2].view((1, self.num_anchors, 1, 1))
-
+        print('INIT')
+        print('GRID X')
+        print(self.grid_x)
+        print('GRID Y')
+        print(self.grid_y)
+        print('ANCHORS W')
+        print(self.anchor_w)
+        print('ANCHORS H')
+        print(self.anchor_h)
     def forward(self, x, targets=None, img_dim=None):
 
         # Tensors for cuda support
@@ -160,14 +168,24 @@ class YOLOLayer(nn.Module):
         # If grid size does not match current we compute new offsets
         if grid_size != self.grid_size:
             self.compute_grid_offsets(grid_size, cuda=x.is_cuda)
-
+        print('AFTER COMPUTE')
+        print('GRID X')
+        print(self.grid_x)
+        print('GRID Y')
+        print(self.grid_y)
+        print('ANCHORS W')
+        print(self.anchor_w)
+        print('ANCHORS H')
+        print(self.anchor_h)
         # Add offset and scale with anchors
         pred_boxes = FloatTensor(prediction[..., :4].shape)
         pred_boxes[..., 0] = x.data + self.grid_x
         pred_boxes[..., 1] = y.data + self.grid_y
         pred_boxes[..., 2] = torch.exp(w.data) * self.anchor_w
         pred_boxes[..., 3] = torch.exp(h.data) * self.anchor_h
-
+        print('PRED BOXES')
+        print(pred_boxes.shape)
+        print(pred_boxes)
         output = torch.cat(
             (
                 pred_boxes.view(num_samples, -1, 4) * self.stride,
@@ -176,7 +194,8 @@ class YOLOLayer(nn.Module):
             ),
             -1,
         )
-
+        print('OUT SHAPE')
+        print(output.shape)
         if targets is None:
             return output, 0
         else:
@@ -187,7 +206,15 @@ class YOLOLayer(nn.Module):
                 anchors=self.scaled_anchors,
                 ignore_thres=self.ignore_thres,
             )
-
+            print('AFTER BUILD TARGET')
+            print(iou_scores.shape)
+            print(class_mask.shape)
+            print(obj_mask.shape)
+            print(noobj_mask.shape)
+            print(tx.shape)
+            print(tw)
+            print(tcls.shape)
+            print(tconf.shape)
             # Loss : Mask outputs to ignore non-existing objects (except with conf. loss)
             loss_x = self.mse_loss(x[obj_mask], tx[obj_mask])
             loss_y = self.mse_loss(y[obj_mask], ty[obj_mask])
