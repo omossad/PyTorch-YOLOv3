@@ -285,7 +285,7 @@ class ROILayer(nn.Module):
             nn.ReLU(inplace=True),
             nn.Dropout(),
             nn.Linear(512, 256),
-            nn.BatchNorm1d(128),
+            nn.BatchNorm1d(256),
             nn.ReLU(inplace=True),
             nn.Dropout(),
             nn.Linear(256, 128),
