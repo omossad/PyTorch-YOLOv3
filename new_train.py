@@ -174,12 +174,13 @@ if __name__ == "__main__":
             for name, metric in roi.metrics.items():
                         #if name != "grid_size":
                 tensorboard_log += [(f"{name} ", metric)]
-            tensorboard_log += [("loss", loss.item())]
+            tensorboard_log += [("loss", lossX.item())]
+            tensorboard_log += [("loss", lossY.item())]
             #logger.list_of_scalars_summary(tensorboard_log, batches_done)
 
             log_str += AsciiTable(metric_table).table
-            log_str += f"\nTotal loss {loss.item()}"
-
+            log_str += f"\nTotal lossX {lossX.item()}"
+            log_str += f"\nTotal lossY {lossX.item()}"
             # Determine approximate time left for epoch
             epoch_batches_left = len(dataloader) - (batch_i + 1)
             time_left = datetime.timedelta(seconds=epoch_batches_left * (time.time() - start_time) / (batch_i + 1))
