@@ -309,6 +309,8 @@ class ROILayer(nn.Module):
         x_inpt = torch.zeros([num_samples, self.num_tiles, self.num_classes]).type(FloatTensor)
         y_inpt = torch.zeros([num_samples, self.num_tiles, self.num_classes]).type(FloatTensor)
         for image_i, image_pred in enumerate(objects):
+            print('OBJECTS')
+            print(image_pred)
             if image_pred is not None:
                 num_pred = len(image_pred)
                 image_pred[..., :4] = xyxy2xywh(image_pred[..., :4])
@@ -332,6 +334,8 @@ class ROILayer(nn.Module):
         #print(x_inpt)
         #print('Y before model')
         #print(y_inpt.shape)
+        print('INPUT')
+        print(x_inpt)
         x = x_inpt.view(x_inpt.size(0), -1)
         x = self.fc_net_x(x)
         y = y_inpt.view(y_inpt.size(0), -1)
