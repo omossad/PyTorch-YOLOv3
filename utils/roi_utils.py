@@ -272,11 +272,13 @@ def build_targets(pred_boxes, pred_cls, target, anchors, ignore_thres):
     nA = pred_boxes.size(1)
     nC = pred_cls.size(-1)
     nG = pred_boxes.size(2)
+    '''
     print('VARIABLES')
     print(nB)
     print(nA)
     print(nC)
     print(nG)
+    '''
     # Output tensors
     obj_mask = ByteTensor(nB, nA, nG, nG).fill_(0)
     noobj_mask = ByteTensor(nB, nA, nG, nG).fill_(1)
