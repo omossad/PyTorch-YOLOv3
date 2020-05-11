@@ -144,9 +144,9 @@ class YOLOLayer(nn.Module):
         print(self.anchor_w)
         print('ANCHORS H')
         print(self.anchor_h)
-        '''
         print('GRID SIZE')
         print(g)
+        '''
     def forward(self, x, targets=None, img_dim=None):
 
         # Tensors for cuda support
@@ -157,8 +157,8 @@ class YOLOLayer(nn.Module):
         self.img_dim = img_dim
         num_samples = x.size(0)
         grid_size = x.size(2)
-        print('IMAGE GRID SIZE')
-        print(grid_size)
+        #print('IMAGE GRID SIZE')
+        #print(grid_size)
         prediction = (
             x.view(num_samples, self.num_anchors, self.num_classes + 5, grid_size, grid_size)
             .permute(0, 1, 3, 4, 2)
