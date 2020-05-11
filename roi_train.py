@@ -1,11 +1,11 @@
 from __future__ import division
 
-from roi_model import *
+from roi_models import *
 from utils.logger import *
-from utils.utils import *
-from utils.datasets import *
+from utils.roi_utils import *
+from utils.roi_datasets import *
 from utils.parse_config import *
-from test import evaluate
+from roi_test import evaluate
 
 from terminaltables import AsciiTable
 
@@ -94,7 +94,7 @@ if __name__ == "__main__":
     ]
 
     for epoch in range(opt.epochs):
-        #print(model)
+        print(model)
         model.train()
         start_time = time.time()
         for batch_i, (_, imgs, targets) in enumerate(dataloader):

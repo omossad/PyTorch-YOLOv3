@@ -264,17 +264,9 @@ def non_max_suppression(prediction, conf_thres=0.5, nms_thres=0.4):
     return output
 
 
-def build_targets(grid_size, target):
-    ByteTensor = torch.cuda.ByteTensor if pred_boxes.is_cuda else torch.ByteTensor
-    #FloatTensor = torch.cuda.FloatTensor if pred_boxes.is_cuda else torch.FloatTensor
-    nB  = pred_boxes.size(0)
-    nGx = pred_cls.size(-1)
-    nGy = pred_boxes.size(1)
-    tx = FloatTensor(nB, nGx, nGy).fill_(0)
-    ty = FloatTensor(nB, nGx, nGy).fill_(0)
-
-def build_targets_(pred_boxes, pred_cls, target, anchors, ignore_thres):
-
+def build_targets(pred_boxes, pred_cls, target, anchors, ignore_thres):
+    print('TARGET')
+    print(target)
     ByteTensor = torch.cuda.ByteTensor if pred_boxes.is_cuda else torch.ByteTensor
     FloatTensor = torch.cuda.FloatTensor if pred_boxes.is_cuda else torch.FloatTensor
 
@@ -282,8 +274,6 @@ def build_targets_(pred_boxes, pred_cls, target, anchors, ignore_thres):
     nA = pred_boxes.size(1)
     nC = pred_cls.size(-1)
     nG = pred_boxes.size(2)
-    b, target_labels = target[:, :2].long().t()
-    
 
     # Output tensors
     obj_mask = ByteTensor(nB, nA, nG, nG).fill_(0)
