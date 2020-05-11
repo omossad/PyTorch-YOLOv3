@@ -276,7 +276,8 @@ class YOLOLayer(nn.Module):
                 "conf_noobj": to_cpu(conf_noobj).item(),
                 "grid_size": grid_size,
             }
-
+            print('OUTPUT')
+            print(output.shape)
             return output, total_loss
 
 
