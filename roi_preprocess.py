@@ -76,7 +76,7 @@ for i in range(num_files):
         #    filelist = filelist + 'valid.txt \n'
         #command = command + filename + '.jpg \n'
         #command = command + "echo '"+ str(s_tile) +" 0.1 0.1 0.1 0.1' > " + out_dir + 'labels/'
-        command = "echo '0 "+ str(sx_tile*1/W_tiles) +' '+ str(sy_tile*1/H_tiles) + ' 0.125 0.125' + "' > " + out_dir + 'labels/'
+        command = "echo '0 "+ str(sx_tile*1/W_tiles) +' '+ str(sy_tile*1/H_tiles) + ' 0.124 0.124' + "' > " + out_dir + 'labels/'
         command = command + filename + '.txt \n'
         #command = command + filelist
         f.write(command)
