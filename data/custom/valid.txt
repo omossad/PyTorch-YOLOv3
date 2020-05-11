@@ -6,3 +6,11 @@ data/custom/images/ha_0_frame_00062.jpg
 data/custom/images/ha_0_frame_00055.jpg
 data/custom/images/ha_0_frame_00057.jpg
 data/custom/images/ha_0_frame_00059.jpg
+data/custom/images/ha_0_frame_00054.jpg
+data/custom/images/ha_0_frame_00056.jpg
+data/custom/images/ha_0_frame_00058.jpg
+data/custom/images/ha_0_frame_00060.jpg
+data/custom/images/ha_0_frame_00062.jpg
+data/custom/images/ha_0_frame_00055.jpg
+data/custom/images/ha_0_frame_00057.jpg
+data/custom/images/ha_0_frame_00059.jpg
