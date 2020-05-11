@@ -132,6 +132,8 @@ if __name__ == "__main__":
             for name, param in model.roi_layer[0].fc_net_y.named_parameters():
                 print(name)
                 param.requires_grad = False
+            for name, param in model.roi_layer[0].fc_net_x.named_parameters():
+                param.requires_grad = True
             lossX.backward()
 
             if batches_done % opt.gradient_accumulations:
