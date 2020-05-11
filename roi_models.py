@@ -159,8 +159,6 @@ class YOLOLayer(nn.Module):
         grid_size = x.size(2)
         print('IMAGE GRID SIZE')
         print(grid_size)
-        print('INPUT SIZE')
-        print(x.shape)
         prediction = (
             x.view(num_samples, self.num_anchors, self.num_classes + 5, grid_size, grid_size)
             .permute(0, 1, 3, 4, 2)
@@ -186,7 +184,12 @@ class YOLOLayer(nn.Module):
         print(self.anchor_w)
         print('ANCHORS H')
         print(self.anchor_h)
-        
+        print('GRID VALUES')
+        print(self.grid_x)
+        print('WIDTH')
+        print(torch.exp(w.data))
+        print('ANCHOR W')
+        print(self.anchor_w)
         # Add offset and scale with anchors
         pred_boxes = FloatTensor(prediction[..., :4].shape)
         pred_boxes[..., 0] = x.data + self.grid_x

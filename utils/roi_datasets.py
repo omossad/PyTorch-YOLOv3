@@ -144,8 +144,6 @@ class ListDataset(Dataset):
         # Resize images to input shape
         imgs = torch.stack([resize(img, self.img_size) for img in imgs])
         self.batch_count += 1
-        print('IMAGE')
-        print(imgs.shape)
         return paths, imgs, targets
 
     def __len__(self):
