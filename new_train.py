@@ -64,6 +64,7 @@ if __name__ == "__main__":
         else:
             model.load_darknet_weights(opt.pretrained_weights)
     for name, param in model.named_parameters():
+        print(name)
         param.requires_grad = False
 
         #print('ROI')
@@ -124,8 +125,9 @@ if __name__ == "__main__":
             #print('TARGET VAR')
             #print(targets)
             #loss, outputs = model(imgs, targets)
-            loss, outputs_x, outputs_y = model(imgs, targets)
-            loss.backward()
+            #loss, outputs_x, outputs_y = model(imgs, targets)
+            lossX, lossY, outputs_x, outputs_y = model(imgs, targets)
+            lossX.backward()
 
             if batches_done % opt.gradient_accumulations:
                 # Accumulates gradient before each step
