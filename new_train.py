@@ -64,7 +64,7 @@ if __name__ == "__main__":
         else:
             model.load_darknet_weights(opt.pretrained_weights)
     for name, param in model.named_parameters():
-        print(name)
+        #print(name)
         param.requires_grad = False
 
         #print('ROI')
@@ -127,7 +127,17 @@ if __name__ == "__main__":
             #loss, outputs = model(imgs, targets)
             #loss, outputs_x, outputs_y = model(imgs, targets)
             lossX, lossY, outputs_x, outputs_y = model(imgs, targets)
-            lossX.backward()
+            for name, param in model.roi_layer[0].named_parameters():
+                param.requires_grad = True
+            for name, param in model.roi_layer[0].fc_net_y.named_parameters():
+                #print(name)
+                param.requires_grad = False
+            lossX.backward(retain_gragh=True)
+            for name, param in model.roi_layer[0].named_parameters():
+                param.requires_grad = True
+            for name, param in model.roi_layer[0].fc_net_x.named_parameters():
+                param.requires_grad = False
+            lossY.backward(retain_gragh=True)
 
             if batches_done % opt.gradient_accumulations:
                 # Accumulates gradient before each step
