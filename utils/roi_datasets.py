@@ -128,7 +128,8 @@ class ListDataset(Dataset):
         if self.augment:
             if np.random.random() < 0.5:
                 img, targets = horisontal_flip(img, targets)
-
+        print('IMAGE')
+        print(img.shape)
         return img_path, img, targets
 
     def collate_fn(self, batch):
