@@ -352,8 +352,6 @@ class ROILayer(nn.Module):
         x_cat = self.fc_net(x_cat)
         x = x_cat[...,:self.num_tiles]
         y = x_cat[...,self.num_tiles:]
-        print(x.shape)
-        print(y.shape)
         #y = self.fc_net_y(y)
         #print('X after MODEL')
         #print(x.shape)
