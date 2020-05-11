@@ -308,6 +308,7 @@ def build_targets(pred_boxes, pred_cls, target, anchors, ignore_thres):
     gw, gh = gwh.t()
     gi, gj = gxy.floor().long().t()
     print('PROBLEM')
+    print(gxy)
     print(gi)
     print(gj)
     #print(gi.shape)
