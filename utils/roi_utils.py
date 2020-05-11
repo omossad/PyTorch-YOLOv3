@@ -293,11 +293,10 @@ def build_targets(pred_boxes, pred_cls, target, anchors, ignore_thres):
     tcls = FloatTensor(nB, nA, nG, nG, nC).fill_(0)
 
     # Convert to position relative to box
-    target_boxes = target[:, 2:6] * nG
+    target_boxes = target[:, 2:6] * (nG-1)
     print('TARGET')
-    print(target[:,2:6])
-    print(target_boxes)
     gxy = target_boxes[:, :2]
+    print(gxy)
     gwh = target_boxes[:, 2:]
     # Get anchors with best iou
     ious = torch.stack([bbox_wh_iou(anchor, gwh) for anchor in anchors])
@@ -306,9 +305,8 @@ def build_targets(pred_boxes, pred_cls, target, anchors, ignore_thres):
     b, target_labels = target[:, :2].long().t()
     gx, gy = gxy.t()
     gw, gh = gwh.t()
-    gi, gj = gxy.floor().long().t()
+    gi, gj = gxy.long().t()
     print('PROBLEM')
-    print(gxy)
     print(gi)
     print(gj)
     #print(gi.shape)
