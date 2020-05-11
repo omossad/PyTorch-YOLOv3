@@ -304,12 +304,17 @@ def build_targets(pred_boxes, pred_cls, target, anchors, ignore_thres):
     gx, gy = gxy.t()
     gw, gh = gwh.t()
     gi, gj = gxy.long().t()
+    print('PROBLEM')
+    print(gi.shape)
+    print(gi)
     # Set masks
     obj_mask[b, best_n, gj, gi] = 1
     noobj_mask[b, best_n, gj, gi] = 0
-
+    print(noobj_mask.shape)
     # Set noobj mask to zero where iou exceeds ignore threshold
     for i, anchor_ious in enumerate(ious.t()):
+        print('I')
+        print(i)
         noobj_mask[b[i], anchor_ious > ignore_thres, gj[i], gi[i]] = 0
 
     # Coordinates
