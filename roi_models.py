@@ -109,7 +109,7 @@ class EmptyLayer(nn.Module):
 class YOLOLayer(nn.Module):
     """Detection layer"""
 
-    def __init__(self, anchors, num_classes, img_dim=416):
+    def __init__(self, anchors, num_classes, img_dim=256):
         super(YOLOLayer, self).__init__()
         self.anchors = anchors
         self.num_anchors = len(anchors)
@@ -147,7 +147,7 @@ class YOLOLayer(nn.Module):
         print('GRID SIZE')
         print(g)
         '''
-    def forward(self, x, targets=None, img_dim=None):
+    def forward(self, x, targets=None, img_dim=256):
 
         # Tensors for cuda support
         FloatTensor = torch.cuda.FloatTensor if x.is_cuda else torch.FloatTensor
