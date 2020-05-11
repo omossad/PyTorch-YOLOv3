@@ -63,9 +63,9 @@ for i in range(num_files):
     for lbl in labels:
         #s_tile = get_tile(lbl[0],lbl[1])
         sx_tile, sy_tile = get_tileXY(lbl[0],lbl[1])
-        if(sx_tile == 8):
+        if(sx_tile > 7):
             print('Problem')
-        if(sy_tile == 8):
+        if(sy_tile > 7):
             print('Problem')
         filename = 'ha_' + str(i) + '_frame_' + str(current_frame).zfill(5)
         #command = 'cp ' + frame_dir + 'ha_' + str(i) + '/frame_' + str(current_frame).zfill(5) + '.jpg ' + out_dir + 'images/'
