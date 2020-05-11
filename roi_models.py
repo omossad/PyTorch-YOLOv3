@@ -176,17 +176,17 @@ class YOLOLayer(nn.Module):
         # If grid size does not match current we compute new offsets
         if grid_size != self.grid_size:
             self.compute_grid_offsets(grid_size, cuda=x.is_cuda)
-        '''
-        print('AFTER COMPUTE')
-        print('GRID X')
-        print(self.grid_x)
-        print('GRID Y')
-        print(self.grid_y)
+
+        #print('AFTER COMPUTE')
+        #print('GRID X')
+        #print(self.grid_x)
+        #print('GRID Y')
+        #print(self.grid_y)
         print('ANCHORS W')
         print(self.anchor_w)
         print('ANCHORS H')
         print(self.anchor_h)
-        '''
+        
         # Add offset and scale with anchors
         pred_boxes = FloatTensor(prediction[..., :4].shape)
         pred_boxes[..., 0] = x.data + self.grid_x
