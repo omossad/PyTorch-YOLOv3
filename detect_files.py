@@ -121,7 +121,11 @@ if __name__ == "__main__":
                     y_c = (y1+y2)/2
                     box_w = x2 - x1
                     box_h = y2 - y1
-                    to_write = str(int(cls_pred)) + " "
+                    if int(cls_pred) == 32:
+                        to_write = str(int(cls_pred)) + " "
+                    else:
+                        to_write = "1 "
+                    #to_write = str(int(cls_pred)) + " "
                     to_write = to_write + str(x_c.item()/W)    + " " + str(y_c.item()/H)    + " "
                     to_write = to_write + str(box_w.item()/W) + " " + str(box_h.item()/H) + "\n"
                     f.write(to_write)
