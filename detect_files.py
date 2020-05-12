@@ -109,9 +109,8 @@ if __name__ == "__main__":
         if detections is not None:
             # Rescale boxes to original image
             detections = rescale_boxes(detections, opt.img_size, img.shape[:2])
-            print('SHAPE')
-            W = img.shape[0]
-            H = img.shape[1]
+            W = img.shape[1]
+            H = img.shape[0]
             unique_labels = detections[:, -1].cpu().unique()
             n_cls_preds = len(unique_labels)
             #bbox_colors = random.sample(colors, n_cls_preds)
