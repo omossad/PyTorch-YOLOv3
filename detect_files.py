@@ -110,8 +110,8 @@ if __name__ == "__main__":
             # Rescale boxes to original image
             detections = rescale_boxes(detections, opt.img_size, img.shape[:2])
             print('SHAPE')
-            print(img.shape[0])
-            print(img.shape[1])
+            W = img.shape[0]
+            H = img.shape[1]
             unique_labels = detections[:, -1].cpu().unique()
             n_cls_preds = len(unique_labels)
             #bbox_colors = random.sample(colors, n_cls_preds)
@@ -121,11 +121,9 @@ if __name__ == "__main__":
 
                     box_w = x2 - x1
                     box_h = y2 - y1
-                    print('X1 item')
-                    print(x1.item())
-                    print('X1 cpu')
-                    print(x1.cpu())
-                    to_write = str(int(cls_pred)) + " " + str(x1) + " " + str(x2) + " " + str(box_w) + " " + str(box_h) + "\n"
+                    to_write = str(int(cls_pred)) + " "
+                    to_write = to_write + str(x1.item()/W)    + " " + str(x2.item()/H)    + " "
+                    to_write = to_write + str(box_w.item()/W) + " " + str(box_h.item()/H) + "\n"
                     f.write(to_write)
 
                 #color = bbox_colors[int(np.where(unique_labels == int(cls_pred))[0])]
