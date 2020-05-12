@@ -105,7 +105,7 @@ if __name__ == "__main__":
 
         # Draw bounding boxes and labels of detections
         filename = path.split("/")[-1].split(".")[0]
-        f = open(f"output/{filename}.txt", "w")
+        f = open(f"output/{filename}.txt", "a")
         if detections is not None:
             # Rescale boxes to original image
             detections = rescale_boxes(detections, opt.img_size, img.shape[:2])
@@ -115,9 +115,9 @@ if __name__ == "__main__":
             n_cls_preds = len(unique_labels)
             #bbox_colors = random.sample(colors, n_cls_preds)
             for x1, y1, x2, y2, conf, cls_conf, cls_pred in detections:
-                if int(cls_pred) == 0:
+                #if int(cls_pred) == 0:
                 #: or int(cls_pred) == 32):
-                #if int(cls_pred) == 32:
+                if int(cls_pred) == 32:
                     print("\t+ Label: %s, Conf: %.5f" % (classes[int(cls_pred)], cls_conf.item()))
                     x_c = (x1+x2)/2
                     y_c = (y1+y2)/2
