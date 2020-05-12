@@ -1,4 +1,4 @@
-classes= 64
-train=/home/omossad/scratch/temp/roi/train.txt
-valid=/home/omossad/scratch/temp/roi/valid.txt
-names=data/custom/classes.names
+classes= 3
+train=/home/omossad/scratch/ROI-PyTorch/data/custom/annotations/train.txt
+valid=/home/omossad/scratch/ROI-PyTorch/data/custom/annotations/valid.txt
+names=/home/omossad/scratch/ROI-PyTorch/data/custom/annotations/classes.names
