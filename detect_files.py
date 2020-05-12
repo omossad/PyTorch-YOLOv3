@@ -113,13 +113,13 @@ if __name__ == "__main__":
             n_cls_preds = len(unique_labels)
             bbox_colors = random.sample(colors, n_cls_preds)
             for x1, y1, x2, y2, conf, cls_conf, cls_pred in detections:
+                if(int(cls_pred) == 0):
+                    print("\t+ Label: %s, Conf: %.5f" % (classes[int(cls_pred)], cls_conf.item()))
 
-                print("\t+ Label: %s, Conf: %.5f" % (classes[int(cls_pred)], cls_conf.item()))
-
-                box_w = x2 - x1
-                box_h = y2 - y1
-                to_write = str(int(cls_pred)) + " " + str(x1) + " " + str(x2) + " " + str(box_w) + " " + str(box_h) + "\n"
-                f.write(to_write)
+                    box_w = x2 - x1
+                    box_h = y2 - y1
+                    to_write = str(int(cls_pred)) + " " + str(x1) + " " + str(x2) + " " + str(box_w) + " " + str(box_h) + "\n"
+                    f.write(to_write)
 
                 #color = bbox_colors[int(np.where(unique_labels == int(cls_pred))[0])]
                 # Create a Rectangle patch
