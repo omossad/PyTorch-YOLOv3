@@ -121,7 +121,7 @@ if __name__ == "__main__":
                     box_w = x2 - x1
                     box_h = y2 - y1
                     to_write = str(int(cls_pred)) + " "
-                    to_write = to_write + str(x1.item()/W)    + " " + str(x2.item()/H)    + " "
+                    to_write = to_write + str(x1.item()/W)    + " " + str(y1.item()/H)    + " "
                     to_write = to_write + str(box_w.item()/W) + " " + str(box_h.item()/H) + "\n"
                     f.write(to_write)
 
