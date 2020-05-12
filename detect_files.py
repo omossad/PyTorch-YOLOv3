@@ -117,11 +117,12 @@ if __name__ == "__main__":
             for x1, y1, x2, y2, conf, cls_conf, cls_pred in detections:
                 if(int(cls_pred) == 0):
                     print("\t+ Label: %s, Conf: %.5f" % (classes[int(cls_pred)], cls_conf.item()))
-
+                    x_c = (x1+x2)/2
+                    y_c = (y1+y2)/2
                     box_w = x2 - x1
                     box_h = y2 - y1
                     to_write = str(int(cls_pred)) + " "
-                    to_write = to_write + str(x1.item()/W)    + " " + str(y1.item()/H)    + " "
+                    to_write = to_write + str(x_c.item()/W)    + " " + str(y_c.item()/H)    + " "
                     to_write = to_write + str(box_w.item()/W) + " " + str(box_h.item()/H) + "\n"
                     f.write(to_write)
 
