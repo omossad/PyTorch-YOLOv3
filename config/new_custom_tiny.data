@@ -1,4 +1,4 @@
 classes= 3
-train=/home/omossad/scratch/temp/roi/train.txt
-valid=/home/omossad/scratch/temp/roi/valid.txt
+train=/home/omossad/scratch/temp/roi/dev-train.txt
+valid=/home/omossad/scratch/temp/roi/dev-valid.txt
 names=data/custom/annotations/classes.names
