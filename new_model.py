@@ -417,7 +417,17 @@ class ROILayer(nn.Module):
             #print(x)
             #print('sigmoid')
             x = torch.sigmoid(x)
+            print('SIGMOID')
+            print(x)
             y = torch.sigmoid(y)
+            pre_lbl = torch.zeros([num_samples, self.num_tiles*self.num_tiles]).type(FloatTensor)
+            pre_lbl.scatter(1, pred_x*self.num_tiles + pred_y , 1)
+            print('PREDICTED LABEL')
+            print(pre_lbl)
+            cor_lbl = torch.zeros([num_samples, self.num_tiles*self.num_tiles]).type(FloatTensor)
+            cor_lbl.scatter(1, corr_x*self.num_tiles + corr_y , 1)
+            print('CORRECT LABEL')
+            print(cor_lbl)
             #print(x)
             #print('corr X')
             #print(corr_x)
@@ -438,7 +448,8 @@ class ROILayer(nn.Module):
             #print(corr)
             #loss_x = self.loss_func(x, targets_x)
             #loss_y = self.loss_func(y, targets_y)
-            total_loss = loss_x + loss_y
+            #total_loss = loss_x + loss_y
+            total_loss = self.loss_func(pre_lbl,cor_lbl)
             self.metrics = {
                 "loss_x": to_cpu(loss_x).item(),
                 "loss_y": to_cpu(loss_y).item(),
