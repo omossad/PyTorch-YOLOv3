@@ -60,7 +60,7 @@ if __name__ == "__main__":
     # If specified we start from checkpoint
     if opt.pretrained_weights:
         if opt.pretrained_weights.endswith(".pth"):
-            model.load_state_dict(torch.load(opt.pretrained_weights))
+            model.load_state_dict(torch.load(opt.pretrained_weights), strict=False)
         else:
             model.load_darknet_weights(opt.pretrained_weights)
     for name, param in model.named_parameters():
