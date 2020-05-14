@@ -324,6 +324,8 @@ class ROILayer(nn.Module):
         LongTensor = torch.cuda.LongTensor if x.is_cuda else torch.LongTensor
         ByteTensor = torch.cuda.ByteTensor if x.is_cuda else torch.ByteTensor
         total_loss = 0
+        loss_x = 0
+        loss_y =0
         objects = non_max_suppression(x, self.conf_thres, self.nms_thres)
         x_inpt = torch.zeros([num_samples, self.num_tiles, self.num_classes]).type(FloatTensor)
         y_inpt = torch.zeros([num_samples, self.num_tiles, self.num_classes]).type(FloatTensor)
