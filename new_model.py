@@ -468,7 +468,7 @@ class ROILayer(nn.Module):
             }
             #return x,y, loss_x, loss_y
             #return x,y, loss_x, loss_y
-            retrun x,y, total_loss
+            return x,y, total_loss
 
 
 class Darknet(nn.Module):
