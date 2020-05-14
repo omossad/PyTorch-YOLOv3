@@ -276,32 +276,32 @@ class ROILayer(nn.Module):
         self.tile_size = self.img_dim // self.num_tiles
         self.loss_func = nn.CrossEntropyLoss()
         self.fc_net_x = nn.Sequential(
-            nn.Linear(self.num_classes * self.num_tiles, 256),
-            nn.BatchNorm1d(256),
-            nn.ReLU(inplace=True),
-            nn.Dropout(),
-            nn.Linear(256, 128),
-            nn.BatchNorm1d(128),
-            nn.ReLU(inplace=True),
-            nn.Dropout(),
-            nn.Linear(128, 64),
+            nn.Linear(self.num_classes * self.num_tiles, 64),
             nn.BatchNorm1d(64),
             nn.ReLU(inplace=True),
-            nn.Linear(64, self.num_tiles)
+            nn.Dropout(),
+            nn.Linear(64, 32),
+            nn.BatchNorm1d(32),
+            nn.ReLU(inplace=True),
+            #nn.Dropout(),
+            #nn.Linear(128, 64),
+            #nn.BatchNorm1d(64),
+            #nn.ReLU(inplace=True),
+            nn.Linear(32, self.num_tiles)
         )
         self.fc_net_y = nn.Sequential(
-            nn.Linear(self.num_classes * self.num_tiles, 256),
-            nn.BatchNorm1d(256),
-            nn.ReLU(inplace=True),
-            nn.Dropout(),
-            nn.Linear(256, 128),
-            nn.BatchNorm1d(128),
-            nn.ReLU(inplace=True),
-            nn.Dropout(),
-            nn.Linear(128, 64),
+            nn.Linear(self.num_classes * self.num_tiles, 64),
             nn.BatchNorm1d(64),
             nn.ReLU(inplace=True),
-            nn.Linear(64, self.num_tiles)
+            nn.Dropout(),
+            nn.Linear(64, 32),
+            nn.BatchNorm1d(32),
+            nn.ReLU(inplace=True),
+            #nn.Dropout(),
+            #nn.Linear(128, 64),
+            #nn.BatchNorm1d(64),
+            #nn.ReLU(inplace=True),
+            nn.Linear(32, self.num_tiles)
         )
 
         #self.fc_net_y = nn.Sequential(
@@ -371,7 +371,7 @@ class ROILayer(nn.Module):
 
         if targets is None:
         #if 1 == 2:
-            return x,y, 0, 0
+            return x,y, 0
         else:
             #print('RECEIVED TARGETS')
             #print(targets)
@@ -440,6 +440,7 @@ class ROILayer(nn.Module):
             #print(corr_x)
             loss_x = self.loss_func(x, corr_x)
             loss_y = self.loss_func(y, corr_y)
+            total_loss = loss_x * loss_y
             x_score = torch.eq(pred_x, corr_x).type(FloatTensor)
             y_score = torch.eq(pred_y, corr_y).type(FloatTensor)
             overall = x_score * y_score
@@ -455,7 +456,7 @@ class ROILayer(nn.Module):
             #print(corr)
             #loss_x = self.loss_func(x, targets_x)
             #loss_y = self.loss_func(y, targets_y)
-            total_loss = loss_x + loss_y
+            #total_loss = loss_x + loss_y
             #total_loss = self.loss_func(pre_lbl,cor_lbl)
             self.metrics = {
                 "loss_x": to_cpu(loss_x).item(),
@@ -466,8 +467,8 @@ class ROILayer(nn.Module):
                 "acc"   : to_cpu(acc).item(),
             }
             #return x,y, loss_x, loss_y
-            return x,y, loss_x, loss_y
-
+            #return x,y, loss_x, loss_y
+            retrun x,y, total_loss
 
 
 class Darknet(nn.Module):
@@ -507,15 +508,15 @@ class Darknet(nn.Module):
             elif module_def["type"] == "roi":
                 #print(yolo_outputs)
                 yolo_outputs = torch.cat(yolo_outputs, 1)
-                roi_x, roi_y, roi_loss_x, roi_loss_y = module[0](yolo_outputs, targets)
-                #roi_x, roi_y, roi_lossX, roi_lossY = module[0](yolo_outputs, targets)
+                #roi_x, roi_y, roi_loss_x, roi_loss_y = module[0](yolo_outputs, targets)
+                roi_x, roi_y, roi_loss = module[0](yolo_outputs, targets)
                 #print('ROI LOSS')
                 #print(roi_loss)
             layer_outputs.append(x)
         #yolo_outputs = to_cpu(torch.cat(yolo_outputs, 1))
         #yolo_outputs = to_cpu(yolo_outputs)
-        return (roi_x, roi_y) if targets is None else (roi_loss_x, roi_loss_y, roi_x, roi_y)
-        #return (roi_x, roi_y) if targets is None else (roi_lossX, roi_lossY, roi_x, roi_y)
+        #return (roi_x, roi_y) if targets is None else (roi_loss_x, roi_loss_y, roi_x, roi_y)
+        return (roi_x, roi_y) if targets is None else (roi_loss, roi_x, roi_y)
         #print('AFTER')
         #print(yolo_outputs.shape)
         #print(loss)
