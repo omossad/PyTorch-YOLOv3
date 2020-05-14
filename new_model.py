@@ -371,7 +371,7 @@ class ROILayer(nn.Module):
 
         if targets is None:
         #if 1 == 2:
-            return x,y, 0
+            return x,y, 0, 0
         else:
             #print('RECEIVED TARGETS')
             #print(targets)
