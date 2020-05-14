@@ -275,35 +275,33 @@ class ROILayer(nn.Module):
         self.metrics = {}
         self.tile_size = self.img_dim // self.num_tiles
         self.loss_func = nn.CrossEntropyLoss()
-        self.fc_net_x = nn.Sequential(
-            nn.Linear(self.num_classes * self.num_tiles, 64),
-            nn.BatchNorm1d(64),
+        self.fc_net = nn.Sequential(
+            nn.Linear(self.num_classes * self.num_tiles * 2, 1024),
+            nn.BatchNorm1d(1024),
             nn.ReLU(inplace=True),
             nn.Dropout(),
-            nn.Linear(64, 32),
-            nn.BatchNorm1d(32),
-            nn.ReLU(inplace=True),
-            #nn.Dropout(),
-            #nn.Linear(128, 64),
-            #nn.BatchNorm1d(64),
-            #nn.ReLU(inplace=True),
-            nn.Linear(32, self.num_tiles)
-        )
-        self.fc_net_y = nn.Sequential(
-            nn.Linear(self.num_classes * self.num_tiles, 64),
-            nn.BatchNorm1d(64),
+            nn.Linear(1024, 512),
+            nn.BatchNorm1d(512),
             nn.ReLU(inplace=True),
             nn.Dropout(),
-            nn.Linear(64, 32),
-            nn.BatchNorm1d(32),
+            nn.Linear(512, 256),
+            nn.BatchNorm1d(256),
             nn.ReLU(inplace=True),
-            #nn.Dropout(),
-            #nn.Linear(128, 64),
-            #nn.BatchNorm1d(64),
-            #nn.ReLU(inplace=True),
-            nn.Linear(32, self.num_tiles)
+            nn.Dropout()
         )
+        self.fc_out_x = nn.Sequential(
 
+            nn.Linear(256, 128),
+            nn.BatchNorm1d(128),
+            nn.ReLU(inplace=True),
+            nn.Linear(128, self.num_tiles)
+        )
+        self.fc_out_y = nn.Sequential(
+            nn.Linear(256, 128),
+            nn.BatchNorm1d(128),
+            nn.ReLU(inplace=True),
+            nn.Linear(128, self.num_tiles)
+        )
         #self.fc_net_y = nn.Sequential(
         #    nn.Linear(self.num_classes * self.num_tiles, 256),
         #    nn.BatchNorm1d(256),
@@ -324,8 +322,6 @@ class ROILayer(nn.Module):
         LongTensor = torch.cuda.LongTensor if x.is_cuda else torch.LongTensor
         ByteTensor = torch.cuda.ByteTensor if x.is_cuda else torch.ByteTensor
         total_loss = 0
-        loss_x = 0
-        loss_y =0
         objects = non_max_suppression(x, self.conf_thres, self.nms_thres)
         x_inpt = torch.zeros([num_samples, self.num_tiles, self.num_classes]).type(FloatTensor)
         y_inpt = torch.zeros([num_samples, self.num_tiles, self.num_classes]).type(FloatTensor)
@@ -358,11 +354,13 @@ class ROILayer(nn.Module):
         #print('INPUT')
         #print(x_inpt)
 
-        x = x_inpt.view(x_inpt.size(0), -1)
+        x_ = x_inpt.view(x_inpt.size(0), -1)
         #x = self.fc_net_x(x)
-        y = y_inpt.view(y_inpt.size(0), -1)
-        x = self.fc_net_x(x)
-        y = self.fc_net_y(y)
+        y_ = y_inpt.view(y_inpt.size(0), -1)
+        x_cat = torch.cat((x_, y_), 1)
+        x_cat = self.fc_net(x_cat)
+        x = self.fc_out_x(x_cat)
+        y = self.fc_out_y(x_cat)
         #x = x_cat[...,:self.num_tiles]
         #y = x_cat[...,self.num_tiles:]
         #y = self.fc_net_y(y)
@@ -410,7 +408,10 @@ class ROILayer(nn.Module):
             #loss_y = self.loss_func(y, ty)
             #print('PREDICTED')
             #print(x)
-
+            _, pred_x = torch.max(x, 1)
+            _, pred_y = torch.max(y, 1)
+            _, corr_x = torch.max(tx, 1)
+            _, corr_y = torch.max(tx, 1)
             #print('LOSS')
             #print('X')
             #print(x)
@@ -423,10 +424,6 @@ class ROILayer(nn.Module):
             #print(x)
             #y = torch.sigmoid(y)
             y = torch.softmax(y,1)
-            _, pred_x = torch.max(x, 1)
-            _, pred_y = torch.max(y, 1)
-            _, corr_x = torch.max(tx, 1)
-            _, corr_y = torch.max(tx, 1)
             #pre_lbl = torch.zeros([num_samples, self.num_tiles*self.num_tiles]).type(FloatTensor)
             #pre_lbl.scatter(1, pred_x*self.num_tiles + pred_y , 1)
             #print('PREDICTED LABEL')
@@ -440,7 +437,6 @@ class ROILayer(nn.Module):
             #print(corr_x)
             loss_x = self.loss_func(x, corr_x)
             loss_y = self.loss_func(y, corr_y)
-            total_loss = loss_x * loss_y
             x_score = torch.eq(pred_x, corr_x).type(FloatTensor)
             y_score = torch.eq(pred_y, corr_y).type(FloatTensor)
             overall = x_score * y_score
@@ -456,7 +452,7 @@ class ROILayer(nn.Module):
             #print(corr)
             #loss_x = self.loss_func(x, targets_x)
             #loss_y = self.loss_func(y, targets_y)
-            #total_loss = loss_x + loss_y
+            total_loss = max(loss_x,loss_y)
             #total_loss = self.loss_func(pre_lbl,cor_lbl)
             self.metrics = {
                 "loss_x": to_cpu(loss_x).item(),
@@ -467,8 +463,8 @@ class ROILayer(nn.Module):
                 "acc"   : to_cpu(acc).item(),
             }
             #return x,y, loss_x, loss_y
-            #return x,y, loss_x, loss_y
             return x,y, total_loss
+
 
 
 class Darknet(nn.Module):
@@ -508,15 +504,15 @@ class Darknet(nn.Module):
             elif module_def["type"] == "roi":
                 #print(yolo_outputs)
                 yolo_outputs = torch.cat(yolo_outputs, 1)
-                #roi_x, roi_y, roi_loss_x, roi_loss_y = module[0](yolo_outputs, targets)
                 roi_x, roi_y, roi_loss = module[0](yolo_outputs, targets)
+                #roi_x, roi_y, roi_lossX, roi_lossY = module[0](yolo_outputs, targets)
                 #print('ROI LOSS')
                 #print(roi_loss)
             layer_outputs.append(x)
         #yolo_outputs = to_cpu(torch.cat(yolo_outputs, 1))
         #yolo_outputs = to_cpu(yolo_outputs)
-        #return (roi_x, roi_y) if targets is None else (roi_loss_x, roi_loss_y, roi_x, roi_y)
         return (roi_x, roi_y) if targets is None else (roi_loss, roi_x, roi_y)
+        #return (roi_x, roi_y) if targets is None else (roi_lossX, roi_lossY, roi_x, roi_y)
         #print('AFTER')
         #print(yolo_outputs.shape)
         #print(loss)
