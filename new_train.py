@@ -181,11 +181,11 @@ if __name__ == "__main__":
                 print(metric)
                 print(*row_metrics)
                 if i == 3:
-                    accuracy_x += int(*row_metrics)
+                    accuracy_x += float(*row_metrics)
                 elif i == 4:
-                    accuracy_y += int(*row_metrics)
+                    accuracy_y += float(*row_metrics)
                 elif i == 5:
-                    tot_accuracy += int(*row_metrics)
+                    tot_accuracy += float(*row_metrics)
 
                 # Tensorboard logging
                 tensorboard_log = []
