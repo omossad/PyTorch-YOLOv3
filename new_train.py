@@ -65,11 +65,11 @@ if __name__ == "__main__":
             model.load_darknet_weights(opt.pretrained_weights)
     for name, param in model.named_parameters():
         #print(name)
-        param.requires_grad = True
+        param.requires_grad = False
 
         #print('ROI')
-    #for name, param in model.roi_layer[0].named_parameters():
-    #    param.requires_grad = True
+    for name, param in model.roi_layer[0].named_parameters():
+        param.requires_grad = True
         #if param.requires_grad:
         #    print('PARAM')
         #    print(name)
