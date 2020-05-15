@@ -199,7 +199,7 @@ if __name__ == "__main__":
                 # Tensorboard logging
                 #tensorboard_log = []
                 #for j, roi in enumerate(model.roi_layer):
-            for name, metric in roi.metrics.items():
+            #for name, metric in roi.metrics.items():
                         #if name != "grid_size":
                 #tensorboard_log += [(f"{name} ", metric)]
             #tensorboard_log += [("loss", loss.item())]
