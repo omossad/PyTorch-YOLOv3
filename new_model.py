@@ -347,7 +347,7 @@ class ROILayer(nn.Module):
                     s_conf = obj_conf.data.tolist()[i]
                     #print(str(x_coordinate.data.tolist()[i]) + ' ' + str(x_coordinate.data.tolist()[i]))
                     #print(str(image_i) + ' ' + str(x_tile) + ' ' + str(y_tile) + ' ' + str(s_obj) + ' ' + str(s_conf) + '\n')
-                    x_inpt[image_i][self.num_tiles-x_tile][s_obj] += s_conf
+                    x_inpt[image_i][self.num_tiles-x_tile-1][s_obj] += s_conf
                     y_inpt[image_i][y_tile][s_obj] += s_conf
                 #if targets is None:
                 #    print('INPUT RAW')
