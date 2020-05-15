@@ -277,29 +277,30 @@ class ROILayer(nn.Module):
         self.metrics = {}
         self.tile_size = self.img_dim // self.num_tiles
         self.loss_func = nn.CrossEntropyLoss()
-        self.fc_net = nn.Sequential(
-            nn.Linear(self.num_classes * self.num_tiles * 2, 1024),
-            nn.BatchNorm1d(1024),
-            nn.ReLU(inplace=True),
-            nn.Dropout(),
-            nn.Linear(1024, 512),
-            nn.BatchNorm1d(512),
-            nn.ReLU(inplace=True),
-            nn.Dropout(),
-            nn.Linear(512, 256),
-            nn.BatchNorm1d(256),
-            nn.ReLU(inplace=True),
-            nn.Dropout()
-        )
+        #self.fc_net = nn.Sequential(
+        #    nn.Linear(self.num_classes * self.num_tiles * 2, 1024),
+        #    nn.BatchNorm1d(1024),
+        #    nn.ReLU(inplace=True),
+        #    nn.Dropout(),
+        #    nn.Linear(1024, 512),
+        #    nn.BatchNorm1d(512),
+        #    nn.ReLU(inplace=True),
+        #    nn.Dropout(),
+        #    nn.Linear(512, 256),
+        #    nn.BatchNorm1d(256),
+        #    nn.ReLU(inplace=True),
+        #    nn.Dropout()
+        #)
         self.fc_out_x = nn.Sequential(
-
-            nn.Linear(256, 128),
+            nn.Linear(self.num_classes * self.num_tiles, 128)
+            #nn.Linear(256, 128),
             nn.BatchNorm1d(128),
             nn.ReLU(inplace=True),
             nn.Linear(128, self.num_tiles)
         )
         self.fc_out_y = nn.Sequential(
-            nn.Linear(256, 128),
+            nn.Linear(self.num_classes * self.num_tiles, 128)
+            #nn.Linear(256, 128),
             nn.BatchNorm1d(128),
             nn.ReLU(inplace=True),
             nn.Linear(128, self.num_tiles)
@@ -346,15 +347,15 @@ class ROILayer(nn.Module):
                     s_conf = obj_conf.data.tolist()[i]
                     #print(str(x_coordinate.data.tolist()[i]) + ' ' + str(x_coordinate.data.tolist()[i]))
                     #print(str(image_i) + ' ' + str(x_tile) + ' ' + str(y_tile) + ' ' + str(s_obj) + ' ' + str(s_conf) + '\n')
-                    x_inpt[image_i][x_tile][s_obj] += s_conf
+                    x_inpt[image_i][self.num_tiles-x_tile][s_obj] += s_conf
                     y_inpt[image_i][y_tile][s_obj] += s_conf
-                if targets is None:
-                    print('INPUT RAW')
-                    print(image_pred)
-                    print('X')
-                    print(x_inpt[image_i])
-                    print('Y')
-                    print(y_inpt[image_i])
+                #if targets is None:
+                #    print('INPUT RAW')
+                #    print(image_pred)
+                #    print('X')
+                #    print(x_inpt[image_i])
+                #    print('Y')
+                #    print(y_inpt[image_i])
         #print('X before model')
         #print(x_inpt)
         #print('Y before model')
@@ -362,13 +363,13 @@ class ROILayer(nn.Module):
         #print('INPUT')
         #print(x_inpt)
 
-        x_ = x_inpt.view(x_inpt.size(0), -1)
+        x = x_inpt.view(x_inpt.size(0), -1)
         #x = self.fc_net_x(x)
-        y_ = y_inpt.view(y_inpt.size(0), -1)
-        x_cat = torch.cat((x_, y_), 1)
-        x_cat = self.fc_net(x_cat)
-        x = self.fc_out_x(x_cat)
-        y = self.fc_out_y(x_cat)
+        y = y_inpt.view(y_inpt.size(0), -1)
+        #x_cat = torch.cat((x_, y_), 1)
+        #x_cat = self.fc_net(x_cat)
+        x = self.fc_out_x(x)
+        y = self.fc_out_y(y)
         #x = x_cat[...,:self.num_tiles]
         #y = x_cat[...,self.num_tiles:]
         #y = self.fc_net_y(y)
