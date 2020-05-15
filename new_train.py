@@ -116,9 +116,12 @@ if __name__ == "__main__":
         model.train()
         start_time = time.time()
         num_batches = len(dataloader)
-        accuracy_x = 0
-        accuracy_y = 0
-        tot_accuracy = 0
+        tot_loss_x = 0
+        tot_loss_y = 0
+        tot_loss = 0
+        tot_acc_x = 0
+        tot_acc_y = 0
+        tot_acc = 0
         for batch_i, (_, imgs, targets) in enumerate(dataloader):
             #print('TARGET FILE')
             #print(targets)
@@ -167,7 +170,7 @@ if __name__ == "__main__":
             log_str = "\n---- [Epoch %d/%d, Batch %d/%d] ----\n" % (epoch, opt.epochs, batch_i, len(dataloader))
 
             #metric_table = [["Metrics", *[f"ROI Layer {i}" for i in range(1)]]]
-            metric_table = [["Metrics", *["ROI Layer"]]]
+            #metric_table = [["Metrics", *["ROI Layer"]]]
             # Log metrics at each YOLO layer
             roi = model.roi_layer[0]
             for i, metric in enumerate(metrics):
@@ -176,40 +179,47 @@ if __name__ == "__main__":
                 #formats["cls_acc"] = "%.2f%%"
                 row_metrics = [formats[metric] % roi.metrics.get(metric, 0)]
                 #row_metrics = [formats[metric] % roi.metrics.get(metric, 0) for roi in model.roi_layer]
-                metric_table += [[metric, *row_metrics]]
+                #metric_table += [[metric, *row_metrics]]
                 #print('METRIC')
                 #print(metric)
                 #print(*row_metrics)
-                if i == 3:
-                    accuracy_x += float(*row_metrics)
+                if i == 0:
+                    tot_loss_x += float(*row_metrics)
+                elif i == 1:
+                    tot_loss_y += float(*row_metrics)
+                elif i == 2:
+                    tot_loss += float(*row_metrics)
+                elif i == 3:
+                    tot_acc_x += float(*row_metrics)
                 elif i == 4:
-                    accuracy_y += float(*row_metrics)
+                    tot_acc_y += float(*row_metrics)
                 elif i == 5:
-                    tot_accuracy += float(*row_metrics)
+                    tot_acc += float(*row_metrics)
 
                 # Tensorboard logging
-                tensorboard_log = []
+                #tensorboard_log = []
                 #for j, roi in enumerate(model.roi_layer):
             for name, metric in roi.metrics.items():
                         #if name != "grid_size":
-                tensorboard_log += [(f"{name} ", metric)]
-            tensorboard_log += [("loss", loss.item())]
+                #tensorboard_log += [(f"{name} ", metric)]
+            #tensorboard_log += [("loss", loss.item())]
             #logger.list_of_scalars_summary(tensorboard_log, batches_done)
 
-            log_str += AsciiTable(metric_table).table
-            log_str += f"\nTotal loss {loss.item()}"
+            #log_str += AsciiTable(metric_table).table
+            #log_str += f"\nTotal loss {loss.item()}"
             # Determine approximate time left for epoch
             epoch_batches_left = len(dataloader) - (batch_i + 1)
             time_left = datetime.timedelta(seconds=epoch_batches_left * (time.time() - start_time) / (batch_i + 1))
             log_str += f"\n---- ETA {time_left}"
 
-            print(log_str)
+            #print(log_str)
 
             model.seen += imgs.size(0)
         print('OVERALL')
-        print(accuracy_x/num_batches)
-        print(accuracy_y/num_batches)
-        print(tot_accuracy)
+        print('losses')
+        print(str(tot_loss_x/num_batches) + ', ' + str(tot_loss_y/num_batches) + ', ' + str(tot_loss/num_batches) + '\n')
+        print('accuracies')
+        print(str(tot_acc_x/num_batches) + ', ' + str(tot_acc_y/num_batches) + ', ' + str(tot_acc/num_batches) + '\n')
 
         if epoch % opt.evaluation_interval == 0:
             print("\n---- Evaluating Model ----")
