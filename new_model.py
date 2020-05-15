@@ -263,7 +263,7 @@ class YOLOLayer(nn.Module):
 class ROILayer(nn.Module):
     """ROI layer"""
 
-    def __init__(self, num_classes=3, num_tiles=8, img_dim=416, conf_thes=0.3, nms_thes=0.2):
+    def __init__(self, num_classes=3, num_tiles=4, img_dim=416, conf_thes=0.3, nms_thes=0.2):
         super(ROILayer, self).__init__()
         self.num_classes = num_classes
         self.img_dim = img_dim
