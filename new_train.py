@@ -115,6 +115,10 @@ if __name__ == "__main__":
         #print(model)
         model.train()
         start_time = time.time()
+        num_batches = len(dataloader)
+        accuracy_x = 0
+        accuracy_y = 0
+        tot_accuracy = 0
         for batch_i, (_, imgs, targets) in enumerate(dataloader):
             #print('TARGET FILE')
             #print(targets)
@@ -173,6 +177,15 @@ if __name__ == "__main__":
                 row_metrics = [formats[metric] % roi.metrics.get(metric, 0)]
                 #row_metrics = [formats[metric] % roi.metrics.get(metric, 0) for roi in model.roi_layer]
                 metric_table += [[metric, *row_metrics]]
+                print('METRIC')
+                print(metric)
+                print(*row_metrics)
+                if i == 3:
+                    accuracy_x += *row_metrics
+                elif i == 4:
+                    accuracy_y += *row_metrics
+                elif i == 5:
+                    tot_accuracy += *row_metrics
 
                 # Tensorboard logging
                 tensorboard_log = []
@@ -193,6 +206,10 @@ if __name__ == "__main__":
             print(log_str)
 
             model.seen += imgs.size(0)
+        print('OVERALL')
+        print(accuracy_x)
+        print(accuracy_y)
+        print(tot_accuracy)
 
         if epoch % opt.evaluation_interval == 0:
             print("\n---- Evaluating Model ----")
