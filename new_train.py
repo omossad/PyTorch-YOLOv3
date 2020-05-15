@@ -177,9 +177,9 @@ if __name__ == "__main__":
                 row_metrics = [formats[metric] % roi.metrics.get(metric, 0)]
                 #row_metrics = [formats[metric] % roi.metrics.get(metric, 0) for roi in model.roi_layer]
                 metric_table += [[metric, *row_metrics]]
-                print('METRIC')
-                print(metric)
-                print(*row_metrics)
+                #print('METRIC')
+                #print(metric)
+                #print(*row_metrics)
                 if i == 3:
                     accuracy_x += float(*row_metrics)
                 elif i == 4:
@@ -207,8 +207,8 @@ if __name__ == "__main__":
 
             model.seen += imgs.size(0)
         print('OVERALL')
-        print(accuracy_x)
-        print(accuracy_y)
+        print(accuracy_x/num_batches)
+        print(accuracy_y/num_batches)
         print(tot_accuracy)
 
         if epoch % opt.evaluation_interval == 0:
