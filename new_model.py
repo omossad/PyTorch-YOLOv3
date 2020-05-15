@@ -360,13 +360,13 @@ class ROILayer(nn.Module):
                     y_inpt[image_i][y_tile][s_obj] += s_conf
                     x_inpt[image_i][x_tile_][s_obj] += s_conf
                     y_inpt[image_i][y_tile_][s_obj] += s_conf
-                if targets is None:
-                    print('INPUT RAW')
-                    print(image_pred)
-                    print('X')
-                    print(x_inpt[image_i])
-                    print('Y')
-                    print(y_inpt[image_i])
+                #if targets is None:
+                #    print('INPUT RAW')
+                #    print(image_pred)
+                #    print('X')
+                #    print(x_inpt[image_i])
+                #    print('Y')
+                #    print(y_inpt[image_i])
         #print('X before model')
         #print(x_inpt)
         #print('Y before model')
