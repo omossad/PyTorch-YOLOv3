@@ -292,18 +292,21 @@ class ROILayer(nn.Module):
         #    nn.Dropout()
         #)
         self.fc_out_x = nn.Sequential(
-            nn.Linear(self.num_classes * self.num_tiles, 128),
+            nn.Linear(self.num_classes * self.num_tiles, 64),
             #nn.Linear(256, 128),
-            nn.BatchNorm1d(128),
+            #nn.BatchNorm1d(128),
             nn.ReLU(inplace=True),
-            nn.Linear(128, self.num_tiles)
+            nn.Linear(64, 32),
+            nn.ReLU(inplace=True),
+            nn.Linear(32, self.num_tiles)
         )
         self.fc_out_y = nn.Sequential(
             nn.Linear(self.num_classes * self.num_tiles, 128),
             #nn.Linear(256, 128),
-            nn.BatchNorm1d(128),
             nn.ReLU(inplace=True),
-            nn.Linear(128, self.num_tiles)
+            nn.Linear(64, 32),
+            nn.ReLU(inplace=True),
+            nn.Linear(32, self.num_tiles)
         )
         #self.fc_net_y = nn.Sequential(
         #    nn.Linear(self.num_classes * self.num_tiles, 256),
@@ -333,9 +336,11 @@ class ROILayer(nn.Module):
             #print(image_pred)
             if image_pred is not None:
                 num_pred = len(image_pred)
-                image_pred[..., :4] = xyxy2xywh(image_pred[..., :4])
+                #image_pred[..., :4] = xyxy2xywh(image_pred[..., :4])
                 x_tiles = (image_pred[..., 0] // self.tile_size).int()
                 y_tiles = (image_pred[..., 1] // self.tile_size).int()
+                x_tiles_ = (image_pred[..., 3] // self.tile_size).int()
+                y_tiles_ = (image_pred[..., 4] // self.tile_size).int()
                 obj_class    = image_pred[..., 6].int()
                 obj_conf     = image_pred[..., 4]
                 for i in range(num_pred):
@@ -343,12 +348,18 @@ class ROILayer(nn.Module):
                     y_tile = max(y_tiles.data.tolist()[i], 0)
                     x_tile = min(x_tiles.data.tolist()[i], self.num_tiles-1)
                     y_tile = min(y_tiles.data.tolist()[i], self.num_tiles-1)
+                    x_tile_ = max(x_tiles_.data.tolist()[i], 0)
+                    y_tile_ = max(y_tiles_.data.tolist()[i], 0)
+                    x_tile_ = min(x_tiles_.data.tolist()[i], self.num_tiles-1)
+                    y_tile_ = min(y_tiles_.data.tolist()[i], self.num_tiles-1)
                     s_obj  = obj_class.data.tolist()[i]
                     s_conf = obj_conf.data.tolist()[i]
                     #print(str(x_coordinate.data.tolist()[i]) + ' ' + str(x_coordinate.data.tolist()[i]))
                     #print(str(image_i) + ' ' + str(x_tile) + ' ' + str(y_tile) + ' ' + str(s_obj) + ' ' + str(s_conf) + '\n')
-                    x_inpt[image_i][self.num_tiles-x_tile-1][s_obj] += s_conf
+                    x_inpt[image_i][x_tile][s_obj] += s_conf
                     y_inpt[image_i][y_tile][s_obj] += s_conf
+                    x_inpt[image_i][x_tile_][s_obj] += s_conf
+                    y_inpt[image_i][y_tile_][s_obj] += s_conf
                 #if targets is None:
                 #    print('INPUT RAW')
                 #    print(image_pred)
