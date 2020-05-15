@@ -346,7 +346,12 @@ class ROILayer(nn.Module):
                     #print(str(image_i) + ' ' + str(x_tile) + ' ' + str(y_tile) + ' ' + str(s_obj) + ' ' + str(s_conf) + '\n')
                     x_inpt[image_i][x_tile][s_obj] += s_conf
                     y_inpt[image_i][y_tile][s_obj] += s_conf
-
+                print('INPUT')
+                print(image_pred)
+                print('X')
+                print(x_inpt[image_i])
+                print('Y')
+                print(y_inpt[image_i])
         #print('X before model')
         #print(x_inpt)
         #print('Y before model')
