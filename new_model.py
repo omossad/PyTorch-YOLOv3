@@ -268,6 +268,8 @@ class ROILayer(nn.Module):
         self.num_classes = num_classes
         self.img_dim = img_dim
         self.num_tiles = num_tiles
+        conf_thes = 0.1
+        nms_thes = 0.05
         self.conf_thres = conf_thes
         self.nms_thres = nms_thes
         #self.mse_loss = nn.MSELoss()
@@ -346,7 +348,7 @@ class ROILayer(nn.Module):
                     #print(str(image_i) + ' ' + str(x_tile) + ' ' + str(y_tile) + ' ' + str(s_obj) + ' ' + str(s_conf) + '\n')
                     x_inpt[image_i][x_tile][s_obj] += s_conf
                     y_inpt[image_i][y_tile][s_obj] += s_conf
-                print('INPUT')
+                print('INPUT RAW')
                 print(image_pred)
                 print('X')
                 print(x_inpt[image_i])
