@@ -215,7 +215,7 @@ if __name__ == "__main__":
             #print(log_str)
 
             model.seen += imgs.size(0)
-        print('OVERALL')
+        print('Training Statistics for epoch ' + str(epoch) + '/' + str(opt.epochs))
         print('losses: '     + str(tot_loss_x/num_batches) + ', ' + str(tot_loss_y/num_batches) + ', ' + str(tot_loss/num_batches))
         print('accuracies: ' + str(tot_acc_x/num_batches)  + ', ' + str(tot_acc_y/num_batches)  + ', ' + str(tot_acc/num_batches))
 
@@ -245,7 +245,7 @@ if __name__ == "__main__":
                 ("grid_x Accuracy", x_acc.mean()),
                 ("grid_y Accuracy", y_acc.mean()),
             ]
-            print('accuracies: ' + str(x_acc.mean()) + ', ' + str(y_acc.mean()) + ', ' + str(tot_accuracy.mean()))
+            print('accuracies: ' + str(x_acc.mean()) + ', ' + str(y_acc.mean()) + ', ' + str(tot_accuracy.mean()) + '\n')
             #logger.list_of_scalars_summary(evaluation_metrics, epoch)
 
             #evaluation_metrics = [
