@@ -295,10 +295,10 @@ class ROILayer(nn.Module):
             nn.Linear(24, self.num_tiles)
         )
         self.fc_out_y = nn.Sequential(
-            nn.Linear(16, 16),
-            nn.BatchNorm1d(16),
+            nn.Linear(16, 24),
+            nn.BatchNorm1d(24),
             nn.ReLU(inplace=True),
-            nn.Linear(16, self.num_tiles)
+            nn.Linear(24, self.num_tiles)
         )
         #self.fc_net_y = nn.Sequential(
         #    nn.Linear(self.num_classes * self.num_tiles, 256),
