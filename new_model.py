@@ -277,26 +277,26 @@ class ROILayer(nn.Module):
         self.loss_func = nn.CrossEntropyLoss()
         self.fc_net = nn.Sequential(
             nn.Linear(self.num_classes * self.num_tiles * 2, 64),
-            nn.BatchNorm1d(64),
+            #nn.BatchNorm1d(64),
             nn.ReLU(inplace=True),
             nn.Dropout(),
             nn.Linear(64, 64),
-            nn.BatchNorm1d(64),
+            #nn.BatchNorm1d(64),
             nn.ReLU(inplace=True),
             nn.Linear(64, 32),
-            nn.BatchNorm1d(32),
+            #nn.BatchNorm1d(32),
             nn.ReLU(inplace=True),
             nn.Dropout()
         )
         self.fc_out_x = nn.Sequential(
             nn.Linear(32, 24),
-            nn.BatchNorm1d(24),
+            #nn.BatchNorm1d(24),
             nn.ReLU(inplace=True),
             nn.Linear(24, self.num_tiles)
         )
         self.fc_out_y = nn.Sequential(
             nn.Linear(32, 24),
-            nn.BatchNorm1d(24),
+            #nn.BatchNorm1d(24),
             nn.ReLU(inplace=True),
             nn.Linear(24, self.num_tiles)
         )

@@ -175,8 +175,8 @@ def get_batch_statistic(outputs_x, outputs_y, targets):
     _, pred_y = torch.max(outputs_y, 1)
     _, corr_x = torch.max(tx, 1)
     _, corr_y = torch.max(tx, 1)
-    print('PREDICTED ' + str(pred_x) + ', ' + str(pred_y))
-    print('TRUE ' + str(corr_x) + ', ' + str(corr_y))
+    #print('PREDICTED ' + str(pred_x) + ', ' + str(pred_y))
+    #print('TRUE ' + str(corr_x) + ', ' + str(corr_y))
     x_score = torch.eq(pred_x, corr_x).type(FloatTensor)
     y_score = torch.eq(pred_y, corr_y).type(FloatTensor)
     overall = x_score * y_score
