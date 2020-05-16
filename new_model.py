@@ -290,13 +290,13 @@ class ROILayer(nn.Module):
         )
         self.fc_out_x = nn.Sequential(
             nn.Linear(32, 24),
-            #nn.BatchNorm1d(24),
+            nn.BatchNorm1d(24),
             nn.ReLU(inplace=True),
             nn.Linear(24, self.num_tiles)
         )
         self.fc_out_y = nn.Sequential(
             nn.Linear(32, 24),
-            #nn.BatchNorm1d(24),
+            nn.BatchNorm1d(24),
             nn.ReLU(inplace=True),
             nn.Linear(24, self.num_tiles)
         )
@@ -466,7 +466,7 @@ class ROILayer(nn.Module):
             #print(corr)
             #loss_x = self.loss_func(x, targets_x)
             #loss_y = self.loss_func(y, targets_y)
-            total_loss = max(loss_x**2, loss_y**2)
+            total_loss = max(loss_x, loss_y)
             #total_loss = self.loss_func(pre_lbl,cor_lbl)
             self.metrics = {
                 "loss_x": to_cpu(loss_x).item(),
