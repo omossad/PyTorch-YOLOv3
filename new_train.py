@@ -222,7 +222,7 @@ if __name__ == "__main__":
         if epoch % opt.evaluation_interval == 0:
             print("\n---- Evaluating Model ----")
             # Evaluate the model on the validation set
-            tot_acc, x_acc, y_acc = evaluate(
+            tot_accuracy, x_acc, y_acc = evaluate(
                 model,
                 path=valid_path,
                 conf_thres=0.3,
@@ -230,7 +230,7 @@ if __name__ == "__main__":
                 img_size=opt.img_size,
                 batch_size=8,
             )
-            print('accuracies: ' + str(x_acc) + ', ' + str(y_acc) + ', ' + str(tot_acc))
+            print('accuracies: ' + str(x_acc) + ', ' + str(y_acc) + ', ' + str(tot_accuracy))
             #precision, recall, AP, f1, ap_class = evaluate(
             #    model,
             #    path=valid_path,
@@ -241,7 +241,7 @@ if __name__ == "__main__":
             #    batch_size=8,
             #)
             evaluation_metrics = [
-                ("total_Accuracy", tot_acc.mean()),
+                ("total_Accuracy", tot_accuracy.mean()),
                 ("grid_x Accuracy", x_acc.mean()),
                 ("grid_y Accuracy", y_acc.mean()),
             ]
