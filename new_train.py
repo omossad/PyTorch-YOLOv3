@@ -230,7 +230,7 @@ if __name__ == "__main__":
                 img_size=opt.img_size,
                 batch_size=8,
             )
-            print('accuracies: ' + str(x_acc) + ', ' + str(y_acc) + ', ' + str(tot_accuracy))
+
             #precision, recall, AP, f1, ap_class = evaluate(
             #    model,
             #    path=valid_path,
@@ -245,6 +245,7 @@ if __name__ == "__main__":
                 ("grid_x Accuracy", x_acc.mean()),
                 ("grid_y Accuracy", y_acc.mean()),
             ]
+            print('accuracies: ' + str(x_acc.mean()) + ', ' + str(y_acc.mean()) + ', ' + str(tot_accuracy.mean()))
             #logger.list_of_scalars_summary(evaluation_metrics, epoch)
 
             #evaluation_metrics = [
