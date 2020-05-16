@@ -441,7 +441,7 @@ class ROILayer(nn.Module):
             _, pred_x = torch.max(x, 1)
             _, pred_y = torch.max(y, 1)
             _, corr_x = torch.max(tx, 1)
-            _, corr_y = torch.max(tx, 1)
+            _, corr_y = torch.max(ty, 1)
             #print('LOSS')
             #print('X')
             #print(x)
