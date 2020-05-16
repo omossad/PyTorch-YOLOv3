@@ -289,14 +289,14 @@ class ROILayer(nn.Module):
             nn.Dropout()
         )
         self.fc_out_x = nn.Sequential(
-            nn.Linear(16, 24),
+            nn.Linear(32, 24),
             nn.BatchNorm1d(24),
             nn.ReLU(inplace=True),
             nn.ReLU(inplace=True),
             nn.Linear(24, self.num_tiles)
         )
         self.fc_out_y = nn.Sequential(
-            nn.Linear(16, 24),
+            nn.Linear(32, 24),
             nn.BatchNorm1d(24),
             nn.ReLU(inplace=True),
             nn.Linear(24, self.num_tiles)
@@ -374,8 +374,8 @@ class ROILayer(nn.Module):
         y_ = y_inpt.view(y_inpt.size(0), -1)
         x_cat = torch.cat((x_, y_), 1)
         x_cat = self.fc_net(x_cat)
-        x = self.fc_out_x(x_cat[..., :16])
-        y = self.fc_out_y(x_cat[..., 16:])
+        x = self.fc_out_x(x_cat)
+        y = self.fc_out_y(x_cat)
         #x = x_cat[...,:self.num_tiles]
         #y = x_cat[...,self.num_tiles:]
         #y = self.fc_net_y(y)
