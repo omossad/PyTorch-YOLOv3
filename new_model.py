@@ -283,19 +283,19 @@ class ROILayer(nn.Module):
             nn.Linear(64, 64),
             nn.BatchNorm1d(64),
             nn.ReLU(inplace=True),
-            nn.Linear(64, 16),
-            nn.BatchNorm1d(16),
+            nn.Linear(64, 32),
+            nn.BatchNorm1d(32),
             nn.ReLU(inplace=True),
             nn.Dropout()
         )
         self.fc_out_x = nn.Sequential(
-            nn.Linear(16, 24),
+            nn.Linear(32, 24),
             nn.BatchNorm1d(24),
             nn.ReLU(inplace=True),
             nn.Linear(24, self.num_tiles)
         )
         self.fc_out_y = nn.Sequential(
-            nn.Linear(16, 24),
+            nn.Linear(32, 24),
             nn.BatchNorm1d(24),
             nn.ReLU(inplace=True),
             nn.Linear(24, self.num_tiles)
@@ -348,8 +348,8 @@ class ROILayer(nn.Module):
                     s_conf = obj_conf.data.tolist()[i]
                     #print(str(x_coordinate.data.tolist()[i]) + ' ' + str(x_coordinate.data.tolist()[i]))
                     #print(str(image_i) + ' ' + str(x_tile) + ' ' + str(y_tile) + ' ' + str(s_obj) + ' ' + str(s_conf) + '\n')
-                    x_inpt[image_i][s_obj][x_tile] += (s_obj+1)  * s_conf
-                    y_inpt[image_i][s_obj][y_tile] += (s_obj+1)  * s_conf
+                    x_inpt[image_i][s_obj][x_tile] += s_conf
+                    y_inpt[image_i][s_obj][y_tile] += s_conf
                     if x_tile != x_tile_:
                         x_inpt[image_i][s_obj][x_tile_] += s_conf
                     if y_tile != y_tile_:
