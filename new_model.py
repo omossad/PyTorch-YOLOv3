@@ -335,8 +335,8 @@ class ROILayer(nn.Module):
         ByteTensor = torch.cuda.ByteTensor if x.is_cuda else torch.ByteTensor
         total_loss = 0
         objects = non_max_suppression(x, self.conf_thres, self.nms_thres)
-        x_inpt = torch.zeros([num_samples, self.num_classes, self.num_tiles]).type(FloatTensor)
-        y_inpt = torch.zeros([num_samples, self.num_classes, self.num_tiles]).type(FloatTensor)
+        x_inpt = torch.zeros([num_samples, self.num_tiles, self.num_classes]).type(FloatTensor)
+        y_inpt = torch.zeros([num_samples, self.num_tiles, self.num_classes]).type(FloatTensor)
         for image_i, image_pred in enumerate(objects):
             #print('OBJECTS')
             #print(image_pred)
@@ -362,12 +362,12 @@ class ROILayer(nn.Module):
                     s_conf = obj_conf.data.tolist()[i]
                     #print(str(x_coordinate.data.tolist()[i]) + ' ' + str(x_coordinate.data.tolist()[i]))
                     #print(str(image_i) + ' ' + str(x_tile) + ' ' + str(y_tile) + ' ' + str(s_obj) + ' ' + str(s_conf) + '\n')
-                    x_inpt[image_i][s_obj][x_tile] += s_conf
-                    y_inpt[image_i][s_obj][y_tile] += s_conf
+                    x_inpt[image_i][x_tile][s_obj] += s_conf
+                    y_inpt[image_i][y_tile][s_obj] += s_conf
                     if x_tile != x_tile_:
-                        x_inpt[image_i][s_obj][x_tile_] += s_conf
+                        x_inpt[image_i][x_tile_][s_obj] += s_conf
                     if y_tile != y_tile_:
-                        y_inpt[image_i][s_obj][y_tile_] += s_conf
+                        y_inpt[image_i][y_tile_][s_obj] += s_conf
                 #if targets is None:
                 #    print('INPUT RAW')
                 #    print(image_pred)
