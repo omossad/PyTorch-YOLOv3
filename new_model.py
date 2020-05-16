@@ -379,8 +379,8 @@ class ROILayer(nn.Module):
             if image_pred is not None:
                 num_pred = len(image_pred)
                 image_pred[..., :4] = xyxy2xywh(image_pred[..., :4])
-                print('PREDICTION')
-                print(image_pred[..., :4])
+                #print('PREDICTION')
+                #print(image_pred[..., :4])
                 x_tiles = (image_pred[..., 0] // self.tile_size).int()
                 y_tiles = (image_pred[..., 1] // self.tile_size).int()
                 #x_tiles_ = (image_pred[..., 3] // self.tile_size).int()
