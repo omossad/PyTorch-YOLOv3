@@ -295,7 +295,7 @@ class ROILayer(nn.Module):
             nn.BatchNorm1d(64),
             nn.ReLU(inplace=True),
             nn.Linear(64, 64),
-            nn.Dropout()
+            nn.Dropout(),
             nn.Linear(64, 32),
             nn.ReLU(inplace=True),
             nn.Linear(32, self.num_tiles)
@@ -306,7 +306,7 @@ class ROILayer(nn.Module):
             nn.BatchNorm1d(64),
             nn.ReLU(inplace=True),
             nn.Linear(64, 64),
-            nn.Dropout()
+            nn.Dropout(),
             nn.Linear(64, 32),
             nn.ReLU(inplace=True),
             nn.Linear(32, self.num_tiles)
