@@ -1,7 +1,7 @@
 from __future__ import division
 
 from new_model import *
-from utils.logger import *
+#from utils.logger import *
 from utils.new_utils import *
 from utils.new_datasets import *
 from utils.parse_config import *
