@@ -58,7 +58,7 @@ def evaluate(model, path, conf_thres, nms_thres, img_size, batch_size):
         #sample_metrics = torch.stack((sample_metrics, batch_statistics.type(Tensor)))
     sample_metrics = torch.Tensor(len(temp_metrics), 1, 3)
     torch.cat(temp_metrics, out=sample_metrics)
-    print('OVERALL RESULTS')
+    #print('OVERALL RESULTS')
     #print(sample_metrics)
     sample_metrics = torch.FloatTensor(sample_metrics.view(-1,3))
     # Concatenate sample statistics
@@ -67,7 +67,7 @@ def evaluate(model, path, conf_thres, nms_thres, img_size, batch_size):
     tot_acc = sample_metrics[..., 0].mean()
     x_acc   = sample_metrics[..., 1].mean()
     y_acc   = sample_metrics[..., 2].mean()
-    print('accuracies: ' + str(x_acc) + ', ' + str(y_acc) + ', ' + str(tot_acc))
+
 
 
     #tot_acc = x_acc = y_acc = 0
@@ -127,7 +127,7 @@ if __name__ == "__main__":
         img_size=opt.img_size,
         batch_size=8,
     )
-
+    print('accuracies: ' + str(x_acc) + ', ' + str(y_acc) + ', ' + str(tot_acc))
     #print("Average Precisions:")
     #for i, c in enumerate(ap_class):
     #    print(f"+ Class '{c}' ({class_names[c]}) - AP: {AP[i]}")

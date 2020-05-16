@@ -230,7 +230,7 @@ if __name__ == "__main__":
                 img_size=opt.img_size,
                 batch_size=8,
             )
-
+            print('accuracies: ' + str(x_acc) + ', ' + str(y_acc) + ', ' + str(tot_acc))
             #precision, recall, AP, f1, ap_class = evaluate(
             #    model,
             #    path=valid_path,

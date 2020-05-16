@@ -275,41 +275,31 @@ class ROILayer(nn.Module):
         self.metrics = {}
         self.tile_size = self.img_dim // self.num_tiles
         self.loss_func = nn.CrossEntropyLoss()
-        #self.fc_net = nn.Sequential(
-        #    nn.Linear(self.num_classes * self.num_tiles * 2, 1024),
-        #    nn.BatchNorm1d(1024),
-        #    nn.ReLU(inplace=True),
-        #    nn.Dropout(),
-        #    nn.Linear(1024, 512),
-        #    nn.BatchNorm1d(512),
-        #    nn.ReLU(inplace=True),
-        #    nn.Dropout(),
-        #    nn.Linear(512, 256),
-        #    nn.BatchNorm1d(256),
-        #    nn.ReLU(inplace=True),
-        #    nn.Dropout()
-        #)
-        self.fc_out_x = nn.Sequential(
-            nn.Linear(self.num_classes * self.num_tiles, 64),
-            #nn.Linear(256, 128),
+        self.fc_net = nn.Sequential(
+            nn.Linear(self.num_classes * self.num_tiles * 2, 64),
             nn.BatchNorm1d(64),
             nn.ReLU(inplace=True),
-            nn.Linear(64, 64),
             nn.Dropout(),
-            nn.Linear(64, 32),
+            nn.Linear(64, 64),
+            nn.BatchNorm1d(64),
             nn.ReLU(inplace=True),
-            nn.Linear(32, self.num_tiles)
+            nn.Linear(64, 32),
+            nn.BatchNorm1d(32),
+            nn.ReLU(inplace=True),
+            nn.Dropout()
+        )
+        self.fc_out_x = nn.Sequential(
+            nn.Linear(16, 24),
+            nn.BatchNorm1d(24),
+            nn.ReLU(inplace=True),
+            nn.ReLU(inplace=True),
+            nn.Linear(24, self.num_tiles)
         )
         self.fc_out_y = nn.Sequential(
-            nn.Linear(self.num_classes * self.num_tiles, 64),
-            #nn.Linear(256, 128),
-            nn.BatchNorm1d(64),
+            nn.Linear(16, 24),
+            nn.BatchNorm1d(24),
             nn.ReLU(inplace=True),
-            nn.Linear(64, 64),
-            nn.Dropout(),
-            nn.Linear(64, 32),
-            nn.ReLU(inplace=True),
-            nn.Linear(32, self.num_tiles)
+            nn.Linear(24, self.num_tiles)
         )
         #self.fc_net_y = nn.Sequential(
         #    nn.Linear(self.num_classes * self.num_tiles, 256),
@@ -332,8 +322,8 @@ class ROILayer(nn.Module):
         ByteTensor = torch.cuda.ByteTensor if x.is_cuda else torch.ByteTensor
         total_loss = 0
         objects = non_max_suppression(x, self.conf_thres, self.nms_thres)
-        x_inpt = torch.zeros([num_samples, self.num_tiles, self.num_classes]).type(FloatTensor)
-        y_inpt = torch.zeros([num_samples, self.num_tiles, self.num_classes]).type(FloatTensor)
+        x_inpt = torch.zeros([num_samples, self.num_classes, self.num_tiles]).type(FloatTensor)
+        y_inpt = torch.zeros([num_samples, self.num_classes, self.num_tile]).type(FloatTensor)
         for image_i, image_pred in enumerate(objects):
             #print('OBJECTS')
             #print(image_pred)
@@ -359,10 +349,12 @@ class ROILayer(nn.Module):
                     s_conf = obj_conf.data.tolist()[i]
                     #print(str(x_coordinate.data.tolist()[i]) + ' ' + str(x_coordinate.data.tolist()[i]))
                     #print(str(image_i) + ' ' + str(x_tile) + ' ' + str(y_tile) + ' ' + str(s_obj) + ' ' + str(s_conf) + '\n')
-                    x_inpt[image_i][x_tile][s_obj] += (s_obj+1)  * s_conf
-                    y_inpt[image_i][y_tile][s_obj] += (s_obj+1)  * s_conf
-                    x_inpt[image_i][x_tile_][s_obj] += (s_conf+1) * s_conf
-                    y_inpt[image_i][y_tile_][s_obj] += (s_conf+1) * s_conf
+                    x_inpt[image_i][s_obj][x_tile] += (s_obj+1)  * s_conf
+                    y_inpt[image_i][s_obj][y_tile] += (s_obj+1)  * s_conf
+                    if x_tile != x_tile_:
+                        x_inpt[image_i][s_obj][x_tile_] += s_conf
+                    if y_tile != y_tile_:
+                        y_inpt[image_i][s_obj][y_tile_] += s_conf
                 #if targets is None:
                 #    print('INPUT RAW')
                 #    print(image_pred)
@@ -377,13 +369,13 @@ class ROILayer(nn.Module):
         #print('INPUT')
         #print(x_inpt)
 
-        x = x_inpt.view(x_inpt.size(0), -1)
+        x_ = x_inpt.view(x_inpt.size(0), -1)
         #x = self.fc_net_x(x)
-        y = y_inpt.view(y_inpt.size(0), -1)
-        #x_cat = torch.cat((x_, y_), 1)
-        #x_cat = self.fc_net(x_cat)
-        x = self.fc_out_x(x)
-        y = self.fc_out_y(y)
+        y_ = y_inpt.view(y_inpt.size(0), -1)
+        x_cat = torch.cat((x_, y_), 1)
+        x_cat = self.fc_net(x_cat)
+        x = self.fc_out_x(x_cat[..., :16])
+        y = self.fc_out_y(x_cat[..., 16:])
         #x = x_cat[...,:self.num_tiles]
         #y = x_cat[...,self.num_tiles:]
         #y = self.fc_net_y(y)
@@ -475,7 +467,7 @@ class ROILayer(nn.Module):
             #print(corr)
             #loss_x = self.loss_func(x, targets_x)
             #loss_y = self.loss_func(y, targets_y)
-            total_loss = max(loss_x,loss_y)
+            total_loss = loss_x * loss_y
             #total_loss = self.loss_func(pre_lbl,cor_lbl)
             self.metrics = {
                 "loss_x": to_cpu(loss_x).item(),
