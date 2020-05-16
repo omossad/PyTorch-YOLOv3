@@ -268,8 +268,6 @@ class ROILayer(nn.Module):
         self.num_classes = num_classes
         self.img_dim = img_dim
         self.num_tiles = num_tiles
-        conf_thes = 0.1
-        nms_thes = 0.05
         self.conf_thres = conf_thes
         self.nms_thres = nms_thes
         #self.mse_loss = nn.MSELoss()
@@ -294,8 +292,10 @@ class ROILayer(nn.Module):
         self.fc_out_x = nn.Sequential(
             nn.Linear(self.num_classes * self.num_tiles, 64),
             #nn.Linear(256, 128),
-            #nn.BatchNorm1d(128),
+            nn.BatchNorm1d(64),
             nn.ReLU(inplace=True),
+            nn.Linear(64, 64),
+            nn.Dropout()
             nn.Linear(64, 32),
             nn.ReLU(inplace=True),
             nn.Linear(32, self.num_tiles)
@@ -303,7 +303,10 @@ class ROILayer(nn.Module):
         self.fc_out_y = nn.Sequential(
             nn.Linear(self.num_classes * self.num_tiles, 64),
             #nn.Linear(256, 128),
+            nn.BatchNorm1d(64),
             nn.ReLU(inplace=True),
+            nn.Linear(64, 64),
+            nn.Dropout()
             nn.Linear(64, 32),
             nn.ReLU(inplace=True),
             nn.Linear(32, self.num_tiles)
@@ -356,10 +359,10 @@ class ROILayer(nn.Module):
                     s_conf = obj_conf.data.tolist()[i]
                     #print(str(x_coordinate.data.tolist()[i]) + ' ' + str(x_coordinate.data.tolist()[i]))
                     #print(str(image_i) + ' ' + str(x_tile) + ' ' + str(y_tile) + ' ' + str(s_obj) + ' ' + str(s_conf) + '\n')
-                    x_inpt[image_i][x_tile][s_obj] += s_conf
-                    y_inpt[image_i][y_tile][s_obj] += s_conf
-                    x_inpt[image_i][x_tile_][s_obj] += s_conf
-                    y_inpt[image_i][y_tile_][s_obj] += s_conf
+                    x_inpt[image_i][x_tile][s_obj] += (s_obj+1)  * s_conf
+                    y_inpt[image_i][y_tile][s_obj] += (s_obj+1)  * s_conf
+                    x_inpt[image_i][x_tile_][s_obj] += (s_conf+1) * s_conf
+                    y_inpt[image_i][y_tile_][s_obj] += (s_conf+1) * s_conf
                 #if targets is None:
                 #    print('INPUT RAW')
                 #    print(image_pred)

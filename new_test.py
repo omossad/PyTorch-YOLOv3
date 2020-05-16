@@ -50,16 +50,16 @@ def evaluate(model, path, conf_thres, nms_thres, img_size, batch_size):
             outputs_x, outputs_y = model(imgs)
             #outputs = non_max_suppression(outputs, conf_thres=conf_thres, nms_thres=nms_thres)
         batch_statistics = get_batch_statistic(outputs_x, outputs_y, targets)
-        print('BATCH ' + str(batch_i) + ' results')
+        #print('BATCH ' + str(batch_i) + ' results')
         ##print(temp_metrics)
-        print(batch_statistics)
+        #print(batch_statistics)
         temp_metrics.append(batch_statistics)
         #sample_metrics += get_batch_statistic(outputs_x, outputs_y, targets)
         #sample_metrics = torch.stack((sample_metrics, batch_statistics.type(Tensor)))
     sample_metrics = torch.Tensor(len(temp_metrics), 1, 3)
     torch.cat(temp_metrics, out=sample_metrics)
     print('OVERALL RESULTS')
-    print(sample_metrics)
+    #print(sample_metrics)
     sample_metrics = torch.FloatTensor(sample_metrics.view(-1,3))
     # Concatenate sample statistics
     #tot_acc, x_acc, y_acc = [np.concatenate(x, 0) for x in list(zip(*sample_metrics))]
@@ -67,12 +67,9 @@ def evaluate(model, path, conf_thres, nms_thres, img_size, batch_size):
     tot_acc = sample_metrics[..., 0].mean()
     x_acc   = sample_metrics[..., 1].mean()
     y_acc   = sample_metrics[..., 2].mean()
-    print('total accuracy')
-    print(tot_acc)
-    print('x_acc accuracy')
-    print(x_acc)
-    print('y_acc accuracy')
-    print(y_acc)
+    print('accuracies: ' + str(x_acc) + ', ' + str(y_acc) + ', ' + str(tot_acc))
+
+
     #tot_acc = x_acc = y_acc = 0
     #true_positives, pred_scores, pred_labels = [np.concatenate(x, 0) for x in list(zip(*sample_metrics))]
     #precision, recall, AP, f1, ap_class = ap_per_class(true_positives, pred_scores, pred_labels, labels)

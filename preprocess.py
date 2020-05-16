@@ -17,8 +17,8 @@ def get_tile(x,y):
         y = y*H_ref
         x_cor = np.minimum(x, W_ref-1)
         y_cor = np.minimum(y, H_ref-1)
-        x_dis = int(x_cor / tile_width)
-        y_dis = int(y_cor / tile_height)
+        x_dis = int(round(x_cor / tile_width))
+        y_dis = int(round(y_cor / tile_height))
         tile = int(x_dis + y_dis * W_tiles)
         return tile
 
