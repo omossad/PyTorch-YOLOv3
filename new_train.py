@@ -216,8 +216,8 @@ if __name__ == "__main__":
 
             model.seen += imgs.size(0)
         print('OVERALL')
-        print('losses: '     + str(tot_loss_x/num_batches) + ', ' + str(tot_loss_y/num_batches) + ', ' + str(tot_loss/num_batches) + '\n')
-        print('accuracies: ' + str(tot_acc_x/num_batches)  + ', ' + str(tot_acc_y/num_batches)  + ', ' + str(tot_acc/num_batches)  + '\n')
+        print('losses: '     + str(tot_loss_x/num_batches) + ', ' + str(tot_loss_y/num_batches) + ', ' + str(tot_loss/num_batches))
+        print('accuracies: ' + str(tot_acc_x/num_batches)  + ', ' + str(tot_acc_y/num_batches)  + ', ' + str(tot_acc/num_batches))
 
         if epoch % opt.evaluation_interval == 0:
             print("\n---- Evaluating Model ----")
