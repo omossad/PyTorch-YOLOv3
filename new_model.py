@@ -323,7 +323,7 @@ class ROILayer(nn.Module):
         total_loss = 0
         objects = non_max_suppression(x, self.conf_thres, self.nms_thres)
         x_inpt = torch.zeros([num_samples, self.num_classes, self.num_tiles]).type(FloatTensor)
-        y_inpt = torch.zeros([num_samples, self.num_classes, self.num_tile]).type(FloatTensor)
+        y_inpt = torch.zeros([num_samples, self.num_classes, self.num_tiles]).type(FloatTensor)
         for image_i, image_pred in enumerate(objects):
             #print('OBJECTS')
             #print(image_pred)
