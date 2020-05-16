@@ -276,31 +276,24 @@ class ROILayer(nn.Module):
         self.tile_size = self.img_dim // self.num_tiles
         self.loss_func = nn.CrossEntropyLoss()
         self.fc_net = nn.Sequential(
-            nn.Linear(self.num_classes * self.num_tiles * 2, 1024),
-            nn.BatchNorm1d(1024),
+            nn.Linear(self.num_classes * self.num_tiles * 2, 64),
+            #nn.BatchNorm1d(1024),
             nn.ReLU(inplace=True),
             nn.Dropout(),
-            nn.Linear(1024, 512),
-            nn.BatchNorm1d(512),
+            nn.Linear(64, 32),
+            nn.BatchNorm1d(32),
             nn.ReLU(inplace=True),
             nn.Dropout(),
-            nn.Linear(512, 256),
-            nn.BatchNorm1d(256),
-            nn.ReLU(inplace=True),
-            nn.Dropout()
         )
         self.fc_out_x = nn.Sequential(
-
-            nn.Linear(256, 128),
-            nn.BatchNorm1d(128),
+            nn.Linear(32, 24),
             nn.ReLU(inplace=True),
-            nn.Linear(128, self.num_tiles)
+            nn.Linear(24, self.num_tiles)
         )
         self.fc_out_y = nn.Sequential(
-            nn.Linear(256, 128),
-            nn.BatchNorm1d(128),
+            nn.Linear(32, 24),
             nn.ReLU(inplace=True),
-            nn.Linear(128, self.num_tiles)
+            nn.Linear(24, self.num_tiles)
         )
         #self.fc_net = nn.Sequential(
         #    nn.Linear(self.num_classes * self.num_tiles * 2, 64),
