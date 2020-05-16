@@ -275,6 +275,33 @@ class ROILayer(nn.Module):
         self.metrics = {}
         self.tile_size = self.img_dim // self.num_tiles
         self.loss_func = nn.CrossEntropyLoss()
+        self.fc_net = nn.Sequential(
+            nn.Linear(self.num_classes * self.num_tiles * 2, 1024),
+            nn.BatchNorm1d(1024),
+            nn.ReLU(inplace=True),
+            nn.Dropout(),
+            nn.Linear(1024, 512),
+            nn.BatchNorm1d(512),
+            nn.ReLU(inplace=True),
+            nn.Dropout(),
+            nn.Linear(512, 256),
+            nn.BatchNorm1d(256),
+            nn.ReLU(inplace=True),
+            nn.Dropout()
+        )
+        self.fc_out_x = nn.Sequential(
+
+            nn.Linear(256, 128),
+            nn.BatchNorm1d(128),
+            nn.ReLU(inplace=True),
+            nn.Linear(128, self.num_tiles)
+        )
+        self.fc_out_y = nn.Sequential(
+            nn.Linear(256, 128),
+            nn.BatchNorm1d(128),
+            nn.ReLU(inplace=True),
+            nn.Linear(128, self.num_tiles)
+        )
         #self.fc_net = nn.Sequential(
         #    nn.Linear(self.num_classes * self.num_tiles * 2, 64),
             #nn.BatchNorm1d(64),
@@ -288,32 +315,32 @@ class ROILayer(nn.Module):
             #nn.ReLU(inplace=True),
             #nn.Dropout()
         #)
-        self.fc_out_x = nn.Sequential(
-            nn.Linear(self.num_classes * self.num_tiles, 64),
+        #self.fc_out_x = nn.Sequential(
+        #    nn.Linear(self.num_classes * self.num_tiles, 64),
             #nn.BatchNorm1d(64),
-            nn.ReLU(inplace=True),
+        #    nn.ReLU(inplace=True),
             #nn.Dropout(),
-            nn.Linear(64, 32),
-            nn.BatchNorm1d(32),
-            nn.ReLU(inplace=True),
-            nn.Linear(32, self.num_tiles),
+        #    nn.Linear(64, 32),
+        #    nn.BatchNorm1d(32),
+        #    nn.ReLU(inplace=True),
+        #    nn.Linear(32, self.num_tiles),
             #nn.BatchNorm1d(32),
             #nn.ReLU(inplace=True),
             #nn.Dropout()
-        )
-        self.fc_out_y = nn.Sequential(
-            nn.Linear(self.num_classes * self.num_tiles, 64),
+        #)
+        #self.fc_out_y = nn.Sequential(
+        #    nn.Linear(self.num_classes * self.num_tiles, 64),
             #nn.BatchNorm1d(64),
-            nn.ReLU(inplace=True),
+        #    nn.ReLU(inplace=True),
             #nn.Dropout(),
-            nn.Linear(64, 32),
-            nn.BatchNorm1d(32),
-            nn.ReLU(inplace=True),
-            nn.Linear(32, self.num_tiles),
+        #    nn.Linear(64, 32),
+        #    nn.BatchNorm1d(32),
+        #    nn.ReLU(inplace=True),
+        #    nn.Linear(32, self.num_tiles),
             #nn.BatchNorm1d(32),
             #nn.ReLU(inplace=True),
             #nn.Dropout()
-        )
+        #)
         #self.fc_net_y = nn.Sequential(
         #    nn.Linear(self.num_classes * self.num_tiles, 256),
         #    nn.BatchNorm1d(256),
@@ -381,14 +408,20 @@ class ROILayer(nn.Module):
         #print(y_inpt.shape)
         #print('INPUT')
         #print(x_inpt)
-
         x_ = x_inpt.view(x_inpt.size(0), -1)
-        #x = self.fc_net_x(x)
         y_ = y_inpt.view(y_inpt.size(0), -1)
+        x_cat = torch.cat((x_, y_), 1)
+        x_cat = self.fc_net(x_cat)
+        x = self.fc_out_x(x_cat)
+        y = self.fc_out_y(x_cat)
+
+        #x_ = x_inpt.view(x_inpt.size(0), -1)
+        #x = self.fc_net_x(x)
+        #y_ = y_inpt.view(y_inpt.size(0), -1)
         #x_cat = torch.cat((x_, y_), 1)
         #x_cat = self.fc_net(x_cat)
-        x = self.fc_out_x(x_)
-        y = self.fc_out_y(y_)
+        #x = self.fc_out_x(x_)
+        #y = self.fc_out_y(y_)
         #x = x_cat[...,:8]
         #y = x_cat[...,8:]
         #x = x_cat[...,:self.num_tiles]
