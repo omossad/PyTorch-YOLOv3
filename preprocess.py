@@ -38,7 +38,8 @@ out_dir   = '/home/omossad/scratch/temp/roi/'
 frame_dir = '/home/omossad/scratch/temp/frames/'
 
 frame_info = np.zeros((num_files,2))
-with open('../ROI-detection/frames_info') as csv_file:
+#with open('../ROI-detection/frames_info') as csv_file:
+with open('frames_info') as csv_file:
 	csv_reader = csv.reader(csv_file, delimiter=',')
 	line_count = 0
 	for row in csv_reader:
