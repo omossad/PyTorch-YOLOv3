@@ -22,7 +22,6 @@ import torch.optim as optim
 
 #def evaluate(model, path, iou_thres, conf_thres, nms_thres, img_size, batch_size):
 def evaluate(model, path, conf_thres, nms_thres, img_size, batch_size):
-    model = nn.DataParallel(model)
     model.eval()
 
     # Get dataloader
