@@ -22,6 +22,7 @@ import torch.optim as optim
 
 #def evaluate(model, path, iou_thres, conf_thres, nms_thres, img_size, batch_size):
 def evaluate(model, path, conf_thres, nms_thres, img_size, batch_size):
+    model = nn.DataParallel(model)
     model.eval()
 
     # Get dataloader
@@ -125,7 +126,7 @@ if __name__ == "__main__":
         conf_thres=0.3,
         nms_thres=0.2,
         img_size=opt.img_size,
-        batch_size=8,
+        batch_size=32,
     )
     print('accuracies: ' + str(x_acc) + ', ' + str(y_acc) + ', ' + str(tot_acc))
     #print("Average Precisions:")
