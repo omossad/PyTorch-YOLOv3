@@ -216,7 +216,7 @@ if __name__ == "__main__":
 
             #print(log_str)
 
-            model.seen += imgs.size(0)
+            model.module.seen += imgs.size(0)
         print('Training Statistics for epoch ' + str(epoch) + '/' + str(opt.epochs))
         print('losses: '     + str(tot_loss_x/num_batches) + ', ' + str(tot_loss_y/num_batches) + ', ' + str(tot_loss/num_batches))
         print('accuracies: ' + str(tot_acc_x/num_batches)  + ', ' + str(tot_acc_y/num_batches)  + ', ' + str(tot_acc/num_batches))
