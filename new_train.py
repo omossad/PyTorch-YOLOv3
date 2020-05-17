@@ -76,7 +76,7 @@ if __name__ == "__main__":
         #    print(param)
 
     # Get dataloader
-    model = nn.DataParallel(model)
+    #model = nn.DataParallel(model)
     dataset = ListDataset(train_path, augment=True, multiscale=opt.multiscale_training)
     dataloader = torch.utils.data.DataLoader(
         dataset,
@@ -175,8 +175,7 @@ if __name__ == "__main__":
             #metric_table = [["Metrics", *["ROI Layer"]]]
             # Log metrics at each YOLO layer
             #print(model.Darknet)
-            roi = model.module.roi_layer[0]
-            print(roi)
+            roi = model.roi_layer[0]
             for i, metric in enumerate(metrics):
                 print(metric)
                 formats = {m: "%.6f" for m in metrics}
@@ -219,7 +218,7 @@ if __name__ == "__main__":
 
             #print(log_str)
 
-            model.module.seen += imgs.size(0)
+            model.seen += imgs.size(0)
         print('Training Statistics for epoch ' + str(epoch) + '/' + str(opt.epochs))
         print('losses: '     + str(tot_loss_x/num_batches) + ', ' + str(tot_loss_y/num_batches) + ', ' + str(tot_loss/num_batches))
         print('accuracies: ' + str(tot_acc_x/num_batches)  + ', ' + str(tot_acc_y/num_batches)  + ', ' + str(tot_acc/num_batches))
