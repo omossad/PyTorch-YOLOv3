@@ -155,8 +155,8 @@ if __name__ == "__main__":
             #    param.requires_grad = False
             #lossY.backward()
             #loss = lossX + lossY
-            lossX.backward()
-            lossY.backward()
+            lossX.mean().backward()
+            lossY.mean().backward()
             loss = lossX + lossY
             #loss.backward()
 
