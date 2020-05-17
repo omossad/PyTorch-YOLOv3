@@ -177,7 +177,7 @@ if __name__ == "__main__":
             #print(model.Darknet)
             roi = model.roi_layer[0]
             for i, metric in enumerate(metrics):
-                print(metric)
+                #print(metric)
                 formats = {m: "%.6f" for m in metrics}
                 #formats["grid_size"] = "%2d"
                 #formats["cls_acc"] = "%.2f%%"
