@@ -4,8 +4,8 @@ import csv
 
 W_ref = 1920.0
 H_ref = 1080.0
-W_tiles = 4.0
-H_tiles  = 4.0
+W_tiles = 5.0
+H_tiles  = 3.0
 tile_width = W_ref / W_tiles
 tile_height = H_ref / H_tiles
 num_tiles = int(W_tiles * H_tiles)
