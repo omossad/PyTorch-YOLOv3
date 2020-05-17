@@ -155,8 +155,8 @@ if __name__ == "__main__":
             #    param.requires_grad = False
             #lossY.backward()
             #loss = lossX + lossY
-            lossX.mean().backward()
-            lossY.mean().backward()
+            lossX.sum().backward()
+            lossY.sum().backward()
             loss = lossX + lossY
             #loss.backward()
 
@@ -174,7 +174,7 @@ if __name__ == "__main__":
             #metric_table = [["Metrics", *[f"ROI Layer {i}" for i in range(1)]]]
             #metric_table = [["Metrics", *["ROI Layer"]]]
             # Log metrics at each YOLO layer
-            roi = model.roi_layer[0]
+            roi = model.module.roi_layer[0]
             for i, metric in enumerate(metrics):
                 formats = {m: "%.6f" for m in metrics}
                 #formats["grid_size"] = "%2d"
