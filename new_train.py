@@ -132,8 +132,8 @@ if __name__ == "__main__":
             #print('TARGET VAR')
             #print(targets)
             #loss, outputs = model(imgs, targets)
-            loss, outputs_x, outputs_y = model(imgs, targets)
-            #lossX, lossY, outputs_x, outputs_y = model(imgs, targets)
+            #loss, outputs_x, outputs_y = model(imgs, targets)
+            lossX, lossY, outputs_x, outputs_y = model(imgs, targets)
             #for name, param in model.roi_layer[0].named_parameters():
             #    param.requires_grad = True
             #for name, param in model.roi_layer[0].fc_net_y.named_parameters():
@@ -154,9 +154,10 @@ if __name__ == "__main__":
             #    param.requires_grad = False
             #lossY.backward()
             #loss = lossX + lossY
-            #lossX.backward()
-            #lossY.backward()
-            loss.backward()
+            lossX.backward()
+            lossY.backward()
+            loss = lossX + lossY
+            #loss.backward()
 
             if batches_done % opt.gradient_accumulations:
                 # Accumulates gradient before each step
