@@ -174,9 +174,11 @@ if __name__ == "__main__":
             #metric_table = [["Metrics", *[f"ROI Layer {i}" for i in range(1)]]]
             #metric_table = [["Metrics", *["ROI Layer"]]]
             # Log metrics at each YOLO layer
-            print(model.Darknet)
-            roi = model.Darknet.roi_layer[0]
+            #print(model.Darknet)
+            roi = model.module.roi_layer[0]
+            print(roi)
             for i, metric in enumerate(metrics):
+                print(metric)
                 formats = {m: "%.6f" for m in metrics}
                 #formats["grid_size"] = "%2d"
                 #formats["cls_acc"] = "%.2f%%"
