@@ -286,30 +286,30 @@ class ROILayer(nn.Module):
         #    nn.Dropout(),
         #)
         self.fc_out_x = nn.Sequential(
-            nn.Linear(self.num_classes * self.num_tiles, 64),
+            nn.Linear(self.num_classes * self.num_tiles, 24),
             #nn.BatchNorm1d(1024),
             nn.ReLU(inplace=True),
             nn.Dropout(),
-            nn.Linear(64, 32),
+            nn.Linear(24, 24),
             #nn.BatchNorm1d(32),
             nn.ReLU(inplace=True),
             nn.Dropout(),
-            nn.Linear(32, 24),
+            nn.Linear(24, 12),
             nn.ReLU(inplace=True),
-            nn.Linear(24, self.num_tiles)
+            nn.Linear(12, self.num_tiles)
         )
         self.fc_out_y = nn.Sequential(
-            nn.Linear(self.num_classes * self.num_tiles, 64),
+            nn.Linear(self.num_classes * self.num_tiles, 24),
             #nn.BatchNorm1d(1024),
             nn.ReLU(inplace=True),
             nn.Dropout(),
-            nn.Linear(64, 32),
+            nn.Linear(24, 24),
             #nn.BatchNorm1d(32),
             nn.ReLU(inplace=True),
             nn.Dropout(),
-            nn.Linear(32, 24),
+            nn.Linear(24, 12),
             nn.ReLU(inplace=True),
-            nn.Linear(24, self.num_tiles)
+            nn.Linear(12, self.num_tiles)
         )
         #self.fc_net = nn.Sequential(
         #    nn.Linear(self.num_classes * self.num_tiles * 2, 64),
@@ -420,6 +420,9 @@ class ROILayer(nn.Module):
         #print('INPUT')
         #print(x_inpt)
         x = x_inpt.view(x_inpt.size(0), -1)
+        print('X shape: ' + str(x.shape))
+        print('X VALUES')
+        print(x)
         y = y_inpt.view(y_inpt.size(0), -1)
         #x_cat = torch.cat((x_, y_), 1)
         #x_cat = self.fc_net(x_cat)
@@ -450,6 +453,9 @@ class ROILayer(nn.Module):
             #new_target = torch.zeros([num_samples, self.num_tiles])
             #new_target[..., 4] = 1
             x_label = targets[..., 1].view(num_samples,-1).type(LongTensor)
+            print('TARGETS: ' + str(x_label.shape))
+            print('TARGETS')
+            print(x_label)
             y_label = targets[..., 2].view(num_samples,-1).type(LongTensor)
             #print('X TARGETS')
             #print(x_label)
@@ -460,6 +466,7 @@ class ROILayer(nn.Module):
             #y_onehot.zero_()
             #y_onehot.scatter_(1, y, 1)
             tx.scatter_(1, x_label, 1)
+            print('TX: ' +  str(tx.shape))
             ty.scatter_(1, y_label, 1)
             #tx = new_target.type(FloatTensor)
             #ty = new_target.type(FloatTensor)
@@ -484,6 +491,7 @@ class ROILayer(nn.Module):
             #print(x)
 
             _, corr_x = torch.max(tx, 1)
+            print('corr_x: ' +  str(corr_x))
             _, corr_y = torch.max(ty, 1)
             #print('LOSS')
             #print('X')
@@ -493,6 +501,7 @@ class ROILayer(nn.Module):
             #print('BEFORE SOFTMAX')
             #print(x)
             x = torch.softmax(x,1)
+            print('softmax x: ' +  str(x))
             #print('SIGMOID')
             #print(x)
             #y = torch.sigmoid(y)
@@ -515,9 +524,13 @@ class ROILayer(nn.Module):
             x_score = torch.eq(pred_x, corr_x).type(FloatTensor)
             y_score = torch.eq(pred_y, corr_y).type(FloatTensor)
             overall = x_score * y_score
+            print('X score: ' + str(x_score))
+            print('Y score: ' + str(y_score))
+            print('overall score: ' + str(overall))
             #overall = overall.bool()
             #overall = overall.type(FloatTensor)
             acc_x = x_score.mean()
+            print('X mean score: ' + str(acc_x))
             acc_y = y_score.mean()
             acc   = overall.mean()
             #print(pred)
