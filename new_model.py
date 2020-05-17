@@ -467,6 +467,7 @@ class ROILayer(nn.Module):
             #y_onehot.scatter_(1, y, 1)
             tx.scatter_(1, x_label, 1)
             print('TX: ' +  str(tx.shape))
+            print('tx: ' + str(tx))
             ty.scatter_(1, y_label, 1)
             #tx = new_target.type(FloatTensor)
             #ty = new_target.type(FloatTensor)
