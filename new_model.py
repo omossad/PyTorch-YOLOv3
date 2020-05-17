@@ -83,10 +83,11 @@ def create_modules(module_defs):
         elif module_def["type"] == "roi":
             img_size = int(hyperparams["height"])
             num_classes = int(module_def["classes"])
-            num_tiles = int(module_def["tiles"])
+            num_htiles = int(module_def["htiles"])
+            num_vtiles = int(module_def["vtiles"])
             conf_thes = float(module_def["conf_thes"])
             nms_thes = float(module_def["nms_thes"])
-            roi_layer = ROILayer(num_classes, num_tiles, img_size, conf_thes, nms_thes)
+            roi_layer = ROILayer(num_classes, num_htiles, num_vtiles, img_size, conf_thes, nms_thes)
             modules.add_module(f"roi_{module_i}", roi_layer)
 
         module_list.append(modules)
@@ -263,17 +264,19 @@ class YOLOLayer(nn.Module):
 class ROILayer(nn.Module):
     """ROI layer"""
 
-    def __init__(self, num_classes=3, num_tiles=4, img_dim=416, conf_thes=0.3, nms_thes=0.2):
+    def __init__(self, num_classes=3, num_htiles=5, num_vtiles=3, img_dim=416, conf_thes=0.3, nms_thes=0.2):
         super(ROILayer, self).__init__()
         self.num_classes = num_classes
         self.img_dim = img_dim
-        self.num_tiles = num_tiles
+        self.num_htiles = num_htiles
+        self.num_vtiles = num_vtiles
         self.conf_thres = conf_thes
         self.nms_thres = nms_thes
         #self.mse_loss = nn.MSELoss()
         #self.loss_func = nn.BCEWithLogitsLoss()
         self.metrics = {}
-        self.tile_size = self.img_dim // self.num_tiles
+        self.htile_size = self.img_dim // self.num_htiles
+        self.vtile_size = self.img_dim // self.num_vtiles
         self.loss_func = nn.CrossEntropyLoss()
         #self.fc_net = nn.Sequential(
         #    nn.Linear(self.num_classes * self.num_tiles * 2, 64),
@@ -286,7 +289,7 @@ class ROILayer(nn.Module):
         #    nn.Dropout(),
         #)
         self.fc_out_x = nn.Sequential(
-            nn.Linear(self.num_classes * self.num_tiles, 24),
+            nn.Linear(self.num_classes * self.num_htiles, 24),
             #nn.BatchNorm1d(1024),
             nn.ReLU(inplace=True),
             nn.Dropout(),
@@ -296,10 +299,10 @@ class ROILayer(nn.Module):
             nn.Dropout(),
             nn.Linear(24, 12),
             nn.ReLU(inplace=True),
-            nn.Linear(12, self.num_tiles)
+            nn.Linear(12, self.num_htiles)
         )
         self.fc_out_y = nn.Sequential(
-            nn.Linear(self.num_classes * self.num_tiles, 24),
+            nn.Linear(self.num_classes * self.num_vtiles, 24),
             #nn.BatchNorm1d(1024),
             nn.ReLU(inplace=True),
             nn.Dropout(),
@@ -309,7 +312,7 @@ class ROILayer(nn.Module):
             nn.Dropout(),
             nn.Linear(24, 12),
             nn.ReLU(inplace=True),
-            nn.Linear(12, self.num_tiles)
+            nn.Linear(12, self.num_vtiles)
         )
         #self.fc_net = nn.Sequential(
         #    nn.Linear(self.num_classes * self.num_tiles * 2, 64),
@@ -371,8 +374,8 @@ class ROILayer(nn.Module):
         ByteTensor = torch.cuda.ByteTensor if x.is_cuda else torch.ByteTensor
         total_loss = 0
         objects = non_max_suppression(x, self.conf_thres, self.nms_thres)
-        x_inpt = torch.zeros([num_samples, self.num_tiles, self.num_classes]).type(FloatTensor)
-        y_inpt = torch.zeros([num_samples, self.num_tiles, self.num_classes]).type(FloatTensor)
+        x_inpt = torch.zeros([num_samples, self.num_htiles, self.num_classes]).type(FloatTensor)
+        y_inpt = torch.zeros([num_samples, self.num_vtiles, self.num_classes]).type(FloatTensor)
         for image_i, image_pred in enumerate(objects):
             #print('OBJECTS')
             #print(image_pred)
@@ -381,8 +384,8 @@ class ROILayer(nn.Module):
                 image_pred[..., :4] = xyxy2xywh(image_pred[..., :4])
                 #print('PREDICTION')
                 #print(image_pred[..., :4])
-                x_tiles = (image_pred[..., 0] // self.tile_size).int()
-                y_tiles = (image_pred[..., 1] // self.tile_size).int()
+                x_tiles = (image_pred[..., 0] // self.htile_size).int()
+                y_tiles = (image_pred[..., 1] // self.vtile_size).int()
                 #x_tiles_ = (image_pred[..., 3] // self.tile_size).int()
                 #y_tiles_ = (image_pred[..., 4] // self.tile_size).int()
                 obj_class    = image_pred[..., 6].int()
@@ -390,8 +393,8 @@ class ROILayer(nn.Module):
                 for i in range(num_pred):
                     x_tile = max(x_tiles.data.tolist()[i], 0)
                     y_tile = max(y_tiles.data.tolist()[i], 0)
-                    x_tile = min(x_tiles.data.tolist()[i], self.num_tiles-1)
-                    y_tile = min(y_tiles.data.tolist()[i], self.num_tiles-1)
+                    x_tile = min(x_tiles.data.tolist()[i], self.num_htiles-1)
+                    y_tile = min(y_tiles.data.tolist()[i], self.num_vtiles-1)
                     #x_tile_ = max(x_tiles_.data.tolist()[i], 0)
                     #y_tile_ = max(y_tiles_.data.tolist()[i], 0)
                     #x_tile_ = min(x_tiles_.data.tolist()[i], self.num_tiles-1)
@@ -460,8 +463,8 @@ class ROILayer(nn.Module):
             #print('X TARGETS')
             #print(x_label)
             #y = torch.LongTensor(batch_size,3).random_() % nb_digits
-            tx = torch.zeros([num_samples, self.num_tiles]).type(FloatTensor)
-            ty = torch.zeros([num_samples, self.num_tiles]).type(FloatTensor)
+            tx = torch.zeros([num_samples, self.num_htiles]).type(FloatTensor)
+            ty = torch.zeros([num_samples, self.num_vtiles]).type(FloatTensor)
             #y_onehot = torch.FloatTensor(batch_size, nb_digits)
             #y_onehot.zero_()
             #y_onehot.scatter_(1, y, 1)
