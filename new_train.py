@@ -76,6 +76,7 @@ if __name__ == "__main__":
         #    print(param)
 
     # Get dataloader
+    model = nn.DataParallel(model)
     dataset = ListDataset(train_path, augment=True, multiscale=opt.multiscale_training)
     dataloader = torch.utils.data.DataLoader(
         dataset,
