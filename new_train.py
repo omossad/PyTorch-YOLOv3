@@ -156,7 +156,7 @@ if __name__ == "__main__":
             #lossY.backward()
             #loss = lossX + lossY
             lossX.backward()
-            lossY.backward()
+            #lossY.backward()
             loss = lossX + lossY
             #loss.backward()
 
