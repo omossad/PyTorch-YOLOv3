@@ -125,7 +125,7 @@ class YOLOLayer(nn.Module):
         self.num_anchors = len(anchors)
         self.num_classes = num_classes
         self.ignore_thres = 0.5
-        #self.mse_loss = nn.MSELoss()
+        self.mse_loss = nn.MSELoss()
         #self.bce_loss = nn.BCELoss()
         self.obj_scale = 1
         self.noobj_scale = 100
@@ -526,8 +526,10 @@ class ROILayer(nn.Module):
             #print(x)
             #print('corr X')
             #print(corr_x)
-            loss_x = self.loss_func(x, corr_x)
-            loss_y = self.loss_func(y, corr_y)
+            #loss_x = self.loss_func(x, corr_x)
+            #loss_y = self.loss_func(y, corr_y)
+            loss_x = self.mse_loss(pred_x, corr_x)
+            loss_y = self.mse_loss(pred_y, corr_y)
             x_score = torch.eq(pred_x, corr_x).type(FloatTensor)
             y_score = torch.eq(pred_y, corr_y).type(FloatTensor)
             overall = x_score * y_score
