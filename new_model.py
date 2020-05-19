@@ -456,8 +456,8 @@ class ROILayer(nn.Module):
 
         if targets is None:
         #if 1 == 2:
-            #return x,y, 0
-            return x,y, 0, 0
+            return x,y, 0
+            #return x,y, 0, 0
         else:
             #print('RECEIVED TARGETS')
             #print(targets)
@@ -572,8 +572,8 @@ class ROILayer(nn.Module):
                 "acc_y" : to_cpu(acc_y).item(),
                 "acc"   : to_cpu(acc).item(),
             }
-            return x,y, loss_x, loss_y
-            #return x,y, total_loss
+            #return x,y, loss_x, loss_y
+            return x,y, total_loss
 
 
 
@@ -614,15 +614,14 @@ class Darknet(nn.Module):
             elif module_def["type"] == "roi":
                 #print(yolo_outputs)
                 yolo_outputs = torch.cat(yolo_outputs, 1)
-                #roi_x, roi_y, roi_loss = module[0](yolo_outputs, targets)
-                roi_x, roi_y, roi_lossX, roi_lossY = module[0](yolo_outputs, targets)
+                return (roi_x, roi_y) if targets is None else (roi_loss, roi_x, roi_y)
+                #return (roi_x, roi_y) if targets is None else (roi_lossX, roi_lossY, roi_x, roi_y)
                 #print('ROI LOSS')
                 #print(roi_loss)
-            layer_outputs.append(x)
+            #layer_outputs.append(x)
         #yolo_outputs = to_cpu(torch.cat(yolo_outputs, 1))
         #yolo_outputs = to_cpu(yolo_outputs)
-        #return (roi_x, roi_y) if targets is None else (roi_loss, roi_x, roi_y)
-        return (roi_x, roi_y) if targets is None else (roi_lossX, roi_lossY, roi_x, roi_y)
+        #return (roi_x, roi_y) if targets is None else (roi_lossX, roi_lossY, roi_x, roi_y)
         #print('AFTER')
         #print(yolo_outputs.shape)
         #print(loss)
