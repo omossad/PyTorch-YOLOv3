@@ -611,16 +611,23 @@ class Darknet(nn.Module):
                 x = module[0](x, img_dim)
                 #loss += layer_loss
                 yolo_outputs.append(x)
-            elif module_def["type"] == "roi":
+            #elif module_def["type"] == "roi":
+                #print(yolo_outputs)
+            #    yolo_outputs = torch.cat(yolo_outputs, 1)
+                #roi_x, roi_y, roi_loss = module[0](yolo_outputs, targets)
+            #    roi_x, roi_y, roi_lossX, roi_lossY = module[0](yolo_outputs, targets)
+                #print('ROI LOSS')
+                #print(roi_loss)
+            layer_outputs.append(x)
+        for i, (module_def, module) in enumerate(zip(self.module_defs, self.module_list)):
+            if module_def["type"] == "roi":
                 #print(yolo_outputs)
                 yolo_outputs = torch.cat(yolo_outputs, 1)
                 return (roi_x, roi_y) if targets is None else (roi_loss, roi_x, roi_y)
                 #return (roi_x, roi_y) if targets is None else (roi_lossX, roi_lossY, roi_x, roi_y)
-                #print('ROI LOSS')
-                #print(roi_loss)
-            #layer_outputs.append(x)
         #yolo_outputs = to_cpu(torch.cat(yolo_outputs, 1))
         #yolo_outputs = to_cpu(yolo_outputs)
+        #return (roi_x, roi_y) if targets is None else (roi_loss, roi_x, roi_y)
         #return (roi_x, roi_y) if targets is None else (roi_lossX, roi_lossY, roi_x, roi_y)
         #print('AFTER')
         #print(yolo_outputs.shape)
