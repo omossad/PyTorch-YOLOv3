@@ -125,7 +125,7 @@ class YOLOLayer(nn.Module):
         self.num_anchors = len(anchors)
         self.num_classes = num_classes
         self.ignore_thres = 0.5
-        self.mse_loss = nn.MSELoss()
+        #self.mse_loss = nn.MSELoss()
         #self.bce_loss = nn.BCELoss()
         self.obj_scale = 1
         self.noobj_scale = 100
@@ -272,7 +272,7 @@ class ROILayer(nn.Module):
         self.num_vtiles = num_vtiles
         self.conf_thres = conf_thes
         self.nms_thres = nms_thes
-        #self.mse_loss = nn.MSELoss()
+        self.mse_loss = nn.MSELoss()
         #self.loss_func = nn.BCEWithLogitsLoss()
         self.metrics = {}
         self.htile_size = self.img_dim // self.num_htiles
