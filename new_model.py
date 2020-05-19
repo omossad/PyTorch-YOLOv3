@@ -289,31 +289,31 @@ class ROILayer(nn.Module):
         #    nn.Dropout(),
         #)
         self.fc_out_x = nn.Sequential(
-            nn.Linear(self.num_classes * self.num_htiles, 24),
+            nn.Linear(self.num_classes * self.num_htiles, 128),
             #nn.BatchNorm1d(1024),
             nn.ReLU(inplace=True),
             nn.Dropout(),
-            nn.Linear(24, 24),
+            nn.Linear(128, 128),
             #nn.BatchNorm1d(32),
             nn.ReLU(inplace=True),
             nn.Dropout(),
-            nn.Linear(24, 12),
+            nn.Linear(128, 64),
             nn.ReLU(inplace=True),
-            nn.Linear(12, self.num_htiles)
+            nn.Linear(64, self.num_htiles)
         )
         #self.fc_out_x = nn.DataParallel(self.fc_out_x)
         self.fc_out_y = nn.Sequential(
-            nn.Linear(self.num_classes * self.num_vtiles, 24),
+            nn.Linear(self.num_classes * self.num_vtiles, 128),
             #nn.BatchNorm1d(1024),
             nn.ReLU(inplace=True),
             nn.Dropout(),
-            nn.Linear(24, 24),
+            nn.Linear(128, 128),
             #nn.BatchNorm1d(32),
             nn.ReLU(inplace=True),
             nn.Dropout(),
-            nn.Linear(24, 12),
+            nn.Linear(128, 64),
             nn.ReLU(inplace=True),
-            nn.Linear(12, self.num_vtiles)
+            nn.Linear(64, self.num_vtiles)
         )
         #self.fc_out_y = nn.DataParallel(self.fc_out_y)
         #self.fc_net = nn.Sequential(
