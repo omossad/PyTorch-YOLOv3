@@ -249,8 +249,7 @@ if __name__ == "__main__":
                 ("grid_x Accuracy", x_acc.mean()),
                 ("grid_y Accuracy", y_acc.mean()),
             ]
-            #print('accuracies: ' + str(x_acc.mean()) + ', ' + str(y_acc.mean()) + ', ' + str(tot_accuracy.mean()) + '\n')
-            print('accuracies: ' + str(x_acc + ', ' + str(y_acc) + ', ' + str(tot_accuracy) + '\n')
+            print('accuracies: ' + str(x_acc) + ', ' + str(y_acc) + ', ' + str(tot_accuracy) + '\n')
             #logger.list_of_scalars_summary(evaluation_metrics, epoch)
 
             #evaluation_metrics = [
