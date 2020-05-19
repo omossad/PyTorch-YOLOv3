@@ -166,6 +166,9 @@ def get_batch_statistic(outputs_x, outputs_y, targets):
     num_samples = outputs_x.size(0)
     num_htiles = outputs_x.size(1)
     num_vtiles = outputs_y.size(1)
+    print('NUM SAMP' + str(num_samples))
+    print('H TILES ' + str(num_htiles))
+    print('V TILES ' + str(num_vtiles))
     x_label = targets[..., 1].view(num_samples,-1).type(LongTensor)
     y_label = targets[..., 2].view(num_samples,-1).type(LongTensor)
     tx = torch.zeros([num_samples, num_htiles]).type(FloatTensor)
@@ -176,8 +179,8 @@ def get_batch_statistic(outputs_x, outputs_y, targets):
     _, pred_y = torch.max(outputs_y, 1)
     _, corr_x = torch.max(tx, 1)
     _, corr_y = torch.max(ty, 1)
-    #print('PREDICTED ' + str(pred_x) + ', ' + str(pred_y))
-    #print('TRUE ' + str(corr_x) + ', ' + str(corr_y))
+    print('PREDICTED ' + str(pred_x) + ', ' + str(pred_y))
+    print('TRUE ' + str(corr_x) + ', ' + str(corr_y))
     x_score = torch.eq(pred_x, corr_x).type(FloatTensor)
     y_score = torch.eq(pred_y, corr_y).type(FloatTensor)
     overall = x_score * y_score
@@ -190,6 +193,7 @@ def get_batch_statistic(outputs_x, outputs_y, targets):
     #print(acc_x.data[0])
     #print(to_cpu(acc_y))
     batch_metrics = torch.tensor([acc.item(), acc_x.item(), acc_y.item()])
+    print('BATCH METRICS: ' + str(batch_metrics)
     #batch_metrics = torch.stack((to_cpu(acc), to_cpu(acc_x), to_cpu(acc_y))).view(1,-1)
     #batch_metrics.append([acc, acc_x, acc_y])
     #for sample_i in range(len(outputs)):
