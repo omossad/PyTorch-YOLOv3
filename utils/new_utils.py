@@ -193,7 +193,7 @@ def get_batch_statistic(outputs_x, outputs_y, targets):
     #print(acc_x.data[0])
     #print(to_cpu(acc_y))
     batch_metrics = torch.tensor([acc.item(), acc_x.item(), acc_y.item()])
-    print('BATCH METRICS: ' + str(batch_metrics)
+    print('BATCH METRICS: ' + str(batch_metrics))
     #batch_metrics = torch.stack((to_cpu(acc), to_cpu(acc_x), to_cpu(acc_y))).view(1,-1)
     #batch_metrics.append([acc, acc_x, acc_y])
     #for sample_i in range(len(outputs)):
