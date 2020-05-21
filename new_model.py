@@ -422,9 +422,12 @@ class ROILayer(nn.Module):
         #print(x_inpt)
         #print('Y before model')
         #print(y_inpt.shape)
-        #print('INPUT')
-        #print(x_inpt)
+        print('INPUT')
+        print(x_inpt)
+
         x = x_inpt.view(x_inpt.size(0), -1)
+        print('INPUT in batches')
+        print(x)
         #print('X shape: ' + str(x.shape))
         #print('X VALUES')
         #print(x)
@@ -432,8 +435,8 @@ class ROILayer(nn.Module):
         #x_cat = torch.cat((x_, y_), 1)
         #x_cat = self.fc_net(x_cat)
         x = self.fc_out_x(x)
-        #print('BEFORE SOFTMAX')
-        #print(x)
+        print('BEFORE SOFTMAX')
+        print(x)
         y = self.fc_out_y(y)
         #x = torch.softmax(x,1)
         #y = torch.softmax(y,1)
@@ -456,12 +459,12 @@ class ROILayer(nn.Module):
 
         if targets is None:
         #if 1 == 2:
-            print('x values')
-            print(x)
-            x = torch.softmax(x,1)
-            print('softmax x')
-            print(x)
-            y = torch.softmax(y,1)
+            #print('x values')
+            #print(x)
+            #x = torch.softmax(x,1)
+            #print('softmax x')
+            #print(x)
+            #y = torch.softmax(y,1)
             return x,y, 0
             #return x,y, 0, 0
         else:
@@ -545,8 +548,8 @@ class ROILayer(nn.Module):
             #print(corr_x)
             #loss_x = torch.abs(pred_x - corr_x).type(FloatTensor).mean()
             loss_x = self.loss_func(x, corr_x)
-            #print('LOSS x')
-            #print(loss_x)
+            print('LOSS x')
+            print(loss_x)
             #loss_y = torch.abs(pred_y - corr_y).type(FloatTensor).mean()
             loss_y = self.loss_func(y, corr_y)
             #loss_x = self.mse_loss(pred_x, corr_x)
