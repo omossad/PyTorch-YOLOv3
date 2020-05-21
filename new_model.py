@@ -456,6 +456,8 @@ class ROILayer(nn.Module):
 
         if targets is None:
         #if 1 == 2:
+            x = torch.softmax(x,1)
+            y = torch.softmax(y,1)
             return x,y, 0
             #return x,y, 0, 0
         else:
