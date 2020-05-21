@@ -635,7 +635,7 @@ class Darknet(nn.Module):
                 #print(yolo_outputs)
                 #print('YOLO OUT 1')
                 #print(yolo_outputs)
-                yolo_outputs = torch.cat(yolo_outputs, 1)
+                yolo_outputs = to_cpu(torch.cat(yolo_outputs, 1))
                 #print('YOLO OUT 2')
                 #print(yolo_outputs)
                 roi_x, roi_y, roi_loss = module[0](yolo_outputs, targets)
