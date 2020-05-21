@@ -278,42 +278,42 @@ class ROILayer(nn.Module):
         self.htile_size = self.img_dim // self.num_htiles
         self.vtile_size = self.img_dim // self.num_vtiles
         self.loss_func = nn.CrossEntropyLoss()
-        #self.fc_net = nn.Sequential(
-        #    nn.Linear(self.num_classes * self.num_tiles * 2, 64),
+        self.fc_net = nn.Sequential(
+            nn.Linear(self.num_classes * (self.num_htiles + self.num_vtiles ), 64),
             #nn.BatchNorm1d(1024),
-        #    nn.ReLU(inplace=True),
-        #    nn.Dropout(),
-        #    nn.Linear(64, 32),
-        #    nn.BatchNorm1d(32),
-        #    nn.ReLU(inplace=True),
-        #    nn.Dropout(),
-        #)
-        self.fc_out_x = nn.Sequential(
-            nn.Linear(self.num_classes * self.num_htiles, 128),
             nn.ReLU(inplace=True),
-            nn.BatchNorm1d(128),
+            nn.Dropout(),
+            nn.Linear(64, 64),
+            nn.BatchNorm1d(64),
+            nn.ReLU(inplace=True),
+        #    nn.Dropout(),
+        )
+        self.fc_out_x = nn.Sequential(
+            nn.Linear(self.num_classes * self.num_htiles, 64),
+            nn.ReLU(inplace=True),
+            nn.BatchNorm1d(64),
             #nn.Dropout(),
-            nn.Linear(128, 128),
+            nn.Linear(64, 32),
             #nn.BatchNorm1d(32),
             nn.ReLU(inplace=True),
             nn.Dropout(),
-            nn.Linear(128, 64),
+            nn.Linear(32, 16),
             nn.ReLU(inplace=True),
-            nn.Linear(64, self.num_htiles)
+            nn.Linear(16, self.num_htiles)
         )
         #self.fc_out_x = nn.DataParallel(self.fc_out_x)
         self.fc_out_y = nn.Sequential(
-            nn.Linear(self.num_classes * self.num_vtiles, 128),
+            nn.Linear(self.num_classes * self.num_vtiles, 64),
             nn.ReLU(inplace=True),
-            nn.BatchNorm1d(128),
+            nn.BatchNorm1d(64),
             #nn.Dropout(),
-            nn.Linear(128, 128),
+            nn.Linear(64, 32),
             #nn.BatchNorm1d(32),
             nn.ReLU(inplace=True),
             nn.Dropout(),
-            nn.Linear(128, 64),
+            nn.Linear(32, 16),
             nn.ReLU(inplace=True),
-            nn.Linear(64, self.num_vtiles)
+            nn.Linear(16, self.num_vtiles)
         )
         #self.fc_out_y = nn.DataParallel(self.fc_out_y)
         #self.fc_net = nn.Sequential(
@@ -422,22 +422,29 @@ class ROILayer(nn.Module):
         #print(x_inpt)
         #print('Y before model')
         #print(y_inpt.shape)
-        print('INPUT')
-        print(x_inpt)
 
-        x = x_inpt.view(x_inpt.size(0), -1)
-        print('INPUT in batches')
-        print(x)
+        x_ = x_inpt.view(x_inpt.size(0), -1)
+        y_ = y_inpt.view(y_inpt.size(0), -1)
+        out_cat = torch.cat((x_, y_), 1)
+        out_cat = self.fc_net(out_cat)
+        x = self.fc_out_x(out_cat)
+        y = self.fc_out_y(out_cat)
+        #print('INPUT')
+        #print(x_inpt)
+
+        #x = x_inpt.view(x_inpt.size(0), -1)
+        #print('INPUT in batches')
+        #print(x)
         #print('X shape: ' + str(x.shape))
         #print('X VALUES')
         #print(x)
-        y = y_inpt.view(y_inpt.size(0), -1)
+        #y = y_inpt.view(y_inpt.size(0), -1)
         #x_cat = torch.cat((x_, y_), 1)
         #x_cat = self.fc_net(x_cat)
-        x = self.fc_out_x(x)
-        print('BEFORE SOFTMAX')
-        print(x)
-        y = self.fc_out_y(y)
+        #x = self.fc_out_x(x)
+        #print('BEFORE SOFTMAX')
+        #print(x)
+        #y = self.fc_out_y(y)
         #x = torch.softmax(x,1)
         #y = torch.softmax(y,1)
         #print('AFTER SOFTMAX')
@@ -619,7 +626,7 @@ class Darknet(nn.Module):
                 #print('BEFORE')
                 #print(x.shape)
                 #x, layer_loss = module[0](x, targets, img_dim)
-                x = module[0](x, img_dim, requires_grad=False)
+                x = module[0](x, img_dim)
                 #loss += layer_loss
                 yolo_outputs.append(x)
             #elif module_def["type"] == "roi":
