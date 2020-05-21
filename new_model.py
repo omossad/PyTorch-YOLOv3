@@ -619,7 +619,7 @@ class Darknet(nn.Module):
                 #print('BEFORE')
                 #print(x.shape)
                 #x, layer_loss = module[0](x, targets, img_dim)
-                x = module[0](x, img_dim)
+                x = module[0](x, img_dim, requires_grad=False)
                 #loss += layer_loss
                 yolo_outputs.append(x)
             #elif module_def["type"] == "roi":
@@ -635,7 +635,7 @@ class Darknet(nn.Module):
                 #print(yolo_outputs)
                 #print('YOLO OUT 1')
                 #print(yolo_outputs)
-                yolo_outputs = to_cpu(torch.cat(yolo_outputs, 1))
+                yolo_outputs = torch.cat(yolo_outputs, 1)
                 #print('YOLO OUT 2')
                 #print(yolo_outputs)
                 roi_x, roi_y, roi_loss = module[0](yolo_outputs, targets)
