@@ -290,9 +290,9 @@ class ROILayer(nn.Module):
         #)
         self.fc_out_x = nn.Sequential(
             nn.Linear(self.num_classes * self.num_htiles, 128),
-            #nn.BatchNorm1d(1024),
             nn.ReLU(inplace=True),
-            nn.Dropout(),
+            nn.BatchNorm1d(128),
+            #nn.Dropout(),
             nn.Linear(128, 128),
             #nn.BatchNorm1d(32),
             nn.ReLU(inplace=True),
@@ -304,9 +304,9 @@ class ROILayer(nn.Module):
         #self.fc_out_x = nn.DataParallel(self.fc_out_x)
         self.fc_out_y = nn.Sequential(
             nn.Linear(self.num_classes * self.num_vtiles, 128),
-            #nn.BatchNorm1d(1024),
             nn.ReLU(inplace=True),
-            nn.Dropout(),
+            nn.BatchNorm1d(128),
+            #nn.Dropout(),
             nn.Linear(128, 128),
             #nn.BatchNorm1d(32),
             nn.ReLU(inplace=True),
