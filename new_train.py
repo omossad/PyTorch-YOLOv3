@@ -126,7 +126,7 @@ if __name__ == "__main__":
             #print(targets)
             batches_done = len(dataloader) * epoch + batch_i
 
-            imgs = Variable(imgs.to(device))
+            imgs = Variable(imgs.to(device), , requires_grad=False)
             targets = Variable(targets.to(device), requires_grad=False)
             #print('TARGET VAR')
             #print(targets)
