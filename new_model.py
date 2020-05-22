@@ -564,7 +564,7 @@ class ROILayer(nn.Module):
             print(loss_x)
             #loss_y = torch.abs(pred_y - corr_y).type(FloatTensor).mean()
             #loss_y = self.loss_func(y, corr_y)
-            loss_y = 0
+            loss_y = loss_x
             #loss_x = self.mse_loss(pred_x, corr_x)
             #loss_y = self.mse_loss(pred_y, corr_y)
             x_score = torch.eq(pred_x, corr_x).type(FloatTensor)
