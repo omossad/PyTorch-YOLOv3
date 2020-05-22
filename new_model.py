@@ -522,10 +522,10 @@ class ROILayer(nn.Module):
             #print(x)
 
             _, corr_x = torch.max(tx, 1)
-            corr_x = corr_x.permute(1, 0)
+            corr_x = corr_x.view(num_samples,-1)
             #print('corr_x: ' +  str(corr_x))
             _, corr_y = torch.max(ty, 1)
-            corr_y = corr_y.permute(1, 0)
+            corr_y = corr_y.view(num_samples,-1)
             #print('LOSS')
             #print('X')
             #print(x)
