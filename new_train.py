@@ -63,13 +63,6 @@ if __name__ == "__main__":
             model.load_state_dict(torch.load(opt.pretrained_weights), strict=False)
         else:
             model.load_darknet_weights(opt.pretrained_weights)
-    for name, param in model.named_parameters():
-        #print(name)
-        param.requires_grad = False
-
-        #print('ROI')
-    for name, param in model.roi_layer[0].named_parameters():
-        param.requires_grad = True
         #if param.requires_grad:
         #    print('PARAM')
         #    print(name)
@@ -86,8 +79,8 @@ if __name__ == "__main__":
         pin_memory=True,
         collate_fn=dataset.collate_fn,
     )
-    #optimizer = torch.optim.Adam(model.parameters())
-    optimizer = torch.optim.Adam(filter(lambda p: p.requires_grad, model.parameters()))
+    optimizer = torch.optim.Adam(model.parameters())
+    #optimizer = torch.optim.Adam(filter(lambda p: p.requires_grad, model.parameters()))
 
     metrics = [
     #    "grid_size",
@@ -123,6 +116,11 @@ if __name__ == "__main__":
         tot_acc_x = 0
         tot_acc_y = 0
         tot_acc = 0
+        for name, param in model.named_parameters():
+            param.requires_grad = False
+        for name, param in model.roi_layer[0].named_parameters():
+            param.requires_grad = True
+
         for batch_i, (_, imgs, targets) in enumerate(dataloader):
             #print('TARGET FILE')
             #print(targets)
