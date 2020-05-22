@@ -594,7 +594,7 @@ class ROILayer(nn.Module):
                 "acc"   : to_cpu(acc).item(),
             }
             #return x,y, loss_x, loss_y
-            return x,y, total_loss
+            return x,y, loss_x
 
 
 
