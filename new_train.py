@@ -79,8 +79,8 @@ if __name__ == "__main__":
         pin_memory=True,
         collate_fn=dataset.collate_fn,
     )
-    optimizer = torch.optim.Adam(model.parameters())
-    #optimizer = torch.optim.Adam(filter(lambda p: p.requires_grad, model.parameters()))
+    #optimizer = torch.optim.Adam(model.parameters())
+    optimizer = torch.optim.Adam(filter(lambda p: p.requires_grad, model.parameters()))
 
     metrics = [
     #    "grid_size",
@@ -165,8 +165,6 @@ if __name__ == "__main__":
                 print(loss.grad)
                 optimizer.step()
                 optimizer.zero_grad()
-                for param in model.roi_layer[0].parameters():
-                    print(param.data)
                 print('AFTER STEP')
                 print(loss.data)
                 print(loss.grad)

@@ -278,18 +278,18 @@ class ROILayer(nn.Module):
         self.htile_size = self.img_dim // self.num_htiles
         self.vtile_size = self.img_dim // self.num_vtiles
         self.loss_func = nn.CrossEntropyLoss()
-        self.fc_net = nn.Sequential(
-            nn.Linear(self.num_classes * (self.num_htiles + self.num_vtiles ), 64),
+        #self.fc_net = nn.Sequential(
+        #    nn.Linear(self.num_classes * (self.num_htiles + self.num_vtiles ), 64),
             #nn.BatchNorm1d(1024),
-            nn.ReLU(inplace=True),
+        #    nn.ReLU(inplace=True),
             #nn.Dropout(),
-            nn.Linear(64, 64),
+        #    nn.Linear(64, 64),
             #nn.BatchNorm1d(64),
-            nn.ReLU(inplace=True),
+        #    nn.ReLU(inplace=True),
         #    nn.Dropout(),
-        )
+        #)
         self.fc_out_x = nn.Sequential(
-            nn.Linear(64, 64),
+            nn.Linear(self.num_classes * self.num_htiles, 64),
             nn.ReLU(inplace=True),
             #nn.BatchNorm1d(64),
             #nn.Dropout(),
@@ -303,7 +303,7 @@ class ROILayer(nn.Module):
         )
         #self.fc_out_x = nn.DataParallel(self.fc_out_x)
         self.fc_out_y = nn.Sequential(
-            nn.Linear(64, 64),
+            nn.Linear(self.num_classes * self.num_vtiles, 64),
             nn.ReLU(inplace=True),
             #nn.BatchNorm1d(64),
             #nn.Dropout(),
@@ -423,12 +423,12 @@ class ROILayer(nn.Module):
         #print('Y before model')
         #print(y_inpt.shape)
 
-        x_ = x_inpt.view(x_inpt.size(0), -1)
-        y_ = y_inpt.view(y_inpt.size(0), -1)
-        out_cat = torch.cat((x_, y_), 1)
-        out_cat = self.fc_net(out_cat)
-        x = self.fc_out_x(out_cat)
-        y = self.fc_out_y(out_cat)
+        x = x_inpt.view(x_inpt.size(0), -1)
+        y = y_inpt.view(y_inpt.size(0), -1)
+        #out_cat = torch.cat((x_, y_), 1)
+        #out_cat = self.fc_net(out_cat)
+        x = self.fc_out_x(x)
+        y = self.fc_out_y(y)
         #print('INPUT')
         #print(x_inpt)
 
@@ -643,8 +643,8 @@ class Darknet(nn.Module):
                 #print('YOLO OUT 1')
                 #print(yolo_outputs)
                 yolo_outputs = torch.cat(yolo_outputs, 1)
-                #print('YOLO OUT 2')
-                #print(yolo_outputs)
+                print('YOLO OUT')
+                print(yolo_outputs)
                 roi_x, roi_y, roi_loss = module[0](yolo_outputs, targets)
                 #roi_x, roi_y, roi_lossX, roi_lossY = module[0](yolo_outputs, targets)
 
