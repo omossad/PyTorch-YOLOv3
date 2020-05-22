@@ -167,7 +167,7 @@ if __name__ == "__main__":
                 print(loss.grad)
                 optimizer.step()
                 optimizer.zero_grad()
-                for name, param in model.roi_layer[0].parameters():
+                for param in model.roi_layer[0].parameters():
                     print(param.data)
                 print('AFTER STEP')
                 print(loss.data)
