@@ -426,6 +426,8 @@ class ROILayer(nn.Module):
 
         x = x_inpt.view(x_inpt.size(0), -1)
         y = y_inpt.view(y_inpt.size(0), -1)
+        x = Variable(x.to(device), requires_grad=True)
+        y = Variable(y.to(device), requires_grad=True)
         #out_cat = torch.cat((x_, y_), 1)
         #out_cat = self.fc_net(out_cat)
         x = self.fc_out_x(x)
@@ -643,7 +645,7 @@ class Darknet(nn.Module):
                 #print(yolo_outputs)
                 #print('YOLO OUT 1')
                 #print(yolo_outputs)
-                yolo_outputs = Variable(torch.cat(yolo_outputs, 1).to(device), requires_grad=True)
+                yolo_outputs = torch.cat(yolo_outputs, 1)
                 print('YOLO OUT')
                 print(yolo_outputs)
                 roi_x, roi_y, roi_loss = module[0](yolo_outputs, targets)
