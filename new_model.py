@@ -273,12 +273,12 @@ class ROILayer(nn.Module):
         self.num_vtiles = num_vtiles
         self.conf_thres = conf_thes
         self.nms_thres = nms_thes
-        self.mse_loss = nn.MSELoss()
+        #self.mse_loss = nn.MSELoss()
         #self.loss_func = nn.BCEWithLogitsLoss()
         self.metrics = {}
         self.htile_size = self.img_dim // self.num_htiles
         self.vtile_size = self.img_dim // self.num_vtiles
-        self.loss_func = nn.CrossEntropyLoss()
+        self.loss_func = nn.CrossEntropyLoss().cuda()
         #self.fc_net = nn.Sequential(
         #    nn.Linear(self.num_classes * (self.num_htiles + self.num_vtiles ), 64),
             #nn.BatchNorm1d(1024),
@@ -426,8 +426,8 @@ class ROILayer(nn.Module):
 
         x = x_inpt.view(x_inpt.size(0), -1)
         y = y_inpt.view(y_inpt.size(0), -1)
-        x = Variable(x.to(device), requires_grad=True)
-        y = Variable(y.to(device), requires_grad=True)
+        x = Variable(x, requires_grad=True)
+        y = Variable(y, requires_grad=True)
         #out_cat = torch.cat((x_, y_), 1)
         #out_cat = self.fc_net(out_cat)
         x = self.fc_out_x(x)
@@ -522,10 +522,10 @@ class ROILayer(nn.Module):
             #print(x)
 
             _, corr_x = torch.max(tx, 1)
-            corr_x = corr_x.view(num_samples,-1)
+            corr_x = Variable(corr_x)
             #print('corr_x: ' +  str(corr_x))
             _, corr_y = torch.max(ty, 1)
-            corr_y = corr_y.view(num_samples,-1)
+            corr_y = Variable(corr_y)
             #print('LOSS')
             #print('X')
             #print(x)
@@ -563,7 +563,8 @@ class ROILayer(nn.Module):
             print('LOSS x')
             print(loss_x)
             #loss_y = torch.abs(pred_y - corr_y).type(FloatTensor).mean()
-            loss_y = self.loss_func(y, corr_y)
+            #loss_y = self.loss_func(y, corr_y)
+            loss_y = 0
             #loss_x = self.mse_loss(pred_x, corr_x)
             #loss_y = self.mse_loss(pred_y, corr_y)
             x_score = torch.eq(pred_x, corr_x).type(FloatTensor)
