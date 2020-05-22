@@ -522,8 +522,10 @@ class ROILayer(nn.Module):
             #print(x)
 
             _, corr_x = torch.max(tx, 1)
+            corr_x = corr_x.permute(1, 0)
             #print('corr_x: ' +  str(corr_x))
             _, corr_y = torch.max(ty, 1)
+            corr_y = corr_y.permute(1, 0)
             #print('LOSS')
             #print('X')
             #print(x)
@@ -609,6 +611,8 @@ class Darknet(nn.Module):
         #print(self.module_list)
         self.yolo_layers = [layer[0] for layer in self.module_list if hasattr(layer[0], "metrics")]
         self.roi_layer = [layer[0] for layer in self.module_list if hasattr(layer[0], "metrics")]
+        print(self.yolo_layers)
+        print(self.roi_layer)
         self.img_size = img_size
         self.seen = 0
         self.header_info = np.array([0, 0, 0, self.seen, 0], dtype=np.int32)
@@ -646,8 +650,6 @@ class Darknet(nn.Module):
                 #print('YOLO OUT 1')
                 #print(yolo_outputs)
                 yolo_outputs = torch.cat(yolo_outputs, 1)
-                print('YOLO OUT')
-                print(yolo_outputs)
                 roi_x, roi_y, roi_loss = module[0](yolo_outputs, targets)
                 #roi_x, roi_y, roi_lossX, roi_lossY = module[0](yolo_outputs, targets)
 
