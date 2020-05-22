@@ -14,6 +14,7 @@ import matplotlib.patches as patches
 
 import warnings
 warnings.filterwarnings("ignore", category=UserWarning)
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 def create_modules(module_defs):
     """
