@@ -303,19 +303,19 @@ class ROILayer(nn.Module):
             nn.Linear(16, self.num_htiles)
         )
         #self.fc_out_x = nn.DataParallel(self.fc_out_x)
-        self.fc_out_y = nn.Sequential(
-            nn.Linear(self.num_classes * self.num_vtiles, 64),
-            nn.ReLU(inplace=True),
+        #self.fc_out_y = nn.Sequential(
+        #    nn.Linear(self.num_classes * self.num_vtiles, 64),
+        #    nn.ReLU(inplace=True),
             #nn.BatchNorm1d(64),
             #nn.Dropout(),
-            nn.Linear(64, 32),
+        #    nn.Linear(64, 32),
             #nn.BatchNorm1d(32),
-            nn.ReLU(inplace=True),
+        #    nn.ReLU(inplace=True),
             #nn.Dropout(),
-            nn.Linear(32, 16),
-            nn.ReLU(inplace=True),
-            nn.Linear(16, self.num_vtiles)
-        )
+        #    nn.Linear(32, 16),
+        #    nn.ReLU(inplace=True),
+        #    nn.Linear(16, self.num_vtiles)
+        #)
         #self.fc_out_y = nn.DataParallel(self.fc_out_y)
         #self.fc_net = nn.Sequential(
         #    nn.Linear(self.num_classes * self.num_tiles * 2, 64),
@@ -425,13 +425,13 @@ class ROILayer(nn.Module):
         #print(y_inpt.shape)
 
         x = x_inpt.view(x_inpt.size(0), -1)
-        y = y_inpt.view(y_inpt.size(0), -1)
+        #y = y_inpt.view(y_inpt.size(0), -1)
         x = Variable(x, requires_grad=True)
-        y = Variable(y, requires_grad=True)
+        #y = Variable(y, requires_grad=True)
         #out_cat = torch.cat((x_, y_), 1)
         #out_cat = self.fc_net(out_cat)
         x = self.fc_out_x(x)
-        y = self.fc_out_y(y)
+        #y = self.fc_out_y(y)
         #print('INPUT')
         #print(x_inpt)
 
@@ -486,19 +486,19 @@ class ROILayer(nn.Module):
             #print('TARGETS: ' + str(x_label.shape))
             #print('TARGETS')
             #print(x_label)
-            y_label = targets[..., 2].view(num_samples,-1).type(LongTensor)
+            #y_label = targets[..., 2].view(num_samples,-1).type(LongTensor)
             #print('X TARGETS')
             #print(x_label)
             #y = torch.LongTensor(batch_size,3).random_() % nb_digits
             tx = torch.zeros([num_samples, self.num_htiles]).type(FloatTensor)
-            ty = torch.zeros([num_samples, self.num_vtiles]).type(FloatTensor)
+            #ty = torch.zeros([num_samples, self.num_vtiles]).type(FloatTensor)
             #y_onehot = torch.FloatTensor(batch_size, nb_digits)
             #y_onehot.zero_()
             #y_onehot.scatter_(1, y, 1)
             tx.scatter_(1, x_label, 1)
             #print('TX: ' +  str(tx.shape))
             #print('tx: ' + str(tx))
-            ty.scatter_(1, y_label, 1)
+            #ty.scatter_(1, y_label, 1)
             #tx = new_target.type(FloatTensor)
             #ty = new_target.type(FloatTensor)
             #print('ONE HOT TARGETS')
@@ -524,8 +524,8 @@ class ROILayer(nn.Module):
             _, corr_x = torch.max(tx, 1)
             corr_x = Variable(corr_x)
             #print('corr_x: ' +  str(corr_x))
-            _, corr_y = torch.max(ty, 1)
-            corr_y = Variable(corr_y)
+            #_, corr_y = torch.max(ty, 1)
+            #corr_y = Variable(corr_y)
             #print('LOSS')
             #print('X')
             #print(x)
@@ -540,11 +540,14 @@ class ROILayer(nn.Module):
             #y = torch.sigmoid(y)
             #y = torch.softmax(y,1)
             _, pred_x = torch.max(x, 1)
-            _, pred_y = torch.max(y, 1)
+            #_, pred_y = torch.max(y, 1)
             #pre_lbl = torch.zeros([num_samples, self.num_tiles*self.num_tiles]).type(FloatTensor)
             #pre_lbl.scatter(1, pred_x*self.num_tiles + pred_y , 1)
-            print('PREDICTED LABEL')
-            print(pred_x)
+            y = x
+            pred_y = pred_x
+            corr_y = corr_x
+            print('PREDICTED ' + str(pred_x) + ', ' + str(pred_y))
+            print('TRUE ' + str(corr_x) + ', ' + str(corr_y))
             #cor_lbl = torch.zeros([num_samples, self.num_tiles*self.num_tiles]).type(FloatTensor)
             #cor_lbl.scatter(1, corr_x*self.num_tiles + corr_y , 1)
             #print('CORRECT LABEL')
