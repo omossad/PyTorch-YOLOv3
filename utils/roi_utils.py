@@ -354,7 +354,8 @@ def yolo_preprocessing(yolo_outputs, conf_thres, nms_thres, htiles, vtiles, clas
                 s_conf = obj_conf.data.tolist()[i]
                 x_inpt[image_i][x_tile][s_obj] += s_conf
                 y_inpt[image_i][y_tile][s_obj] += s_conf
-
+            x_inpt[image_i] = (x_inpt[image_i]- x_inpt[image_i].mean())/x_inpt[image_i].std()
+            y_inpt[image_i] = (y_inpt[image_i]- y_inpt[image_i].mean())/y_inpt[image_i].std()
     x = x_inpt.view(x_inpt.size(0), -1)
     y = y_inpt.view(y_inpt.size(0), -1)
     return x,y

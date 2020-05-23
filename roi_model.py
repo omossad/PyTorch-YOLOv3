@@ -5,6 +5,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch.autograd import Variable
 import numpy as np
+from torchvision import transforms
 
 from utils.parse_config import *
 from utils.roi_utils import to_cpu, non_max_suppression
