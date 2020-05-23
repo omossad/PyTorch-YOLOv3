@@ -15,7 +15,7 @@ model = torch.nn.Sequential(
     torch.nn.ReLU(),
     torch.nn.Linear(H, D_out),
 )
-loss_fn = torch.nn.BCELoss()
+loss_fn = torch.nn.CrossEntropyLoss()
 
 # Use the optim package to define an Optimizer that will update the weights of
 # the model for us. Here we will use Adam; the optim package contains many other
@@ -27,8 +27,8 @@ for t in range(500):
     # Forward pass: compute predicted y by passing x to the model.
     y_pred = model(x)
     print(y_pred)
-    _, y_pred =torch.max(y_pred,1)
-    print(y_pred)
+    #_, y_pred =torch.max(y_pred,1)
+    #print(y_pred)
     # Compute and print loss.
     loss = loss_fn(y_pred, y)
     if t % 100 == 99:
