@@ -23,40 +23,6 @@ def load_classes(path):
     names = fp.read().split("\n")[:-1]
     return names
 
-def yolo_preprocessing(yolo_outputs, conf_thres, nms_thres, htiles, vtiles, classes, img_dim=416):
-    num_samples = yolo_outputs.shape[0]
-    print('NUM SAMPLES ' + str(num_samples))
-    htile_size = img_dim // htiles
-    vtile_size = img_dim // vtiles
-    # Tensors for cuda support
-    FloatTensor = torch.cuda.FloatTensor if yolo_outputs.is_cuda else torch.FloatTensor
-    LongTensor = torch.cuda.LongTensor if yolo_outputs.is_cuda else torch.LongTensor
-    ByteTensor = torch.cuda.ByteTensor if yolo_outputs.is_cuda else torch.ByteTensor
-    yolo_outputs = non_max_suppression(yolo_outputs, conf_thres, nms_thres)
-    x_inpt = torch.zeros([num_samples, htiles, classes]).type(FloatTensor)
-    y_inpt = torch.zeros([num_samples, vtiles, classes]).type(FloatTensor)
-    for image_i, image_pred in enumerate(yolo_outputs):
-        if image_pred is not None:
-            num_pred = len(image_pred)
-            image_pred[..., :4] = xyxy2xywh(image_pred[..., :4])
-            x_tiles = (image_pred[..., 0] // htile_size).int()
-            y_tiles = (image_pred[..., 1] // vtile_size).int()
-            obj_class    = image_pred[..., 6].int()
-            obj_conf     = image_pred[..., 4]
-            for i in range(num_pred):
-                x_tile = max(x_tiles.data.tolist()[i], 0)
-                y_tile = max(y_tiles.data.tolist()[i], 0)
-                x_tile = min(x_tiles.data.tolist()[i], self.num_htiles-1)
-                y_tile = min(y_tiles.data.tolist()[i], self.num_vtiles-1)
-                s_obj  = obj_class.data.tolist()[i]
-                s_conf = obj_conf.data.tolist()[i]
-                x_inpt[image_i][x_tile][s_obj] += s_conf
-                y_inpt[image_i][y_tile][s_obj] += s_conf
-
-    x = x_inpt.view(x_inpt.size(0), -1)
-    y = y_inpt.view(y_inpt.size(0), -1)
-    return x,y
-
 def weights_init_normal(m):
     classname = m.__class__.__name__
     if classname.find("Conv") != -1:
@@ -351,3 +317,37 @@ def build_targets(pred_boxes, pred_cls, target, anchors, ignore_thres):
 
     tconf = obj_mask.float()
     return iou_scores, class_mask, obj_mask, noobj_mask, tx, ty, tw, th, tcls, tconf
+
+def yolo_preprocessing(yolo_outputs, conf_thres, nms_thres, htiles, vtiles, classes, img_dim=416):
+    num_samples = yolo_outputs.shape[0]
+    print('NUM SAMPLES ' + str(num_samples))
+    htile_size = img_dim // htiles
+    vtile_size = img_dim // vtiles
+    # Tensors for cuda support
+    FloatTensor = torch.cuda.FloatTensor if yolo_outputs.is_cuda else torch.FloatTensor
+    LongTensor = torch.cuda.LongTensor if yolo_outputs.is_cuda else torch.LongTensor
+    ByteTensor = torch.cuda.ByteTensor if yolo_outputs.is_cuda else torch.ByteTensor
+    yolo_outputs = non_max_suppression(yolo_outputs, conf_thres, nms_thres)
+    x_inpt = torch.zeros([num_samples, htiles, classes]).type(FloatTensor)
+    y_inpt = torch.zeros([num_samples, vtiles, classes]).type(FloatTensor)
+    for image_i, image_pred in enumerate(yolo_outputs):
+        if image_pred is not None:
+            num_pred = len(image_pred)
+            image_pred[..., :4] = xyxy2xywh(image_pred[..., :4])
+            x_tiles = (image_pred[..., 0] // htile_size).int()
+            y_tiles = (image_pred[..., 1] // vtile_size).int()
+            obj_class    = image_pred[..., 6].int()
+            obj_conf     = image_pred[..., 4]
+            for i in range(num_pred):
+                x_tile = max(x_tiles.data.tolist()[i], 0)
+                y_tile = max(y_tiles.data.tolist()[i], 0)
+                x_tile = min(x_tiles.data.tolist()[i], self.num_htiles-1)
+                y_tile = min(y_tiles.data.tolist()[i], self.num_vtiles-1)
+                s_obj  = obj_class.data.tolist()[i]
+                s_conf = obj_conf.data.tolist()[i]
+                x_inpt[image_i][x_tile][s_obj] += s_conf
+                y_inpt[image_i][y_tile][s_obj] += s_conf
+
+    x = x_inpt.view(x_inpt.size(0), -1)
+    y = y_inpt.view(y_inpt.size(0), -1)
+    return x,y
