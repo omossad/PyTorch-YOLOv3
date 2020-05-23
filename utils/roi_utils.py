@@ -23,8 +23,8 @@ def load_classes(path):
     names = fp.read().split("\n")[:-1]
     return names
 
-def yolo_preprocessing(yolo_outputs, htiles, vtiles, classes, img_dim=416):
-    num_samples = len(yolo_outputs)
+def yolo_preprocessing(yolo_outputs, conf_thres, nms_thres, htiles, vtiles, classes, img_dim=416):
+    num_samples = yolo_outputs.shape[0]
     print('NUM SAMPLES ' + str(num_samples))
     htile_size = img_dim // htiles
     vtile_size = img_dim // vtiles
@@ -32,7 +32,7 @@ def yolo_preprocessing(yolo_outputs, htiles, vtiles, classes, img_dim=416):
     FloatTensor = torch.cuda.FloatTensor if yolo_outputs.is_cuda else torch.FloatTensor
     LongTensor = torch.cuda.LongTensor if yolo_outputs.is_cuda else torch.LongTensor
     ByteTensor = torch.cuda.ByteTensor if yolo_outputs.is_cuda else torch.ByteTensor
-
+    yolo_outputs = non_max_suppression(yolo_outputs, conf_thres, nms_thres)
     x_inpt = torch.zeros([num_samples, htiles, classes]).type(FloatTensor)
     y_inpt = torch.zeros([num_samples, vtiles, classes]).type(FloatTensor)
     for image_i, image_pred in enumerate(yolo_outputs):
