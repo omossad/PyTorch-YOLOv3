@@ -330,7 +330,7 @@ class ROI(nn.Module):
         num_samples = x.shape[0]
         #img_dim = x.shape[2]
         x = self.fc_out_x(x)
-        y = self.fc_out_x(y)
+        y = self.fc_out_y(y)
         loss = 0
         if targets is None:
             return x, y, 0
