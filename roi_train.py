@@ -74,8 +74,8 @@ if __name__ == "__main__":
         pin_memory=True,
         collate_fn=dataset.collate_fn,
     )
-
-    optimizer = torch.optim.Adam(fine_model.parameters())
+    learning_rate = 1e-4
+    optimizer = torch.optim.Adam(fine_model.parameters(), lr=learning_rate)
 
     metrics = [
         "loss_x",
