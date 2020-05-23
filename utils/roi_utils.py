@@ -23,6 +23,40 @@ def load_classes(path):
     names = fp.read().split("\n")[:-1]
     return names
 
+def yolo_preprocessing(yolo_outputs, htiles, vtiles, classes, img_dim=416):
+    print('Preprocessing input SHAPE')
+    print(yolo_outputs.shape)
+    num_samples = yolo_outputs.size(0)
+    htile_size = img_dim // htiles
+    vtile_size = img_dim // vtiles
+    # Tensors for cuda support
+    FloatTensor = torch.cuda.FloatTensor if yolo_outputs.is_cuda else torch.FloatTensor
+    LongTensor = torch.cuda.LongTensor if yolo_outputs.is_cuda else torch.LongTensor
+    ByteTensor = torch.cuda.ByteTensor if yolo_outputs.is_cuda else torch.ByteTensor
+
+    x_inpt = torch.zeros([num_samples, htiles, classes]).type(FloatTensor)
+    y_inpt = torch.zeros([num_samples, vtiles, classes]).type(FloatTensor)
+    for image_i, image_pred in enumerate(yolo_outputs):
+        if image_pred is not None:
+            num_pred = len(image_pred)
+            image_pred[..., :4] = xyxy2xywh(image_pred[..., :4])
+            x_tiles = (image_pred[..., 0] // htile_size).int()
+            y_tiles = (image_pred[..., 1] // vtile_size).int()
+            obj_class    = image_pred[..., 6].int()
+            obj_conf     = image_pred[..., 4]
+            for i in range(num_pred):
+                x_tile = max(x_tiles.data.tolist()[i], 0)
+                y_tile = max(y_tiles.data.tolist()[i], 0)
+                x_tile = min(x_tiles.data.tolist()[i], self.num_htiles-1)
+                y_tile = min(y_tiles.data.tolist()[i], self.num_vtiles-1)
+                s_obj  = obj_class.data.tolist()[i]
+                s_conf = obj_conf.data.tolist()[i]
+                x_inpt[image_i][x_tile][s_obj] += s_conf
+                y_inpt[image_i][y_tile][s_obj] += s_conf
+
+    x = x_inpt.view(x_inpt.size(0), -1)
+    y = y_inpt.view(y_inpt.size(0), -1)
+    retrun x,y
 
 def weights_init_normal(m):
     classname = m.__class__.__name__
@@ -236,8 +270,7 @@ def non_max_suppression(prediction, conf_thres=0.5, nms_thres=0.4):
     output = [None for _ in range(len(prediction))]
     for image_i, image_pred in enumerate(prediction):
         # Filter out confidence scores below threshold
-        #image_pred = image_pred[image_pred[:, 4] >= conf_thres]
-        image_pred = image_pred[image_pred[:, 4] == torch.max(image_pred[:,4])]
+        image_pred = image_pred[image_pred[:, 4] >= conf_thres]
         # If none are remaining => process next image
         if not image_pred.size(0):
             continue
@@ -250,8 +283,7 @@ def non_max_suppression(prediction, conf_thres=0.5, nms_thres=0.4):
         # Perform non-maximum suppression
         keep_boxes = []
         while detections.size(0):
-            #large_overlap = bbox_iou(detections[0, :4].unsqueeze(0), detections[:, :4]) > nms_thres
-            large_overlap = bbox_iou(detections[0, :4].unsqueeze(0), detections[:, :4]) > 0
+            large_overlap = bbox_iou(detections[0, :4].unsqueeze(0), detections[:, :4]) > nms_thres
             label_match = detections[0, -1] == detections[:, -1]
             # Indices of boxes with lower confidence scores, large IOUs and matching labels
             invalid = large_overlap & label_match
@@ -267,6 +299,8 @@ def non_max_suppression(prediction, conf_thres=0.5, nms_thres=0.4):
 
 
 def build_targets(pred_boxes, pred_cls, target, anchors, ignore_thres):
+    #print('TARGET')
+    #print(target)
     ByteTensor = torch.cuda.ByteTensor if pred_boxes.is_cuda else torch.ByteTensor
     FloatTensor = torch.cuda.FloatTensor if pred_boxes.is_cuda else torch.FloatTensor
 
@@ -274,13 +308,7 @@ def build_targets(pred_boxes, pred_cls, target, anchors, ignore_thres):
     nA = pred_boxes.size(1)
     nC = pred_cls.size(-1)
     nG = pred_boxes.size(2)
-    '''
-    print('VARIABLES')
-    print(nB)
-    print(nA)
-    print(nC)
-    print(nG)
-    '''
+
     # Output tensors
     obj_mask = ByteTensor(nB, nA, nG, nG).fill_(0)
     noobj_mask = ByteTensor(nB, nA, nG, nG).fill_(1)
@@ -293,10 +321,8 @@ def build_targets(pred_boxes, pred_cls, target, anchors, ignore_thres):
     tcls = FloatTensor(nB, nA, nG, nG, nC).fill_(0)
 
     # Convert to position relative to box
-    target_boxes = target[:, 2:6] * (nG-1)
-    print('TARGET')
+    target_boxes = target[:, 2:6] * nG
     gxy = target_boxes[:, :2]
-    print(gxy)
     gwh = target_boxes[:, 2:]
     # Get anchors with best iou
     ious = torch.stack([bbox_wh_iou(anchor, gwh) for anchor in anchors])
@@ -306,23 +332,12 @@ def build_targets(pred_boxes, pred_cls, target, anchors, ignore_thres):
     gx, gy = gxy.t()
     gw, gh = gwh.t()
     gi, gj = gxy.long().t()
-    print('PROBLEM')
-    print(gi)
-    print(gj)
-    #print(gi.shape)
-    #print(gi)
     # Set masks
     obj_mask[b, best_n, gj, gi] = 1
     noobj_mask[b, best_n, gj, gi] = 0
-    #print(noobj_mask.shape)
+
     # Set noobj mask to zero where iou exceeds ignore threshold
     for i, anchor_ious in enumerate(ious.t()):
-        #print('I')
-        #print(i)
-        #print(b[i])
-        #print(anchor_ious)
-        #print(gj[i])
-        #print(gi[i])
         noobj_mask[b[i], anchor_ious > ignore_thres, gj[i], gi[i]] = 0
 
     # Coordinates

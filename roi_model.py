@@ -7,11 +7,7 @@ from torch.autograd import Variable
 import numpy as np
 
 from utils.parse_config import *
-from utils.roi_utils import build_targets, to_cpu, non_max_suppression
-
-import matplotlib.pyplot as plt
-import matplotlib.patches as patches
-
+from utils.roi_utils import to_cpu, non_max_suppression
 
 import warnings
 warnings.filterwarnings("ignore", category=UserWarning)
@@ -80,6 +76,8 @@ def create_modules(module_defs):
             yolo_layer = YOLOLayer(anchors, num_classes, img_size)
             modules.add_module(f"yolo_{module_i}", yolo_layer)
         # Register module list and number of output filters
+
+
         module_list.append(modules)
         output_filters.append(filters)
 
@@ -109,7 +107,7 @@ class EmptyLayer(nn.Module):
 class YOLOLayer(nn.Module):
     """Detection layer"""
 
-    def __init__(self, anchors, num_classes, img_dim=256):
+    def __init__(self, anchors, num_classes, img_dim=416):
         super(YOLOLayer, self).__init__()
         self.anchors = anchors
         self.num_anchors = len(anchors)
@@ -119,7 +117,7 @@ class YOLOLayer(nn.Module):
         self.bce_loss = nn.BCELoss()
         self.obj_scale = 1
         self.noobj_scale = 100
-        self.metrics = {}
+        #self.metrics = {}
         self.img_dim = img_dim
         self.grid_size = 0  # grid size
 
@@ -131,23 +129,13 @@ class YOLOLayer(nn.Module):
         # Calculate offsets for each grid
         self.grid_x = torch.arange(g).repeat(g, 1).view([1, 1, g, g]).type(FloatTensor)
         self.grid_y = torch.arange(g).repeat(g, 1).t().view([1, 1, g, g]).type(FloatTensor)
+        #print('GRID')
+        #print(self.grid_x)
         self.scaled_anchors = FloatTensor([(a_w / self.stride, a_h / self.stride) for a_w, a_h in self.anchors])
         self.anchor_w = self.scaled_anchors[:, 0:1].view((1, self.num_anchors, 1, 1))
         self.anchor_h = self.scaled_anchors[:, 1:2].view((1, self.num_anchors, 1, 1))
-        '''
-        print('INIT')
-        print('GRID X')
-        print(self.grid_x)
-        print('GRID Y')
-        print(self.grid_y)
-        print('ANCHORS W')
-        print(self.anchor_w)
-        print('ANCHORS H')
-        print(self.anchor_h)
-        print('GRID SIZE')
-        print(g)
-        '''
-    def forward(self, x, targets=None, img_dim=256):
+
+    def forward(self, x, img_dim=None):
 
         # Tensors for cuda support
         FloatTensor = torch.cuda.FloatTensor if x.is_cuda else torch.FloatTensor
@@ -157,53 +145,30 @@ class YOLOLayer(nn.Module):
         self.img_dim = img_dim
         num_samples = x.size(0)
         grid_size = x.size(2)
-        #print('IMAGE GRID SIZE')
-        #print(grid_size)
+
         prediction = (
             x.view(num_samples, self.num_anchors, self.num_classes + 5, grid_size, grid_size)
             .permute(0, 1, 3, 4, 2)
             .contiguous()
         )
-        # Get outputs
+
         x = torch.sigmoid(prediction[..., 0])  # Center x
         y = torch.sigmoid(prediction[..., 1])  # Center y
         w = prediction[..., 2]  # Width
         h = prediction[..., 3]  # Height
         pred_conf = torch.sigmoid(prediction[..., 4])  # Conf
         pred_cls = torch.sigmoid(prediction[..., 5:])  # Cls pred.
-        # If grid size does not match current we compute new offsets
+
         if grid_size != self.grid_size:
             self.compute_grid_offsets(grid_size, cuda=x.is_cuda)
-        '''
-        print('AFTER COMPUTE')
-        print('GRID X')
-        print(self.grid_x)
-        print('GRID Y')
-        print(self.grid_y)
-        print('ANCHORS W')
-        print(self.anchor_w)
-        print('ANCHORS H')
-        print(self.anchor_h)
-        print('GRID VALUES')
-        print(self.grid_x)
-        print('WIDTH')
-        print(torch.exp(w.data))
-        print('ANCHOR W')
-        print(self.anchor_w)
-        '''
+
         # Add offset and scale with anchors
         pred_boxes = FloatTensor(prediction[..., :4].shape)
         pred_boxes[..., 0] = x.data + self.grid_x
         pred_boxes[..., 1] = y.data + self.grid_y
-        #pred_boxes[..., 2] = torch.exp(w.data) * self.anchor_w
-        #pred_boxes[..., 3] = torch.exp(h.data) * self.anchor_h
-        pred_boxes[..., 2] = self.anchor_w
-        pred_boxes[..., 3] = self.anchor_h
-        '''
-        print('PRED BOXES')
-        print(pred_boxes.shape)
-        print(pred_boxes)
-        '''
+        pred_boxes[..., 2] = torch.exp(w.data) * self.anchor_w
+        pred_boxes[..., 3] = torch.exp(h.data) * self.anchor_h
+
         output = torch.cat(
             (
                 pred_boxes.view(num_samples, -1, 4) * self.stride,
@@ -212,73 +177,8 @@ class YOLOLayer(nn.Module):
             ),
             -1,
         )
-        '''
-        print('OUT SHAPE')
-        print(output.shape)
-        '''
-        if targets is None:
-            return output, 0
-        else:
-            iou_scores, class_mask, obj_mask, noobj_mask, tx, ty, tw, th, tcls, tconf = build_targets(
-                pred_boxes=pred_boxes,
-                pred_cls=pred_cls,
-                target=targets,
-                anchors=self.scaled_anchors,
-                ignore_thres=self.ignore_thres,
-            )
-            '''
-            print('AFTER BUILD TARGET')
-            print(iou_scores.shape)
-            print(class_mask.shape)
-            print(obj_mask.shape)
-            print(noobj_mask.shape)
-            print(tx.shape)
-            print(tw)
-            print(tcls.shape)
-            print(tconf.shape)
-            '''
-            # Loss : Mask outputs to ignore non-existing objects (except with conf. loss)
-            loss_x = self.mse_loss(x[obj_mask], tx[obj_mask])
-            loss_y = self.mse_loss(y[obj_mask], ty[obj_mask])
-            loss_w = self.mse_loss(w[obj_mask], tw[obj_mask])
-            loss_h = self.mse_loss(h[obj_mask], th[obj_mask])
-            loss_conf_obj = self.bce_loss(pred_conf[obj_mask], tconf[obj_mask])
-            loss_conf_noobj = self.bce_loss(pred_conf[noobj_mask], tconf[noobj_mask])
-            loss_conf = self.obj_scale * loss_conf_obj + self.noobj_scale * loss_conf_noobj
-            loss_cls = self.bce_loss(pred_cls[obj_mask], tcls[obj_mask])
-            #total_loss = loss_x + loss_y + loss_w + loss_h + loss_conf + loss_cls
-            total_loss = loss_x + loss_y + loss_conf
-            # Metrics
-            cls_acc = 100 * class_mask[obj_mask].mean()
-            conf_obj = pred_conf[obj_mask].mean()
-            conf_noobj = pred_conf[noobj_mask].mean()
-            conf50 = (pred_conf > 0.5).float()
-            iou50 = (iou_scores > 0.5).float()
-            iou75 = (iou_scores > 0.75).float()
-            detected_mask = conf50 * class_mask * tconf
-            precision = torch.sum(iou50 * detected_mask) / (conf50.sum() + 1e-16)
-            recall50 = torch.sum(iou50 * detected_mask) / (obj_mask.sum() + 1e-16)
-            recall75 = torch.sum(iou75 * detected_mask) / (obj_mask.sum() + 1e-16)
 
-            self.metrics = {
-                "loss": to_cpu(total_loss).item(),
-                "x": to_cpu(loss_x).item(),
-                "y": to_cpu(loss_y).item(),
-                "w": to_cpu(loss_w).item(),
-                "h": to_cpu(loss_h).item(),
-                "conf": to_cpu(loss_conf).item(),
-                "cls": to_cpu(loss_cls).item(),
-                "cls_acc": to_cpu(cls_acc).item(),
-                "recall50": to_cpu(recall50).item(),
-                "recall75": to_cpu(recall75).item(),
-                "precision": to_cpu(precision).item(),
-                "conf_obj": to_cpu(conf_obj).item(),
-                "conf_noobj": to_cpu(conf_noobj).item(),
-                "grid_size": grid_size,
-            }
-            #print('OUTPUT')
-            #print(output.shape)
-            return output, total_loss
+        return output
 
 
 class Darknet(nn.Module):
@@ -288,12 +188,12 @@ class Darknet(nn.Module):
         super(Darknet, self).__init__()
         self.module_defs = parse_model_config(config_path)
         self.hyperparams, self.module_list = create_modules(self.module_defs)
-        self.yolo_layers = [layer[0] for layer in self.module_list if hasattr(layer[0], "metrics")]
+        #self.yolo_layers = [layer[0] for layer in self.module_list if hasattr(layer[0], "metrics")]
         self.img_size = img_size
         self.seen = 0
         self.header_info = np.array([0, 0, 0, self.seen, 0], dtype=np.int32)
 
-    def forward(self, x, targets=None):
+    def forward(self, x):
         img_dim = x.shape[2]
         loss = 0
         layer_outputs, yolo_outputs = [], []
@@ -306,12 +206,13 @@ class Darknet(nn.Module):
                 layer_i = int(module_def["from"])
                 x = layer_outputs[-1] + layer_outputs[layer_i]
             elif module_def["type"] == "yolo":
-                x, layer_loss = module[0](x, targets, img_dim)
+
+                x, layer_loss = module[0](x, img_dim)
                 loss += layer_loss
                 yolo_outputs.append(x)
             layer_outputs.append(x)
         yolo_outputs = to_cpu(torch.cat(yolo_outputs, 1))
-        return yolo_outputs if targets is None else (loss, yolo_outputs)
+        return yolo_outputs
 
     def load_darknet_weights(self, weights_path):
         """Parses and loads the weights stored in 'weights_path'"""
@@ -393,3 +294,76 @@ class Darknet(nn.Module):
                 conv_layer.weight.data.cpu().numpy().tofile(fp)
 
         fp.close()
+
+class ROI(nn.Module):
+    """ROI detection model"""
+
+    def __init__(self, config_path, htiles, vtiles, classes, img_size=416):
+        super(ROI, self).__init__()
+        self.num_classes = class_names
+        self.htiles = htiles
+        self.vtiles = vtiles
+        self.metrics = {}
+        #self.module_defs = parse_model_config(config_path)
+        #self.hyperparams, self.module_list = create_modules(self.module_defs)
+        #self.yolo_layers = [layer[0] for layer in self.module_list if hasattr(layer[0], "metrics")]
+        self.img_size = img_size
+        self.loss_func = nn.CrossEntropyLoss()
+        self.fc_out_x = nn.Sequential(
+            nn.Linear(self.num_classes * self.num_htiles, 64),
+            nn.LeakyReLU(inplace=True),
+            nn.Linear(64, 32),
+            nn.LeakyReLU(inplace=True),
+            nn.Linear(32, 16),
+            nn.LeakyReLU(inplace=True),
+            nn.Linear(16, self.num_htiles)
+        )
+        self.fc_out_y = nn.Sequential(
+            nn.Linear(self.num_classes * self.num_vtiles, 64),
+            nn.LeakyReLU(inplace=True),
+            nn.Linear(64, 32),
+            nn.LeakyReLU(inplace=True),
+            nn.Linear(32, 16),
+            nn.LeakyReLU(inplace=True),
+            nn.Linear(16, self.num_vtiles)
+        )
+
+    def forward(self, x, y, targets=None):
+        num_samples = x.shape[0]
+        #img_dim = x.shape[2]
+        x = self.fc_out_x(x)
+        y = self.fc_out_x(y)
+        loss = 0
+        if targets is None:
+            return x, y, 0
+        else:
+            x_label = targets[..., 1].view(num_samples,-1).type(LongTensor)
+            y_label = targets[..., 2].view(num_samples,-1).type(LongTensor)
+            tx = torch.zeros([num_samples, self.num_htiles]).type(FloatTensor)
+            ty = torch.zeros([num_samples, self.num_vtiles]).type(FloatTensor)
+            tx.scatter_(1, x_label, 1)
+            ty.scatter_(1, y_label, 1)
+            _, corr_x = torch.max(tx, 1)
+            _, corr_y = torch.max(ty, 1)
+            _, pred_x = torch.max(x, 1)
+            _, pred_y = torch.max(y, 1)
+            print('PREDICTED ' + str(pred_x) + ', ' + str(pred_y))
+            print('TRUE ' + str(corr_x) + ', ' + str(corr_y))
+            loss_x = self.loss_func(x, corr_x)
+            loss_y = self.loss_func(y, corr_y)
+            x_score = torch.eq(pred_x, corr_x).type(FloatTensor)
+            y_score = torch.eq(pred_y, corr_y).type(FloatTensor)
+            overall = x_score * y_score
+            acc_x = x_score.mean()
+            acc_y = y_score.mean()
+            acc   = overall.mean()
+            total_loss = loss_x + loss_y
+            self.metrics = {
+                "loss_x": to_cpu(loss_x).item(),
+                "loss_y": to_cpu(loss_y).item(),
+                "loss"  : to_cpu(total_loss).item(),
+                "acc_x" : to_cpu(acc_x).item(),
+                "acc_y" : to_cpu(acc_y).item(),
+                "acc"   : to_cpu(acc).item(),
+            }
+        return total_loss,x,y

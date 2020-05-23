@@ -1,0 +1,4 @@
+classes= 3
+train=/home/omossad/scratch/temp/roi/train-dev.txt
+valid=/home/omossad/scratch/temp/roi/valid-dev.txt
+names=roi.names

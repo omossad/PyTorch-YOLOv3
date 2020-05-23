@@ -7,7 +7,7 @@ from PIL import Image
 import torch
 import torch.nn.functional as F
 
-from utils.augmentations import horisontal_flip
+from utils.roi_augmentations import horizontal_flip
 from torch.utils.data import Dataset
 import torchvision.transforms as transforms
 
@@ -37,7 +37,7 @@ def random_resize(images, min_size=288, max_size=448):
 
 
 class ImageFolder(Dataset):
-    def __init__(self, folder_path, img_size=256):
+    def __init__(self, folder_path, img_size=608):
         self.files = sorted(glob.glob("%s/*.*" % folder_path))
         self.img_size = img_size
 
@@ -57,7 +57,7 @@ class ImageFolder(Dataset):
 
 
 class ListDataset(Dataset):
-    def __init__(self, list_path, img_size=256, augment=True, multiscale=True, normalized_labels=True):
+    def __init__(self, list_path, img_size=608, augment=True, multiscale=True, normalized_labels=True):
         with open(list_path, "r") as file:
             self.img_files = file.readlines()
 
@@ -104,30 +104,38 @@ class ListDataset(Dataset):
 
         targets = None
         if os.path.exists(label_path):
-            boxes = torch.from_numpy(np.loadtxt(label_path).reshape(-1, 5))
+            #print('READ')
+            #print(np.loadtxt(label_path))
+            #boxes = torch.from_numpy(np.loadtxt(label_path).reshape(-1, 5))
+            tiles = torch.from_numpy(np.loadtxt(label_path).reshape(-1, 2))
+            #print('RESHAPE')
+            #print(labels)
             # Extract coordinates for unpadded + unscaled image
-            x1 = w_factor * (boxes[:, 1] - boxes[:, 3] / 2)
-            y1 = h_factor * (boxes[:, 2] - boxes[:, 4] / 2)
-            x2 = w_factor * (boxes[:, 1] + boxes[:, 3] / 2)
-            y2 = h_factor * (boxes[:, 2] + boxes[:, 4] / 2)
+            #x1 = w_factor * (boxes[:, 1] - boxes[:, 3] / 2)
+            #y1 = h_factor * (boxes[:, 2] - boxes[:, 4] / 2)
+            #x2 = w_factor * (boxes[:, 1] + boxes[:, 3] / 2)
+            #y2 = h_factor * (boxes[:, 2] + boxes[:, 4] / 2)
             # Adjust for added padding
-            x1 += pad[0]
-            y1 += pad[2]
-            x2 += pad[1]
-            y2 += pad[3]
+            #x1 += pad[0]
+            #y1 += pad[2]
+            #x2 += pad[1]
+            #y2 += pad[3]
             # Returns (x, y, w, h)
-            boxes[:, 1] = ((x1 + x2) / 2) / padded_w
-            boxes[:, 2] = ((y1 + y2) / 2) / padded_h
-            boxes[:, 3] *= w_factor / padded_w
-            boxes[:, 4] *= h_factor / padded_h
+            #boxes[:, 1] = ((x1 + x2) / 2) / padded_w
+            #boxes[:, 2] = ((y1 + y2) / 2) / padded_h
+            #boxes[:, 3] *= w_factor / padded_w
+            #boxes[:, 4] *= h_factor / padded_h
 
-            targets = torch.zeros((len(boxes), 6))
-            targets[:, 1:] = boxes
+            #targets = torch.zeros((len(boxes), 6))
+            targets = torch.zeros((1, 3))
+            targets[:, 1:] = tiles
+            #print(targets.shape)
 
         # Apply augmentations
         if self.augment:
             if np.random.random() < 0.5:
-                img, targets = horisontal_flip(img, targets)
+                img, targets = horizontal_flip(img, targets)
+
         return img_path, img, targets
 
     def collate_fn(self, batch):
@@ -139,8 +147,8 @@ class ListDataset(Dataset):
             boxes[:, 0] = i
         targets = torch.cat(targets, 0)
         # Selects new image size every tenth batch
-        #if self.multiscale and self.batch_count % 10 == 0:
-        #    self.img_size = random.choice(range(self.min_size, self.max_size + 1, 32))
+        if self.multiscale and self.batch_count % 10 == 0:
+            self.img_size = random.choice(range(self.min_size, self.max_size + 1, 32))
         # Resize images to input shape
         imgs = torch.stack([resize(img, self.img_size) for img in imgs])
         self.batch_count += 1
