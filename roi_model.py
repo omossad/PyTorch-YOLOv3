@@ -195,7 +195,6 @@ class Darknet(nn.Module):
 
     def forward(self, x):
         img_dim = x.shape[2]
-        loss = 0
         layer_outputs, yolo_outputs = [], []
         for i, (module_def, module) in enumerate(zip(self.module_defs, self.module_list)):
             if module_def["type"] in ["convolutional", "upsample", "maxpool"]:
@@ -207,8 +206,7 @@ class Darknet(nn.Module):
                 x = layer_outputs[-1] + layer_outputs[layer_i]
             elif module_def["type"] == "yolo":
 
-                x, layer_loss = module[0](x, img_dim)
-                loss += layer_loss
+                x = module[0](x, img_dim)
                 yolo_outputs.append(x)
             layer_outputs.append(x)
         yolo_outputs = to_cpu(torch.cat(yolo_outputs, 1))
