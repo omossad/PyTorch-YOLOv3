@@ -327,6 +327,11 @@ class ROI(nn.Module):
         )
 
     def forward(self, x, y, targets=None):
+
+        FloatTensor = torch.cuda.FloatTensor if x.is_cuda else torch.FloatTensor
+        LongTensor = torch.cuda.LongTensor if x.is_cuda else torch.LongTensor
+        ByteTensor = torch.cuda.ByteTensor if x.is_cuda else torch.ByteTensor
+        
         num_samples = x.shape[0]
         #img_dim = x.shape[2]
         x = self.fc_out_x(x)
