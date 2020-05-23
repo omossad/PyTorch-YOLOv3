@@ -301,8 +301,8 @@ class ROI(nn.Module):
     def __init__(self, config_path, htiles, vtiles, classes, img_size=416):
         super(ROI, self).__init__()
         self.num_classes = classes
-        self.htiles = htiles
-        self.vtiles = vtiles
+        self.num_htiles = htiles
+        self.num_vtiles = vtiles
         self.metrics = {}
         #self.module_defs = parse_model_config(config_path)
         #self.hyperparams, self.module_list = create_modules(self.module_defs)
