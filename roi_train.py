@@ -57,7 +57,7 @@ if __name__ == "__main__":
     base_model = Darknet(opt.base_model_def).to(device)
     base_model.apply(weights_init_normal)
     fine_model = ROI(opt.fine_model_def, opt.htiles, opt.vtiles, opt.classes, opt.img_size).to(device)
-    print(fine_model[0])
+    print(fine_model.layer[0])
     # If specified we start from checkpoint
     if opt.pretrained_weights:
         if opt.pretrained_weights.endswith(".pth"):
