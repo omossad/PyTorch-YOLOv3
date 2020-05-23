@@ -2,11 +2,11 @@ import torch
 
 # N is batch size; D_in is input dimension;
 # H is hidden dimension; D_out is output dimension.
-N, D_in, H, D_out = 64, 1000, 100, 10
+N, D_in, H, D_out = 10, 1000, 100, 10
 
 # Create random Tensors to hold inputs and outputs
 x = torch.randn(N, D_in)
-y = torch.randn(N, D_out)
+y = torch.LongTensor(N).random_(0, 9)
 
 # Use the nn package to define our model and loss function.
 model = torch.nn.Sequential(
