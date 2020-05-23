@@ -368,8 +368,8 @@ class ROILayer(nn.Module):
         #)
 
     def forward(self, x, targets=None, img_dim=None):
-        #print('INPUT SHAPE')
-        #print(x.shape)
+        print('INPUT SHAPE')
+        print(x.shape)
         num_samples = x.size(0)
         # Tensors for cuda support
         FloatTensor = torch.cuda.FloatTensor if x.is_cuda else torch.FloatTensor
