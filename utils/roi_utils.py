@@ -24,9 +24,8 @@ def load_classes(path):
     return names
 
 def yolo_preprocessing(yolo_outputs, htiles, vtiles, classes, img_dim=416):
-    print('Preprocessing input SHAPE')
-    print(yolo_outputs.shape)
-    num_samples = yolo_outputs.size(0)
+    num_samples = len(yolo_outputs)
+    print('NUM SAMPLES ' + str(num_samples))
     htile_size = img_dim // htiles
     vtile_size = img_dim // vtiles
     # Tensors for cuda support
@@ -299,8 +298,6 @@ def non_max_suppression(prediction, conf_thres=0.5, nms_thres=0.4):
 
 
 def build_targets(pred_boxes, pred_cls, target, anchors, ignore_thres):
-    #print('TARGET')
-    #print(target)
     ByteTensor = torch.cuda.ByteTensor if pred_boxes.is_cuda else torch.ByteTensor
     FloatTensor = torch.cuda.FloatTensor if pred_boxes.is_cuda else torch.FloatTensor
 
