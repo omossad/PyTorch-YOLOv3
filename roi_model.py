@@ -353,7 +353,7 @@ class ROI(nn.Module):
             print('PREDICTED')
             print(x)
             print('TRUE')
-            print(to_cpu(corr_x).item())
+            print(targets)
             #print('PREDICTED ' + str(pred_x) + ', ' + str(pred_y))
             #print('TRUE ' + str(corr_x) + ', ' + str(corr_y))
             loss_x = self.loss_func(x, corr_x)

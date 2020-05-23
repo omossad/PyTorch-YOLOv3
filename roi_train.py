@@ -35,8 +35,8 @@ if __name__ == "__main__":
     parser.add_argument("--multiscale_training", default=False, help="allow for multi-scale training")
     parser.add_argument("--conf_thres", type=float, default=0.3, help="object confidence threshold")
     parser.add_argument("--nms_thres", type=float, default=0.2, help="iou thresshold for non-maximum suppression")
-    parser.add_argument("--vtiles", type=int, default=5, help="number of vertical tiles")
-    parser.add_argument("--htiles", type=int, default=3, help="number of horizontal tiles")
+    parser.add_argument("--htiles", type=int, default=5, help="number of horizontal tiles")
+    parser.add_argument("--vtiles", type=int, default=3, help="number of vertical tiles")
     parser.add_argument("--classes", type=int, default=3, help="number of classes")
 
     opt = parser.parse_args()
