@@ -430,6 +430,7 @@ class ROILayer(nn.Module):
         #out_cat = torch.cat((x_, y_), 1)
         #out_cat = self.fc_net(out_cat)
         x = self.fc_out_x(x)
+        y = x
         #y = self.fc_out_y(y)
         #print('INPUT')
         #print(x_inpt)
@@ -542,7 +543,7 @@ class ROILayer(nn.Module):
             #_, pred_y = torch.max(y, 1)
             #pre_lbl = torch.zeros([num_samples, self.num_tiles*self.num_tiles]).type(FloatTensor)
             #pre_lbl.scatter(1, pred_x*self.num_tiles + pred_y , 1)
-            y = x
+
             pred_y = pred_x
             corr_y = corr_x
             print('PREDICTED ' + str(pred_x) + ', ' + str(pred_y))
