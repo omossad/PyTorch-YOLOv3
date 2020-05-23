@@ -76,8 +76,6 @@ def create_modules(module_defs):
             yolo_layer = YOLOLayer(anchors, num_classes, img_size)
             modules.add_module(f"yolo_{module_i}", yolo_layer)
         # Register module list and number of output filters
-        elif module_def["type"] == "roi":
-            print('ROI')
 
         module_list.append(modules)
         output_filters.append(filters)
@@ -303,9 +301,9 @@ class ROI(nn.Module):
         self.num_htiles = htiles
         self.num_vtiles = vtiles
         self.metrics = {}
-        self.module_defs = parse_model_config(config_path)
-        self.hyperparams, self.module_list = create_modules(self.module_defs)
-        self.roi_layers = [layer[0] for layer in self.module_list if hasattr(layer[0], "metrics")]
+        #self.module_defs = parse_model_config(config_path)
+        #self.hyperparams, self.module_list = create_modules(self.module_defs)
+        #self.roi_layers = [layer[0] for layer in self.module_list if hasattr(layer[0], "metrics")]
         self.img_size = img_size
         self.loss_func = nn.CrossEntropyLoss()
         self.fc_out_x = nn.Sequential(
