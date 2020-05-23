@@ -377,22 +377,24 @@ class ROI(nn.Module):
         self.img_size = img_size
         self.loss_func = nn.CrossEntropyLoss()
         self.fc_out_x = nn.Sequential(
-            nn.Linear(self.num_classes * self.num_htiles, 64),
+            nn.Linear(self.num_classes * self.num_htiles, 512),
             nn.LeakyReLU(inplace=True),
-            nn.Linear(64, 32),
+            nn.Linear(512, 256),
             nn.LeakyReLU(inplace=True),
-            nn.Linear(32, 16),
+            nn.BatchNorm1d(256),
+            nn.Linear(256, 128),
             nn.LeakyReLU(inplace=True),
-            nn.Linear(16, self.num_htiles)
+            nn.Linear(128, self.num_htiles)
         )
         self.fc_out_y = nn.Sequential(
-            nn.Linear(self.num_classes * self.num_vtiles, 64),
+            nn.Linear(self.num_classes * self.num_vtiles, 512),
             nn.LeakyReLU(inplace=True),
-            nn.Linear(64, 32),
+            nn.Linear(512, 256),
             nn.LeakyReLU(inplace=True),
-            nn.Linear(32, 16),
+            nn.BatchNorm1d(256),
+            nn.Linear(256, 128),
             nn.LeakyReLU(inplace=True),
-            nn.Linear(16, self.num_vtiles)
+            nn.Linear(128, self.num_vtiles)
         )
 
     def forward(self, x, y, targets=None):
@@ -403,8 +405,6 @@ class ROI(nn.Module):
 
         num_samples = x.shape[0]
         #img_dim = x.shape[2]
-        print('INPUT TENSOR')
-        print(x)
         x = self.fc_out_x(x)
         y = self.fc_out_y(y)
         loss = 0
@@ -443,4 +443,4 @@ class ROI(nn.Module):
                 "acc_y" : to_cpu(acc_y).item(),
                 "acc"   : to_cpu(acc).item(),
             }
-        return total_loss,x,y
+        return total_loss,x,y, self.metrics

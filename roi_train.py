@@ -22,7 +22,7 @@ import torch.optim as optim
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--epochs", type=int, default=1, help="number of epochs")
-    parser.add_argument("--batch_size", type=int, default=32, help="size of each image batch")
+    parser.add_argument("--batch_size", type=int, default=8, help="size of each image batch")
     parser.add_argument("--gradient_accumulations", type=int, default=1, help="number of gradient accums before step")
     parser.add_argument("--base_model_def", type=str, default="config/base_model.cfg", help="path to base model definition file")
     parser.add_argument("--fine_model_def", type=str, default="config/fine_model.cfg", help="path to fine model definition file")
@@ -100,9 +100,9 @@ if __name__ == "__main__":
             x_inpt, y_inpt = yolo_preprocessing(yolo_outputs, opt.conf_thres, opt.nms_thres, opt.htiles, opt.vtiles, opt.classes, opt.img_size)
             x_inpt = Variable(x_inpt.to(device))
             y_inpt = Variable(y_inpt.to(device))
-            loss, output_x, output_y = fine_model(x_inpt, y_inpt, targets)
+            loss, output_x, output_y, metrics = fine_model(x_inpt, y_inpt, targets)
             loss.backward()
-
+            print(metrics)
             if batches_done % opt.gradient_accumulations:
                 # Accumulates gradient before each step
                 optimizer.step()
