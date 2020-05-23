@@ -300,7 +300,7 @@ class ROI(nn.Module):
 
     def __init__(self, config_path, htiles, vtiles, classes, img_size=416):
         super(ROI, self).__init__()
-        self.num_classes = class_names
+        self.num_classes = classes
         self.htiles = htiles
         self.vtiles = vtiles
         self.metrics = {}
