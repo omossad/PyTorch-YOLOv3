@@ -56,7 +56,7 @@ def yolo_preprocessing(yolo_outputs, htiles, vtiles, classes, img_dim=416):
 
     x = x_inpt.view(x_inpt.size(0), -1)
     y = y_inpt.view(y_inpt.size(0), -1)
-    retrun x,y
+    return x,y
 
 def weights_init_normal(m):
     classname = m.__class__.__name__
