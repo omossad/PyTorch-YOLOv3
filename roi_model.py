@@ -379,6 +379,7 @@ class ROI(nn.Module):
         self.fc_out_x = nn.Sequential(
             nn.Linear(self.num_classes * self.num_htiles, 512),
             nn.LeakyReLU(inplace=True),
+            nn.Dropout(),
             nn.Linear(512, 256),
             nn.LeakyReLU(inplace=True),
             nn.BatchNorm1d(256),
@@ -389,6 +390,7 @@ class ROI(nn.Module):
         self.fc_out_y = nn.Sequential(
             nn.Linear(self.num_classes * self.num_vtiles, 512),
             nn.LeakyReLU(inplace=True),
+            nn.Dropout(),
             nn.Linear(512, 256),
             nn.LeakyReLU(inplace=True),
             nn.BatchNorm1d(256),
