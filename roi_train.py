@@ -57,7 +57,6 @@ if __name__ == "__main__":
     base_model = Darknet(opt.base_model_def).to(device)
     base_model.apply(weights_init_normal)
     fine_model = ROI(opt.fine_model_def, opt.htiles, opt.vtiles, opt.classes, opt.img_size).to(device)
-    print(fine_model.layer[0])
     # If specified we start from checkpoint
     if opt.pretrained_weights:
         if opt.pretrained_weights.endswith(".pth"):
@@ -115,10 +114,10 @@ if __name__ == "__main__":
 
             log_str = "\n---- [Epoch %d/%d, Batch %d/%d] ----\n" % (epoch, opt.epochs, batch_i, len(dataloader))
 
-            metric_table = [["Metrics", *[f"ROI Layer {i}" for i in range(len(fine_model.roi_layers))]]]
-
-            # Log metrics at each YOLO layer
-            for i, metric in enumerate(metrics):
+            #metric_table = [["Metrics", *[f"ROI Layer {i}" for i in range(len(fine_model.roi_layers))]]]
+            '''
+             Log metrics at each YOLO layer
+            #for i, metric in enumerate(metrics):
                 formats = {m: "%.6f" for m in metrics}
                 #formats["grid_size"] = "%2d"
                 #formats["cls_acc"] = "%.2f%%"
@@ -132,7 +131,7 @@ if __name__ == "__main__":
                         tensorboard_log += [(f"{name}_{j+1}", metric)]
                 tensorboard_log += [("loss", loss.item())]
                 #logger.list_of_scalars_summary(tensorboard_log, batches_done)
-
+            '''
             #log_str += AsciiTable(metric_table).table
             log_str += f"\nTotal loss {loss.item()}"
 
