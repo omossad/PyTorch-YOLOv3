@@ -26,7 +26,9 @@ optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
 for t in range(500):
     # Forward pass: compute predicted y by passing x to the model.
     y_pred = model(x)
-
+    print(y_pred)
+    y_pred = softmax(y_pred,1)
+    print(y_pred)
     # Compute and print loss.
     loss = loss_fn(y_pred, y)
     if t % 100 == 99:
