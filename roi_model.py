@@ -334,6 +334,8 @@ class ROI(nn.Module):
 
         num_samples = x.shape[0]
         #img_dim = x.shape[2]
+        print('INPUT TENSOR')
+        print(x)
         x = self.fc_out_x(x)
         y = self.fc_out_y(y)
         loss = 0
@@ -350,12 +352,11 @@ class ROI(nn.Module):
             _, corr_y = torch.max(ty, 1)
             _, pred_x = torch.max(x, 1)
             _, pred_y = torch.max(y, 1)
-            print('PREDICTED')
-            print(x)
-            print('TRUE')
-            print(targets)
-            #print('PREDICTED ' + str(pred_x) + ', ' + str(pred_y))
-            #print('TRUE ' + str(corr_x) + ', ' + str(corr_y))
+            #print('PREDICTED')
+            #print(x)
+
+            print('PREDICTED ' + str(pred_x) + ', ' + str(pred_y))
+            print('TRUE ' + str(corr_x) + ', ' + str(corr_y))
             loss_x = self.loss_func(x, corr_x)
             loss_y = self.loss_func(y, corr_y)
             x_score = torch.eq(pred_x, corr_x).type(FloatTensor)
