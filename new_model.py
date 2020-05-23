@@ -278,7 +278,7 @@ class ROILayer(nn.Module):
         self.metrics = {}
         self.htile_size = self.img_dim // self.num_htiles
         self.vtile_size = self.img_dim // self.num_vtiles
-        self.loss_func = nn.CrossEntropyLoss().cuda()
+        self.loss_func = nn.CrossEntropyLoss()
         #self.fc_net = nn.Sequential(
         #    nn.Linear(self.num_classes * (self.num_htiles + self.num_vtiles ), 64),
             #nn.BatchNorm1d(1024),
@@ -426,7 +426,6 @@ class ROILayer(nn.Module):
 
         x = x_inpt.view(x_inpt.size(0), -1)
         #y = y_inpt.view(y_inpt.size(0), -1)
-        x = Variable(x, requires_grad=True)
         #y = Variable(y, requires_grad=True)
         #out_cat = torch.cat((x_, y_), 1)
         #out_cat = self.fc_net(out_cat)

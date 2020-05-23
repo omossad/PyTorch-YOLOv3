@@ -79,8 +79,8 @@ if __name__ == "__main__":
         pin_memory=True,
         collate_fn=dataset.collate_fn,
     )
-    #optimizer = torch.optim.Adam(model.parameters())
-    optimizer = torch.optim.Adam(filter(lambda p: p.requires_grad, model.parameters()))
+    optimizer = torch.optim.Adam(model.roi_layer[0].parameters())
+    #optimizer = torch.optim.Adam(filter(lambda p: p.requires_grad, model.parameters()))
 
     metrics = [
     #    "grid_size",
@@ -116,17 +116,17 @@ if __name__ == "__main__":
         tot_acc_x = 0
         tot_acc_y = 0
         tot_acc = 0
-        for name, param in model.named_parameters():
-            param.requires_grad = False
-        for name, param in model.roi_layer[0].named_parameters():
-            param.requires_grad = True
+        #for name, param in model.named_parameters():
+        #    param.requires_grad = False
+        #for name, param in model.roi_layer[0].named_parameters():
+        #    param.requires_grad = True
 
         for batch_i, (_, imgs, targets) in enumerate(dataloader):
             #print('TARGET FILE')
             #print(targets)
             batches_done = len(dataloader) * epoch + batch_i
 
-            imgs = Variable(imgs.to(device), requires_grad=False)
+            imgs = Variable(imgs.to(device))
             targets = Variable(targets.to(device), requires_grad=False)
             #print('TARGET VAR')
             #print(targets)
@@ -164,10 +164,11 @@ if __name__ == "__main__":
                 print(loss.data)
                 print(loss.grad)
                 optimizer.step()
-                optimizer.zero_grad()
                 print('AFTER STEP')
                 print(loss.data)
                 print(loss.grad)
+                optimizer.zero_grad()
+
 
             # ----------------
             #   Log progress
