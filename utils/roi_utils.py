@@ -64,7 +64,7 @@ def xyxy2xywh(x):
     y[..., 2] = x[..., 2] - x[..., 0]
     y[..., 3] = x[..., 3] - x[..., 1]
     return y
-    
+
 def ap_per_class(tp, conf, pred_cls, target_cls):
     """ Compute the average precision, given the recall and precision curves.
     Source: https://github.com/rafaelpadilla/Object-Detection-Metrics.
@@ -348,8 +348,8 @@ def yolo_preprocessing(yolo_outputs, conf_thres, nms_thres, htiles, vtiles, clas
             for i in range(num_pred):
                 x_tile = max(x_tiles.data.tolist()[i], 0)
                 y_tile = max(y_tiles.data.tolist()[i], 0)
-                x_tile = min(x_tiles.data.tolist()[i], self.num_htiles-1)
-                y_tile = min(y_tiles.data.tolist()[i], self.num_vtiles-1)
+                x_tile = min(x_tiles.data.tolist()[i], htiles-1)
+                y_tile = min(y_tiles.data.tolist()[i], vtiles-1)
                 s_obj  = obj_class.data.tolist()[i]
                 s_conf = obj_conf.data.tolist()[i]
                 x_inpt[image_i][x_tile][s_obj] += s_conf
