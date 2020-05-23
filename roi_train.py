@@ -142,7 +142,7 @@ if __name__ == "__main__":
 
             print(log_str)
 
-            model.seen += imgs.size(0)
+            base_model.seen += imgs.size(0)
 '''
         if epoch % opt.evaluation_interval == 0:
             print("\n---- Evaluating Model ----")
