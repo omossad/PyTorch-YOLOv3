@@ -198,7 +198,7 @@ if __name__ == "__main__":
                 classes=opt.classes,
                 batch_size=8,
             )
-            print('\n Test accuracy: ' + str(test_score.item()))
+            print('Test accuracy: ' + str(test_score.item()))
 '''
             precision, recall, AP, f1, ap_class = evaluate(
                 base_model,
