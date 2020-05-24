@@ -378,25 +378,27 @@ class ROI(nn.Module):
         self.loss_func = nn.CrossEntropyLoss()
         self.fc_out_x = nn.Sequential(
             nn.Linear(self.num_classes * self.num_htiles, 16),
-            nn.LeakyReLU(inplace=True),
+            nn.LeakyReLU(inplace=False),
             nn.Dropout(),
             nn.Linear(16, 16),
-            nn.LeakyReLU(inplace=True),
+            nn.LeakyReLU(inplace=False),
             nn.BatchNorm1d(16),
             nn.Linear(16, 12),
-            nn.LeakyReLU(inplace=True),
+            nn.LeakyReLU(inplace=False),
             nn.Linear(12, self.num_htiles)
+            #nn.Sigmoid(inplace=True)
         )
         self.fc_out_y = nn.Sequential(
             nn.Linear(self.num_classes * self.num_vtiles, 16),
-            nn.LeakyReLU(inplace=True),
+            nn.LeakyReLU(inplace=False),
             nn.Dropout(),
             nn.Linear(16, 16),
-            nn.LeakyReLU(inplace=True),
+            nn.LeakyReLU(inplace=False),
             nn.BatchNorm1d(16),
             nn.Linear(16, 12),
-            nn.LeakyReLU(inplace=True),
+            nn.LeakyReLU(inplace=False),
             nn.Linear(12, self.num_vtiles)
+            #nn.Sigmoid(inplace=True)
         )
 
     def forward(self, x, y, targets=None):
