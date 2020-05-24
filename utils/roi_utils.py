@@ -361,7 +361,7 @@ def yolo_preprocessing(yolo_outputs, conf_thres, nms_thres, htiles, vtiles, clas
             print(x_inpt[image_i])
             y_inpt[image_i] = (y_inpt[image_i]- y_inpt[image_i].mean())/y_inpt[image_i].std()
     print('INPUT BEFORE RESHAPE')
-    print(x)
+    print(x_inpt)
     x = x_inpt.view(x_inpt.size(0), -1)
     print('INPUT AFTER RESHAPE')
     print(x)
