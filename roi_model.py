@@ -421,4 +421,4 @@ class ROI(nn.Module):
                 "loss"  : to_cpu(loss).item(),
                 "acc" : to_cpu(acc).item(),
             }
-        return loss, x, self.metrics
+        return loss, x, score

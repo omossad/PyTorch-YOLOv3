@@ -81,8 +81,8 @@ if __name__ == "__main__":
     wd = 0.0005
     #optimizer_h = torch.optim.SGD(fine_model_h.parameters(), lr=0.001, momentum=0.9)
     #optimizer_v = torch.optim.SGD(fine_model_v.parameters(), lr=0.001, momentum=0.9)
-    optimizer_h = torch.optim.Adam(fine_model_h.parameters(), lr=learning_rate, momentum=mom, weight_decay=wd)
-    optimizer_v = torch.optim.Adam(fine_model_v.parameters(), lr=learning_rate, momentum=mom, weight_decay=wd)
+    optimizer_h = torch.optim.Adam(fine_model_h.parameters(), lr=learning_rate, weight_decay=wd)
+    optimizer_v = torch.optim.Adam(fine_model_v.parameters(), lr=learning_rate, weight_decay=wd)
     #optimizer = torch.optim.Adam(fine_model.parameters(), lr=learning_rate)
 
     metrics = [
@@ -110,21 +110,21 @@ if __name__ == "__main__":
             y_inpt = yolo_preprocessing(yolo_outputs, opt.vtiles, 1, opt.classes, opt.img_size)
             x_inpt = Variable(x_inpt.to(device))
             y_inpt = Variable(y_inpt.to(device))
-            loss_h, output_x, metrics = fine_model_h(x_inpt, targets)
+            loss_h, output_x, h_score = fine_model_h(x_inpt, targets)
             optimizer_h.zero_grad()
             loss_h.backward()
-            print(metrics)
             #if batches_done % opt.gradient_accumulations:
                 # Accumulates gradient before each step
             optimizer_h.step()
 
-            loss_v, output_y, metrics = fine_model_v(y_inpt, targets)
+            loss_v, output_y, v_score = fine_model_v(y_inpt, targets)
             optimizer_v.zero_grad()
             loss_v.backward()
-            print(metrics)
             #if batches_done % opt.gradient_accumulations:
                 # Accumulates gradient before each step
             optimizer_v.step()
+            overall_score = h_score * v_score
+            print(overall_score)
             loss = loss_h + loss_v
             #optimizer.zero_grad()
 
@@ -169,11 +169,11 @@ if __name__ == "__main__":
             # Evaluate the model on the validation set
             precision, recall, AP, f1, ap_class = evaluate(
                 base_model,
-                fine_model,
+                fine_model_h,
+                fine_model_v,
                 path=valid_path,
-                iou_thres=0.5,
-                conf_thres=0.5,
-                nms_thres=0.5,
+                conf_thres=opt.conf_thres,
+                nms_thres=opt.nms_thres,
                 img_size=opt.img_size,
                 batch_size=8,
             )
