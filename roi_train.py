@@ -22,7 +22,7 @@ import torch.optim as optim
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--epochs", type=int, default=50, help="number of epochs")
-    parser.add_argument("--batch_size", type=int, default=32, help="size of each image batch")
+    parser.add_argument("--batch_size", type=int, default=16, help="size of each image batch")
     parser.add_argument("--gradient_accumulations", type=int, default=4, help="number of gradient accums before step")
     parser.add_argument("--base_model_def", type=str, default="config/base_model.cfg", help="path to base model definition file")
     parser.add_argument("--fine_model_def", type=str, default="config/fine_model.cfg", help="path to fine model definition file")
@@ -81,8 +81,8 @@ if __name__ == "__main__":
     #wd = 0.0005
     #optimizer_h = torch.optim.SGD(fine_model_h.parameters(), lr=0.001, momentum=0.9, weight_decay=0.005)
     #optimizer_v = torch.optim.SGD(fine_model_v.parameters(), lr=0.005, momentum=0.9)
-    optimizer = torch.optim.SGD(fine_model.parameters(), lr=0.001, momentum=0.9, weight_decay=0.005)
-    #optimizer = torch.optim.Adam(fine_model.parameters(), lr=0.0001)
+    #optimizer = torch.optim.SGD(fine_model.parameters(), lr=0.001, momentum=0.9, weight_decay=0.005)
+    optimizer = torch.optim.Adam(fine_model.parameters(), lr=0.0001, weight_decay=0.0005)
     #optimizer_h = torch.optim.Adam(fine_model_h.parameters(), lr=learning_rate, weight_decay=wd)
     #optimizer_v = torch.optim.Adam(fine_model_v.parameters(), lr=learning_rate, weight_decay=wd)
     #optimizer = torch.optim.Adam(fine_model.parameters(), lr=learning_rate)
