@@ -179,8 +179,8 @@ if __name__ == "__main__":
             log_str += f"\n---- ETA {time_left}"
 
             #print(log_str)
-            print ("\n Processing batch no {}".format(batch_i) + ' of ' + str(batch_i), end="")
-            print ("\n loss: {}".format(loss.item()) + ' -  accuracy: {}'.format(str(train_accuracy.item()/(batch_i+1))), end="")
+            print ("\r Processing batch no {}".format(batch_i) + ' of ' + str(batch_i), end="")
+            print ("\r loss: {}".format(loss.item()) + ' -  accuracy: {}'.format(str(train_accuracy.item()/(batch_i+1))), end="")
 
             base_model.seen += imgs.size(0)
         print('\n Epoch ' + str(epoch) + ' of ' + str(opt.epochs) + ' accuracy: ' + str(train_accuracy.item()/(batch_i+1)))
