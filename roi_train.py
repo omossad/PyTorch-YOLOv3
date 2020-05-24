@@ -180,6 +180,7 @@ if __name__ == "__main__":
 
             #print(log_str)
             print ("\r Processing batch no {}".format(batch_i) + ' of ' + str(batch_i), end="")
+            print('\n')
             print ("\r loss: {}".format(loss.item()) + ' -  accuracy: {}'.format(str(train_accuracy.item()/(batch_i+1))), end="")
 
             base_model.seen += imgs.size(0)
@@ -199,6 +200,7 @@ if __name__ == "__main__":
                 batch_size=8,
             )
             print('Test accuracy: ' + str(test_score.item()))
+            print('\n')
 '''
             precision, recall, AP, f1, ap_class = evaluate(
                 base_model,
