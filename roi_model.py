@@ -438,7 +438,7 @@ class ROI(nn.Module):
             acc_x = x_score.mean()
             acc_y = y_score.mean()
             acc   = overall.mean()
-            total_loss = max(loss_x.mean(), loss_y.mean())
+            total_loss = loss_x + loss_y
             self.metrics = {
                 "loss_x": to_cpu(loss_x).item(),
                 "loss_y": to_cpu(loss_y).item(),
