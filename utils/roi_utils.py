@@ -339,7 +339,7 @@ def yolo_preprocessing(yolo_outputs, num_tiles, h_or_v, classes, img_dim=416):
         if image_pred is not None:
             num_pred = len(image_pred)
             image_pred[..., :4] = xyxy2xywh(image_pred[..., :4])
-            x_tiles = (image_pred[..., h_or_v] // htile_size).int()
+            x_tiles = (image_pred[..., h_or_v] // tile_size).int()
             obj_class    = image_pred[..., 6].int()
             obj_conf     = image_pred[..., 4]
             for i in range(num_pred):
