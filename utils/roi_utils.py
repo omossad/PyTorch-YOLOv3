@@ -366,7 +366,7 @@ def yolo_single_tile(yolo_outputs, num_tiles, classes, img_dim=416):
     ByteTensor = torch.cuda.ByteTensor
     #yolo_outputs = non_max_suppression(yolo_outputs, conf_thres, nms_thres)
     #x_inpt = torch.zeros([num_samples, num_tiles, classes]).type(FloatTensor)
-    x_inpt = torch.zeros([num_samples, num_tiles * num_tiles * classes]).type(FloatTensor)
+    x_inpt = torch.zeros([num_samples, num_tiles * num_tiles, classes]).type(FloatTensor)
     for image_i, image_pred in enumerate(yolo_outputs):
         if image_pred is not None:
             num_pred = len(image_pred)
