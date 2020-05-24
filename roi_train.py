@@ -127,7 +127,7 @@ if __name__ == "__main__":
 
             print(overall_score)
             training_accuracy += overall_score.mean()
-            print(overall_score)
+            print(training_accuracy)
             loss = loss_h + loss_v
             #optimizer.zero_grad()
 
