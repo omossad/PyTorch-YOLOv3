@@ -21,8 +21,8 @@ import torch.optim as optim
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--epochs", type=int, default=5, help="number of epochs")
-    parser.add_argument("--batch_size", type=int, default=8, help="size of each image batch")
+    parser.add_argument("--epochs", type=int, default=50, help="number of epochs")
+    parser.add_argument("--batch_size", type=int, default=16, help="size of each image batch")
     parser.add_argument("--gradient_accumulations", type=int, default=2, help="number of gradient accums before step")
     parser.add_argument("--base_model_def", type=str, default="config/base_model.cfg", help="path to base model definition file")
     parser.add_argument("--fine_model_def", type=str, default="config/fine_model.cfg", help="path to fine model definition file")
@@ -119,12 +119,13 @@ if __name__ == "__main__":
             #y_inpt = Variable(y_inpt.to(device))
             #loss_h, output_x, h_score = fine_model_h(x_inpt, targets)
             loss, output, score = fine_model(x_inpt, targets)
-            optimizer.zero_grad()
+
             loss.backward()
-            optimizer.step()
             #optimizer_h.zero_grad()
             #loss_h.backward()
-            #if batches_done % opt.gradient_accumulations:
+            if batches_done % opt.gradient_accumulations:
+                optimizer.step()
+                optimizer.zero_grad()
                 # Accumulates gradient before each step
             #optimizer_h.step()
 
@@ -178,12 +179,11 @@ if __name__ == "__main__":
             log_str += f"\n---- ETA {time_left}"
 
             #print(log_str)
-            print ("\r Processing batch no {}".format(batch_i) + ' of ' + str(batch_i), end="")
-            print ("\r Current loss {}".format(loss.item()) + ' , and accuracy ' + str(train_accuracy/(batch_i+1)), end="")
+            print ("\n Processing batch no {}".format(batch_i) + ' of ' + str(batch_i), end="")
+            print ("\n loss: {}".format(loss.item()) + ' -  accuracy: {}'.format(str(train_accuracy.item()/(batch_i+1))), end="")
 
             base_model.seen += imgs.size(0)
-        print('FINAL TRAIN SCORE')
-        print(train_accuracy/(batch_i+1))
+        print('\n Epoch ' + str(epoch) + ' of ' + str(opt.epochs) + ' accuracy: ' + str(train_accuracy.item()/(batch_i+1)))
         if epoch % opt.evaluation_interval == 0:
             print("\n---- Evaluating Model ----")
             # Evaluate the model on the validation set
@@ -198,8 +198,7 @@ if __name__ == "__main__":
                 classes=opt.classes,
                 batch_size=8,
             )
-            print('FINAL TEST SCORE')
-            print(test_score)
+            print('\n Test accuracy: ' + str(test_score.item()))
 '''
             precision, recall, AP, f1, ap_class = evaluate(
                 base_model,
