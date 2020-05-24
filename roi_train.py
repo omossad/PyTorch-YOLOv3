@@ -56,9 +56,9 @@ if __name__ == "__main__":
     # Initiate model
     base_model = Darknet(opt.base_model_def).to(device)
     base_model.apply(weights_init_normal)
-    fine_model_h = ROI(opt.fine_model_def, opt.htiles, opt.classes, 1, opt.img_size).to(device)
-    fine_model_v = ROI(opt.fine_model_def, opt.vtiles, opt.classes, 2, opt.img_size).to(device)
-
+    #fine_model_h = ROI(opt.fine_model_def, opt.htiles, opt.classes, 1, opt.img_size).to(device)
+    #fine_model_v = ROI(opt.fine_model_def, opt.vtiles, opt.classes, 2, opt.img_size).to(device)
+    fine_model = ROI(opt.fine_model_def, opt.htiles * opt.htiles, opt.classes, 1, opt.img_size).to(device)
     # If specified we start from checkpoint
     if opt.pretrained_weights:
         if opt.pretrained_weights.endswith(".pth"):
@@ -79,8 +79,9 @@ if __name__ == "__main__":
     #learning_rate = 1e-4
     #mom = 0.9
     #wd = 0.0005
-    optimizer_h = torch.optim.SGD(fine_model_h.parameters(), lr=0.001, momentum=0.9, weight_decay=0.005)
-    optimizer_v = torch.optim.SGD(fine_model_v.parameters(), lr=0.005, momentum=0.9)
+    #optimizer_h = torch.optim.SGD(fine_model_h.parameters(), lr=0.001, momentum=0.9, weight_decay=0.005)
+    #optimizer_v = torch.optim.SGD(fine_model_v.parameters(), lr=0.005, momentum=0.9)
+    optimizer = torch.optim.SGD(fine_model.parameters(), lr=0.001, momentum=0.9, weight_decay=0.005)
     #optimizer_h = torch.optim.Adam(fine_model_h.parameters(), lr=learning_rate, weight_decay=wd)
     #optimizer_v = torch.optim.Adam(fine_model_v.parameters(), lr=learning_rate, weight_decay=wd)
     #optimizer = torch.optim.Adam(fine_model.parameters(), lr=learning_rate)
@@ -97,49 +98,51 @@ if __name__ == "__main__":
     for epoch in range(opt.epochs):
         #print(model)
         train_accuracy = 0
-        train_accuracy_h = 0
-        train_accuracy_v = 0
+        #train_accuracy_h = 0
+        #train_accuracy_v = 0
         test_accuracy  = 0
         base_model.eval()
-        fine_model_h.train()
-        fine_model_v.train()
+        #fine_model_h.train()
+        #fine_model_v.train()
+        fine_model.train()
         start_time = time.time()
         for batch_i, (_, imgs, targets) in enumerate(dataloader):
             batches_done = len(dataloader) * epoch + batch_i
             imgs = Variable(imgs.to(device))
             targets = Variable(targets.to(device), requires_grad=False)
             yolo_outputs  = base_model(imgs)
-            print('YOLO outputs')
-            print(yolo_outputs.shape)
             yolo_outputs = non_max_suppression(yolo_outputs, opt.conf_thres, opt.nms_thres)
-            print(len(yolo_outputs))
-            print(len(yolo_outputs[0]))
-            print(yolo_outputs)
-            x_inpt = yolo_preprocessing(yolo_outputs, opt.htiles, 0, opt.classes, opt.img_size)
-            y_inpt = yolo_preprocessing(yolo_outputs, opt.vtiles, 1, opt.classes, opt.img_size)
+            #x_inpt = yolo_preprocessing(yolo_outputs, opt.htiles, 0, opt.classes, opt.img_size)
+            #y_inpt = yolo_preprocessing(yolo_outputs, opt.vtiles, 1, opt.classes, opt.img_size)
+            x_inpt = yolo_single_tile(yolo_outputs, opt.htiles, opt.classes, opt.img_size)
             x_inpt = Variable(x_inpt.to(device))
-            y_inpt = Variable(y_inpt.to(device))
-            loss_h, output_x, h_score = fine_model_h(x_inpt, targets)
-            optimizer_h.zero_grad()
-            loss_h.backward()
+            #y_inpt = Variable(y_inpt.to(device))
+            #loss_h, output_x, h_score = fine_model_h(x_inpt, targets)
+            loss, output, score = fine_model(x_inpt, targets)
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
+            #optimizer_h.zero_grad()
+            #loss_h.backward()
             #if batches_done % opt.gradient_accumulations:
                 # Accumulates gradient before each step
-            optimizer_h.step()
+            #optimizer_h.step()
 
-            loss_v, output_y, v_score = fine_model_v(y_inpt, targets)
-            optimizer_v.zero_grad()
-            loss_v.backward()
+            #loss_v, output_y, v_score = fine_model_v(y_inpt, targets)
+            #optimizer_v.zero_grad()
+            #loss_v.backward()
             #if batches_done % opt.gradient_accumulations:
                 # Accumulates gradient before each step
-            optimizer_v.step()
-            overall_score = h_score * v_score
-            train_accuracy   += overall_score.mean()
-            train_accuracy_h += h_score.mean()
-            train_accuracy_v += v_score.mean()
-            print(train_accuracy_h/(batch_i+1))
-            print(train_accuracy_v/(batch_i+1))
+            #optimizer_v.step()
+            #overall_score = h_score * v_score
+            #train_accuracy   += overall_score.mean()
+            #train_accuracy_h += h_score.mean()
+            #train_accuracy_v += v_score.mean()
+            train_accuracy += score.mean()
+            #print(train_accuracy_h/(batch_i+1))
+            #print(train_accuracy_v/(batch_i+1))
             print(train_accuracy/(batch_i+1))
-            loss = loss_h + loss_v
+            #loss = loss_h + loss_v
             #optimizer.zero_grad()
 
             # ----------------

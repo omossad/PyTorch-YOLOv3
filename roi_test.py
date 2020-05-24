@@ -21,7 +21,9 @@ import torch.optim as optim
 
 
 def evaluate(base_model, fine_model_h, fine_model_v, path, conf_thres, nms_thres, img_size, htiles, vtiles, classes, batch_size):
-    model.eval()
+    base_model.eval()
+    fine_model_h.eval()
+    fine_model_v.eval()
 
     # Get dataloader
     dataset = ListDataset(path, img_size=img_size, augment=False, multiscale=False)

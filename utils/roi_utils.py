@@ -349,7 +349,42 @@ def yolo_preprocessing(yolo_outputs, num_tiles, h_or_v, classes, img_dim=416):
                 s_obj  = obj_class.data.tolist()[i]
                 s_conf = obj_conf.data.tolist()[i]
                 #x_inpt[image_i][x_tile][s_obj] += 1
-                x_inpt[image_i][x_tile] += (0.1 + s_obj * s_conf)**2
+                x_inpt[image_i][x_tile] += (0.1 + s_obj)**2
+            #x_inpt[image_i] = (x_inpt[image_i]- x_in
+            #x_inpt[image_i] = (x_inpt[image_i]- x_inpt[image_i].mean())/x_inpt[image_i].std()
+            #y_inpt[image_i] = (y_inpt[image_i]- y_inpt[image_i].mean())/y_inpt[image_i].std()
+    x = x_inpt.view(x_inpt.size(0), -1)
+    return x
+
+def yolo_single_tile(yolo_outputs, num_tiles, classes, img_dim=416):
+    num_samples = len(yolo_outputs)
+    print('NUM SAMPLES ' + str(num_samples))
+    tile_size = img_dim // num_tiles
+    # Tensors for cuda support
+    FloatTensor = torch.cuda.FloatTensor
+    LongTensor = torch.cuda.LongTensor
+    ByteTensor = torch.cuda.ByteTensor
+    #yolo_outputs = non_max_suppression(yolo_outputs, conf_thres, nms_thres)
+    #x_inpt = torch.zeros([num_samples, num_tiles, classes]).type(FloatTensor)
+    x_inpt = torch.zeros([num_samples, num_tiles * num_tiles]).type(FloatTensor)
+    for image_i, image_pred in enumerate(yolo_outputs):
+        if image_pred is not None:
+            num_pred = len(image_pred)
+            image_pred[..., :4] = xyxy2xywh(image_pred[..., :4])
+            x_tiles = (image_pred[..., 1] // tile_size).int()
+            y_tiles = (image_pred[..., 2] // tile_size).int()
+            obj_class    = image_pred[..., 6].int()
+            obj_conf     = image_pred[..., 4]
+            for i in range(num_pred):
+                x_tile = max(x_tiles.data.tolist()[i], 0)
+                x_tile = min(x_tiles.data.tolist()[i], num_tiles-1)
+                y_tile = max(y_tiles.data.tolist()[i], 0)
+                y_tile = min(y_tiles.data.tolist()[i], num_tiles-1)
+                s_tile = x_tile + y_tile * num_tiles
+                s_obj  = obj_class.data.tolist()[i]
+                s_conf = obj_conf.data.tolist()[i]
+                #x_inpt[image_i][x_tile][s_obj] += 1
+                x_inpt[image_i][s_tile] += (0.1 + s_obj)**2
             #x_inpt[image_i] = (x_inpt[image_i]- x_in
             #x_inpt[image_i] = (x_inpt[image_i]- x_inpt[image_i].mean())/x_inpt[image_i].std()
             #y_inpt[image_i] = (y_inpt[image_i]- y_inpt[image_i].mean())/y_inpt[image_i].std()
