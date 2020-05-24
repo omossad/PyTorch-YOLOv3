@@ -341,6 +341,8 @@ def yolo_preprocessing(yolo_outputs, conf_thres, nms_thres, htiles, vtiles, clas
         if image_pred is not None:
             num_pred = len(image_pred)
             image_pred[..., :4] = xyxy2xywh(image_pred[..., :4])
+            print('IMAGE PRED')
+            print(image_pred[..., :4])
             x_tiles = (image_pred[..., 0] // htile_size).int()
             y_tiles = (image_pred[..., 1] // vtile_size).int()
             obj_class    = image_pred[..., 6].int()
@@ -355,7 +357,13 @@ def yolo_preprocessing(yolo_outputs, conf_thres, nms_thres, htiles, vtiles, clas
                 x_inpt[image_i][x_tile][s_obj] += s_conf
                 y_inpt[image_i][y_tile][s_obj] += s_conf
             x_inpt[image_i] = (x_inpt[image_i]- x_inpt[image_i].mean())/x_inpt[image_i].std()
+            print('X INPUT')
+            print(x_input[image_i])
             y_inpt[image_i] = (y_inpt[image_i]- y_inpt[image_i].mean())/y_inpt[image_i].std()
+    print('INPUT BEFORE RESHAPE')
+    print(x)
     x = x_inpt.view(x_inpt.size(0), -1)
+    print('INPUT AFTER RESHAPE')
+    print(x)
     y = y_inpt.view(y_inpt.size(0), -1)
     return x,y
