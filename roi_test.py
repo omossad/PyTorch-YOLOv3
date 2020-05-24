@@ -59,8 +59,8 @@ def evaluate(base_model, fine_model, path, conf_thres, nms_thres, img_size, num_
             #loss_v, output_y, v_score = fine_model_v(y_inpt, targets)
             loss, output, score = fine_model(x_inpt, targets)
             test_accuracy += score.mean()
-            print('TEST ACCURACY')
-            print(test_accuracy/(batch_i+1))
+            #print('TEST ACCURACY')
+            #print(test_accuracy/(batch_i+1))
             #print('Testing score')
             #print(score)
 

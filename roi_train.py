@@ -141,7 +141,7 @@ if __name__ == "__main__":
             train_accuracy += score.mean()
             #print(train_accuracy_h/(batch_i+1))
             #print(train_accuracy_v/(batch_i+1))
-            print(train_accuracy/(batch_i+1))
+            #print(train_accuracy/(batch_i+1))
             #loss = loss_h + loss_v
             #optimizer.zero_grad()
 
@@ -177,10 +177,11 @@ if __name__ == "__main__":
             time_left = datetime.timedelta(seconds=epoch_batches_left * (time.time() - start_time) / (batch_i + 1))
             log_str += f"\n---- ETA {time_left}"
 
-            print(log_str)
+            #print(log_str)
 
             base_model.seen += imgs.size(0)
-
+        print('FINAL TRAIN SCORE')
+        print(train_accuracy/(batch_i+1))
         if epoch % opt.evaluation_interval == 0:
             print("\n---- Evaluating Model ----")
             # Evaluate the model on the validation set

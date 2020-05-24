@@ -413,8 +413,8 @@ class ROI(nn.Module):
             _, corr_x = torch.max(tx, 1)
             _, pred_x = torch.max(x, 1)
 
-            print('PREDICTED ' + str(pred_x))
-            print('TRUE ' + str(corr_x))
+            #print('PREDICTED ' + str(pred_x))
+            #print('TRUE ' + str(corr_x))
             loss = self.loss_func(x, corr_x)
             score = torch.eq(pred_x, corr_x).type(FloatTensor)
             #overall = x_score * y_score
