@@ -107,7 +107,8 @@ class ListDataset(Dataset):
             #print('READ')
             #print(np.loadtxt(label_path))
             #boxes = torch.from_numpy(np.loadtxt(label_path).reshape(-1, 5))
-            tiles = torch.from_numpy(np.loadtxt(label_path).reshape(-1, 2))
+            #tiles = torch.from_numpy(np.loadtxt(label_path).reshape(-1, 2))
+            tiles = torch.from_numpy(np.loadtxt(label_path).reshape(-1, 1))
             #print('RESHAPE')
             #print(labels)
             # Extract coordinates for unpadded + unscaled image
@@ -127,14 +128,16 @@ class ListDataset(Dataset):
             #boxes[:, 4] *= h_factor / padded_h
 
             #targets = torch.zeros((len(boxes), 6))
-            targets = torch.zeros((1, 3))
-            targets[:, 1:] = tiles
+            #targets = torch.zeros((1, 3))
+            targets = torch.zeros((1, 2))
+            #targets[:, 1:] = tiles
+            targets[:, 1] = tiles
             #print(targets.shape)
 
         # Apply augmentations
-        if self.augment:
-            if np.random.random() < 0.5:
-                img, targets = horizontal_flip(img, targets)
+        #if self.augment:
+        #    if np.random.random() < 0.5:
+        #        img, targets = horizontal_flip(img, targets)
 
         return img_path, img, targets
 
