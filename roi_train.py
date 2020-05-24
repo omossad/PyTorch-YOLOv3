@@ -197,7 +197,7 @@ if __name__ == "__main__":
                 img_size=opt.img_size,
                 num_tiles=opt.htiles,
                 classes=opt.classes,
-                batch_size=8,
+                batch_size=32,
             )
             print('Test accuracy: ' + str(test_score.item()))
             print('\n')
