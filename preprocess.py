@@ -4,8 +4,8 @@ import csv
 
 W_ref = 1920.0
 H_ref = 1080.0
-W_tiles = 5.0
-H_tiles  = 3.0
+W_tiles = 4.0
+H_tiles  = 4.0
 tile_width = W_ref / W_tiles
 tile_height = H_ref / H_tiles
 num_tiles = int(W_tiles * H_tiles)
@@ -64,8 +64,8 @@ for i in range(num_files):
     end_frame = int(frame_info[i][1])
     current_frame = start_frame
     for lbl in labels:
-        #s_tile = get_tile(lbl[0],lbl[1])
-        sx_tile, sy_tile = get_tileXY(lbl[0],lbl[1])
+        s_tile = get_tile(lbl[0],lbl[1])
+        #sx_tile, sy_tile = get_tileXY(lbl[0],lbl[1])
         filename = 'ha_' + str(i) + '_frame_' + str(current_frame).zfill(5)
         #command = 'cp ' + frame_dir + 'ha_' + str(i) + '/frame_' + str(current_frame).zfill(5) + '.jpg ' + out_dir + 'images/'
         #filelist = "echo '" + out_dir + 'images/' + filename + ".jpg' >> " + out_dir
@@ -75,7 +75,8 @@ for i in range(num_files):
         #    filelist = filelist + 'valid.txt \n'
         #command = command + filename + '.jpg \n'
         #command = command + "echo '"+ str(s_tile) +" 0.1 0.1 0.1 0.1' > " + out_dir + 'labels/'
-        command = "echo '"+ str(sx_tile) +' '+ str(sy_tile) + "' > " + out_dir + 'labels/'
+        command = "echo '"+ str(s_tile) + "' > " + out_dir + 'labels/'
+        #command = "echo '"+ str(sx_tile) +' '+ str(sy_tile) + "' > " + out_dir + 'labels/'
         command = command + filename + '.txt \n'
         #command = command + filelist
         f.write(command)
