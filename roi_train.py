@@ -75,7 +75,8 @@ if __name__ == "__main__":
         collate_fn=dataset.collate_fn,
     )
     learning_rate = 1e-3
-    optimizer = torch.optim.Adam(fine_model.parameters(), lr=learning_rate)
+    optimizer = torch.optim.SGD(fine_model.parameters(), lr=0.01, momentum=0.9)
+    #optimizer = torch.optim.Adam(fine_model.parameters(), lr=learning_rate)
 
     metrics = [
         "loss_x",
