@@ -334,7 +334,8 @@ def yolo_preprocessing(yolo_outputs, num_tiles, h_or_v, classes, img_dim=416):
     LongTensor = torch.cuda.LongTensor
     ByteTensor = torch.cuda.ByteTensor
     #yolo_outputs = non_max_suppression(yolo_outputs, conf_thres, nms_thres)
-    x_inpt = torch.zeros([num_samples, num_tiles, classes]).type(FloatTensor)
+    #x_inpt = torch.zeros([num_samples, num_tiles, classes]).type(FloatTensor)
+    x_inpt = torch.zeros([num_samples, num_tiles]).type(FloatTensor)
     for image_i, image_pred in enumerate(yolo_outputs):
         if image_pred is not None:
             num_pred = len(image_pred)
@@ -347,7 +348,9 @@ def yolo_preprocessing(yolo_outputs, num_tiles, h_or_v, classes, img_dim=416):
                 x_tile = min(x_tiles.data.tolist()[i], num_tiles-1)
                 s_obj  = obj_class.data.tolist()[i]
                 s_conf = obj_conf.data.tolist()[i]
-                x_inpt[image_i][x_tile][s_obj] += 1
+                #x_inpt[image_i][x_tile][s_obj] += 1
+                x_inpt[image_i][x_tile] += (0.1 + s_obj)**2
+            #x_inpt[image_i] = (x_inpt[image_i]- x_in
             #x_inpt[image_i] = (x_inpt[image_i]- x_inpt[image_i].mean())/x_inpt[image_i].std()
             #y_inpt[image_i] = (y_inpt[image_i]- y_inpt[image_i].mean())/y_inpt[image_i].std()
     x = x_inpt.view(x_inpt.size(0), -1)
