@@ -20,7 +20,7 @@ from torch.autograd import Variable
 import torch.optim as optim
 
 
-def evaluate(base_model, fine_model_h, fine_model_v, path, iou_thres, conf_thres, nms_thres, img_size, batch_size):
+def evaluate(base_model, fine_model_h, fine_model_v, path, conf_thres, nms_thres, img_size, htiles, vtiles, classes, batch_size):
     model.eval()
 
     # Get dataloader
@@ -44,8 +44,16 @@ def evaluate(base_model, fine_model_h, fine_model_v, path, iou_thres, conf_thres
         imgs = Variable(imgs.type(Tensor), requires_grad=False)
 
         with torch.no_grad():
-            outputs = model(imgs)
-            outputs = non_max_suppression(outputs, conf_thres=conf_thres, nms_thres=nms_thres)
+            #outputs = model(imgs)
+            #outputs = non_max_suppression(outputs, conf_thres=conf_thres, nms_thres=nms_thres)
+            yolo_outputs  = base_model(imgs)
+            yolo_outputs = non_max_suppression(yolo_outputs, conf_thres, nms_thres)
+            x_inpt = yolo_preprocessing(yolo_outputs, htiles, 0, classes, img_size)
+            y_inpt = yolo_preprocessing(yolo_outputs, vtiles, 1, classes, img_size)
+            x_inpt = Variable(x_inpt.type(Tensor), requires_grad=False)
+            y_inpt = Variable(y_inpt.type(Tensor), requires_grad=False)
+            loss_h, output_x, h_score = fine_model_h(x_inpt, targets)
+            loss_v, output_y, v_score = fine_model_v(y_inpt, targets)
 
         sample_metrics += get_batch_statistics(outputs, targets, iou_threshold=iou_thres)
 
@@ -70,7 +78,7 @@ if __name__ == "__main__":
     parser.add_argument("--img_size", type=int, default=416, help="size of each image dimension")
     opt = parser.parse_args()
     print(opt)
-
+'''
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     data_config = parse_data_config(opt.data_config)
@@ -103,3 +111,4 @@ if __name__ == "__main__":
         print(f"+ Class '{c}' ({class_names[c]}) - AP: {AP[i]}")
 
     print(f"mAP: {AP.mean()}")
+'''

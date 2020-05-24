@@ -80,7 +80,7 @@ if __name__ == "__main__":
     #mom = 0.9
     #wd = 0.0005
     optimizer_h = torch.optim.SGD(fine_model_h.parameters(), lr=0.001, momentum=0.9, weight_decay=0.005)
-    optimizer_v = torch.optim.SGD(fine_model_v.parameters(), lr=0.001, momentum=0.9)
+    optimizer_v = torch.optim.SGD(fine_model_v.parameters(), lr=0.0001, momentum=0.9)
     #optimizer_h = torch.optim.Adam(fine_model_h.parameters(), lr=learning_rate, weight_decay=wd)
     #optimizer_v = torch.optim.Adam(fine_model_v.parameters(), lr=learning_rate, weight_decay=wd)
     #optimizer = torch.optim.Adam(fine_model.parameters(), lr=learning_rate)
@@ -96,7 +96,8 @@ if __name__ == "__main__":
 
     for epoch in range(opt.epochs):
         #print(model)
-        training_accuracy = 0
+        train_accuracy = 0
+        test_accuracy  = 0
         base_model.eval()
         fine_model_h.train()
         fine_model_v.train()
@@ -125,8 +126,8 @@ if __name__ == "__main__":
                 # Accumulates gradient before each step
             optimizer_v.step()
             overall_score = h_score * v_score
-            training_accuracy += overall_score.mean()
-            print(training_accuracy/(batch_i+1))
+            train_accuracy += overall_score.mean()
+            print(train_accuracy/(batch_i+1))
             loss = loss_h + loss_v
             #optimizer.zero_grad()
 
