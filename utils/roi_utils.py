@@ -325,45 +325,30 @@ def build_targets(pred_boxes, pred_cls, target, anchors, ignore_thres):
     tconf = obj_mask.float()
     return iou_scores, class_mask, obj_mask, noobj_mask, tx, ty, tw, th, tcls, tconf
 
-def yolo_preprocessing(yolo_outputs, conf_thres, nms_thres, htiles, vtiles, classes, img_dim=416):
-    num_samples = yolo_outputs.shape[0]
+def yolo_preprocessing(yolo_outputs, num_tiles, h_or_v, classes, img_dim=416):
+    num_samples = len(yolo_outputs)
     print('NUM SAMPLES ' + str(num_samples))
-    htile_size = img_dim // htiles
-    vtile_size = img_dim // vtiles
+    tile_size = img_dim // num_tiles
     # Tensors for cuda support
     FloatTensor = torch.cuda.FloatTensor if yolo_outputs.is_cuda else torch.FloatTensor
     LongTensor = torch.cuda.LongTensor if yolo_outputs.is_cuda else torch.LongTensor
     ByteTensor = torch.cuda.ByteTensor if yolo_outputs.is_cuda else torch.ByteTensor
-    yolo_outputs = non_max_suppression(yolo_outputs, conf_thres, nms_thres)
-    x_inpt = torch.zeros([num_samples, htiles, classes]).type(FloatTensor)
-    y_inpt = torch.zeros([num_samples, vtiles, classes]).type(FloatTensor)
+    #yolo_outputs = non_max_suppression(yolo_outputs, conf_thres, nms_thres)
+    x_inpt = torch.zeros([num_samples, num_tiles, classes]).type(FloatTensor)
     for image_i, image_pred in enumerate(yolo_outputs):
         if image_pred is not None:
             num_pred = len(image_pred)
             image_pred[..., :4] = xyxy2xywh(image_pred[..., :4])
-            print('IMAGE PRED')
-            print(image_pred[..., :4])
-            x_tiles = (image_pred[..., 0] // htile_size).int()
-            y_tiles = (image_pred[..., 1] // vtile_size).int()
+            x_tiles = (image_pred[..., h_or_v] // htile_size).int()
             obj_class    = image_pred[..., 6].int()
             obj_conf     = image_pred[..., 4]
             for i in range(num_pred):
                 x_tile = max(x_tiles.data.tolist()[i], 0)
-                y_tile = max(y_tiles.data.tolist()[i], 0)
-                x_tile = min(x_tiles.data.tolist()[i], htiles-1)
-                y_tile = min(y_tiles.data.tolist()[i], vtiles-1)
+                x_tile = min(x_tiles.data.tolist()[i], num_tiles-1)
                 s_obj  = obj_class.data.tolist()[i]
                 s_conf = obj_conf.data.tolist()[i]
-                x_inpt[image_i][x_tile][s_obj] += s_conf
-                y_inpt[image_i][y_tile][s_obj] += s_conf
-            x_inpt[image_i] = (x_inpt[image_i]- x_inpt[image_i].mean())/x_inpt[image_i].std()
-            print('X INPUT')
-            print(x_inpt[image_i])
-            y_inpt[image_i] = (y_inpt[image_i]- y_inpt[image_i].mean())/y_inpt[image_i].std()
-    print('INPUT BEFORE RESHAPE')
-    print(x_inpt)
+                x_inpt[image_i][x_tile][s_obj] += 1
+            #x_inpt[image_i] = (x_inpt[image_i]- x_inpt[image_i].mean())/x_inpt[image_i].std()
+            #y_inpt[image_i] = (y_inpt[image_i]- y_inpt[image_i].mean())/y_inpt[image_i].std()
     x = x_inpt.view(x_inpt.size(0), -1)
-    print('INPUT AFTER RESHAPE')
-    print(x)
-    y = y_inpt.view(y_inpt.size(0), -1)
-    return x,y
+    return x
