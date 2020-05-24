@@ -358,7 +358,7 @@ def yolo_preprocessing(yolo_outputs, conf_thres, nms_thres, htiles, vtiles, clas
                 y_inpt[image_i][y_tile][s_obj] += s_conf
             x_inpt[image_i] = (x_inpt[image_i]- x_inpt[image_i].mean())/x_inpt[image_i].std()
             print('X INPUT')
-            print(x_input[image_i])
+            print(x_inpt[image_i])
             y_inpt[image_i] = (y_inpt[image_i]- y_inpt[image_i].mean())/y_inpt[image_i].std()
     print('INPUT BEFORE RESHAPE')
     print(x)
