@@ -384,10 +384,10 @@ class ROI(nn.Module):
             nn.Linear(512, 512),
             nn.LeakyReLU(inplace=False),
             #nn.Dropout(),
-            #nn.BatchNorm1d(64),
+            nn.BatchNorm1d(512),
             nn.Linear(512, 256),
             nn.LeakyReLU(inplace=False),
-            #nn.Dropout(),
+            nn.Dropout(0.2),
             nn.Linear(256, 128),
             nn.LeakyReLU(inplace=False),
             nn.Linear(128, self.num_tiles)
