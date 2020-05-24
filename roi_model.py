@@ -365,43 +365,32 @@ class Darknet(nn.Module):
 class ROI(nn.Module):
     """ROI detection model"""
 
-    def __init__(self, config_path, htiles, vtiles, classes, img_size=416):
+    def __init__(self, config_path, num_tiles, classes, h_or_v, img_size=416):
         super(ROI, self).__init__()
         self.num_classes = classes
-        self.num_htiles = htiles
-        self.num_vtiles = vtiles
+        self.num_tiles = num_tiles
+        self.h_or_v = h_or_v
         self.metrics = {}
         #self.module_defs = parse_model_config(config_path)
         #self.hyperparams, self.module_list = create_fine_modules(self.module_defs)
         #self.roi_layers = [layer[0] for layer in self.module_list if hasattr(layer[0], "metrics")]
         self.img_size = img_size
         self.loss_func = nn.CrossEntropyLoss()
-        self.fc_out_x = nn.Sequential(
-            nn.Linear(self.num_classes * self.num_htiles, 16),
+        self.fc_out = nn.Sequential(
+            nn.Linear(self.num_classes * self.num_tiles, 64),
             nn.LeakyReLU(inplace=False),
             nn.Dropout(),
-            nn.Linear(16, 16),
-            nn.LeakyReLU(inplace=False),
-            nn.BatchNorm1d(16),
-            nn.Linear(16, 12),
-            nn.LeakyReLU(inplace=False),
-            nn.Linear(12, self.num_htiles)
-            #nn.Sigmoid(inplace=True)
-        )
-        self.fc_out_y = nn.Sequential(
-            nn.Linear(self.num_classes * self.num_vtiles, 16),
+            nn.Linear(64, 64),
             nn.LeakyReLU(inplace=False),
             nn.Dropout(),
-            nn.Linear(16, 16),
+            #nn.BatchNorm1d(64),
+            nn.Linear(64, 32),
             nn.LeakyReLU(inplace=False),
-            nn.BatchNorm1d(16),
-            nn.Linear(16, 12),
-            nn.LeakyReLU(inplace=False),
-            nn.Linear(12, self.num_vtiles)
+            nn.Linear(32, self.num_tiles)
             #nn.Sigmoid(inplace=True)
         )
 
-    def forward(self, x, y, targets=None):
+    def forward(self, x, targets=None):
 
         FloatTensor = torch.cuda.FloatTensor if x.is_cuda else torch.FloatTensor
         LongTensor = torch.cuda.LongTensor if x.is_cuda else torch.LongTensor
@@ -409,42 +398,26 @@ class ROI(nn.Module):
 
         num_samples = x.shape[0]
         #img_dim = x.shape[2]
-        x = self.fc_out_x(x)
-        y = self.fc_out_y(y)
+        x = self.fc_out(x)
         loss = 0
         if targets is None:
-            return x, y, 0
+            return x, 0
         else:
-            x_label = targets[..., 1].view(num_samples,-1).type(LongTensor)
-            y_label = targets[..., 2].view(num_samples,-1).type(LongTensor)
+            x_label = targets[..., self.h_or_v].view(num_samples,-1).type(LongTensor)
             tx = torch.zeros([num_samples, self.num_htiles]).type(FloatTensor)
-            ty = torch.zeros([num_samples, self.num_vtiles]).type(FloatTensor)
             tx.scatter_(1, x_label, 1)
-            ty.scatter_(1, y_label, 1)
             _, corr_x = torch.max(tx, 1)
-            _, corr_y = torch.max(ty, 1)
             _, pred_x = torch.max(x, 1)
-            _, pred_y = torch.max(y, 1)
-            #print('PREDICTED')
-            #print(x)
 
-            print('PREDICTED ' + str(pred_x) + ', ' + str(pred_y))
-            print('TRUE ' + str(corr_x) + ', ' + str(corr_y))
-            loss_x = self.loss_func(x, corr_x)
-            loss_y = self.loss_func(y, corr_y)
-            x_score = torch.eq(pred_x, corr_x).type(FloatTensor)
-            y_score = torch.eq(pred_y, corr_y).type(FloatTensor)
-            overall = x_score * y_score
-            acc_x = x_score.mean()
-            acc_y = y_score.mean()
-            acc   = overall.mean()
-            total_loss = loss_x + loss_y
+            print('PREDICTED ' + str(pred_x))
+            print('TRUE ' + str(corr_x))
+            loss = self.loss_func(x, corr_x)
+            score = torch.eq(pred_x, corr_x).type(FloatTensor)
+            #overall = x_score * y_score
+            acc = score.mean()
+            #acc   = overall.mean()
             self.metrics = {
-                "loss_x": to_cpu(loss_x).item(),
-                "loss_y": to_cpu(loss_y).item(),
-                "loss"  : to_cpu(total_loss).item(),
-                "acc_x" : to_cpu(acc_x).item(),
-                "acc_y" : to_cpu(acc_y).item(),
-                "acc"   : to_cpu(acc).item(),
+                "loss"  : to_cpu(loss).item(),
+                "acc" : to_cpu(acc).item(),
             }
-        return total_loss,x,y, self.metrics
+        return loss, x, self.metrics
