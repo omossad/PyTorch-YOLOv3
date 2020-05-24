@@ -101,12 +101,13 @@ if __name__ == "__main__":
             x_inpt = Variable(x_inpt.to(device))
             y_inpt = Variable(y_inpt.to(device))
             loss, output_x, output_y, metrics = fine_model(x_inpt, y_inpt, targets)
+            optimizer.zero_grad()
             loss.backward()
             print(metrics)
-            if batches_done % opt.gradient_accumulations:
+            #if batches_done % opt.gradient_accumulations:
                 # Accumulates gradient before each step
-                optimizer.step()
-                optimizer.zero_grad()
+            optimizer.step()
+            #optimizer.zero_grad()
 
             # ----------------
             #   Log progress
