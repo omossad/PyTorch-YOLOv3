@@ -404,7 +404,7 @@ class ROI(nn.Module):
             return x, 0
         else:
             x_label = targets[..., self.h_or_v].view(num_samples,-1).type(LongTensor)
-            tx = torch.zeros([num_samples, self.num_htiles]).type(FloatTensor)
+            tx = torch.zeros([num_samples, self.num_tiles]).type(FloatTensor)
             tx.scatter_(1, x_label, 1)
             _, corr_x = torch.max(tx, 1)
             _, pred_x = torch.max(x, 1)
