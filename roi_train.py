@@ -101,7 +101,6 @@ if __name__ == "__main__":
         train_accuracy = 0
         #train_accuracy_h = 0
         #train_accuracy_v = 0
-        test_accuracy  = 0
         base_model.eval()
         #fine_model_h.train()
         #fine_model_v.train()
@@ -196,6 +195,8 @@ if __name__ == "__main__":
                 classes=opt.classes,
                 batch_size=8,
             )
+            print('FINAL TEST SCORE')
+            print(test_score)
 '''
             precision, recall, AP, f1, ap_class = evaluate(
                 base_model,

@@ -34,6 +34,7 @@ def evaluate(base_model, fine_model, path, conf_thres, nms_thres, img_size, num_
 
     labels = []
     sample_metrics = []  # List of tuples (TP, confs, pred)
+    test_accuracy = 0
     for batch_i, (_, imgs, targets) in enumerate(tqdm.tqdm(dataloader, desc="Detecting objects")):
 
         # Extract labels
@@ -57,15 +58,18 @@ def evaluate(base_model, fine_model, path, conf_thres, nms_thres, img_size, num_
             #loss_h, output_x, h_score = fine_model_h(x_inpt, targets)
             #loss_v, output_y, v_score = fine_model_v(y_inpt, targets)
             loss, output, score = fine_model(x_inpt, targets)
-            print('Testing score')
-            print(score)
+            test_accuracy += score.mean()
+            print('TEST ACCURACY')
+            print(test_accuracy/(batch_i+1))
+            #print('Testing score')
+            #print(score)
 
         #sample_metrics += get_batch_statistics(outputs, targets, iou_threshold=iou_thres)
 
     # Concatenate sample statistics
     #true_positives, pred_scores, pred_labels = [np.concatenate(x, 0) for x in list(zip(*sample_metrics))]
     #precision, recall, AP, f1, ap_class = ap_per_class(true_positives, pred_scores, pred_labels, labels)
-    return score
+    return test_accuracy/(batch_i+1)
     #return precision, recall, AP, f1, ap_class
 
 
