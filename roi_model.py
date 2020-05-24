@@ -377,20 +377,20 @@ class ROI(nn.Module):
         self.img_size = img_size
         self.loss_func = nn.CrossEntropyLoss()
         self.fc_out = nn.Sequential(
-            nn.Linear(self.num_tiles, 512),
+            nn.Linear(self.num_tiles, 128),
             #nn.Linear(self.num_tiles * self.num_classes, 512),
             nn.LeakyReLU(inplace=False),
-            #nn.Dropout(),
-            nn.Linear(512, 512),
+            nn.Dropout(0.3),
+            nn.Linear(128, 128),
             nn.LeakyReLU(inplace=False),
             #nn.Dropout(),
-            nn.BatchNorm1d(512),
-            nn.Linear(512, 256),
+            nn.BatchNorm1d(128),
+            nn.Linear(128, 64),
             nn.LeakyReLU(inplace=False),
-            nn.Dropout(0.2),
-            nn.Linear(256, 128),
+            nn.Dropout(0.3),
+            nn.Linear(64, 64),
             nn.LeakyReLU(inplace=False),
-            nn.Linear(128, self.num_tiles)
+            nn.Linear(64, self.num_tiles)
             #nn.Sigmoid(inplace=True)
         )
 

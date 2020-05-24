@@ -81,7 +81,7 @@ if __name__ == "__main__":
     #wd = 0.0005
     #optimizer_h = torch.optim.SGD(fine_model_h.parameters(), lr=0.001, momentum=0.9, weight_decay=0.005)
     #optimizer_v = torch.optim.SGD(fine_model_v.parameters(), lr=0.005, momentum=0.9)
-    optimizer = torch.optim.SGD(fine_model.parameters(), lr=0.007, momentum=0.9, weight_decay=0.0005)
+    optimizer = torch.optim.SGD(fine_model.parameters(), lr=0.007, momentum=0.9, weight_decay=0.005)
     #optimizer = torch.optim.Adam(fine_model.parameters(), lr=0.0001)
     #optimizer_h = torch.optim.Adam(fine_model_h.parameters(), lr=learning_rate, weight_decay=wd)
     #optimizer_v = torch.optim.Adam(fine_model_v.parameters(), lr=learning_rate, weight_decay=wd)
@@ -178,6 +178,8 @@ if __name__ == "__main__":
             log_str += f"\n---- ETA {time_left}"
 
             #print(log_str)
+            print ("\r Processing batch no {}".format(batch_i) + ' of ' + str(batch_i), end="")
+            print ("\r Current loss {}".format(loss.item()) + ' , and accuracy ' + str(train_accuracy/(batch_i+1)), end="")
 
             base_model.seen += imgs.size(0)
         print('FINAL TRAIN SCORE')
