@@ -20,10 +20,9 @@ from torch.autograd import Variable
 import torch.optim as optim
 
 
-def evaluate(base_model, fine_model_h, fine_model_v, path, conf_thres, nms_thres, img_size, htiles, vtiles, classes, batch_size):
+def evaluate(base_model, fine_model, path, conf_thres, nms_thres, img_size, num_tiles, classes, batch_size):
     base_model.eval()
-    fine_model_h.eval()
-    fine_model_v.eval()
+    fine_model.eval()
 
     # Get dataloader
     dataset = ListDataset(path, img_size=img_size, augment=False, multiscale=False)
@@ -38,10 +37,10 @@ def evaluate(base_model, fine_model_h, fine_model_v, path, conf_thres, nms_thres
     for batch_i, (_, imgs, targets) in enumerate(tqdm.tqdm(dataloader, desc="Detecting objects")):
 
         # Extract labels
-        labels += targets[:, 1].tolist()
+        #labels += targets[:, 1].tolist()
         # Rescale target
-        targets[:, 2:] = xywh2xyxy(targets[:, 2:])
-        targets[:, 2:] *= img_size
+        #targets[:, 2:] = xywh2xyxy(targets[:, 2:])
+        #targets[:, 2:] *= img_size
 
         imgs = Variable(imgs.type(Tensor), requires_grad=False)
 
@@ -50,20 +49,24 @@ def evaluate(base_model, fine_model_h, fine_model_v, path, conf_thres, nms_thres
             #outputs = non_max_suppression(outputs, conf_thres=conf_thres, nms_thres=nms_thres)
             yolo_outputs  = base_model(imgs)
             yolo_outputs = non_max_suppression(yolo_outputs, conf_thres, nms_thres)
-            x_inpt = yolo_preprocessing(yolo_outputs, htiles, 0, classes, img_size)
-            y_inpt = yolo_preprocessing(yolo_outputs, vtiles, 1, classes, img_size)
+            x_inpt = yolo_single_tile(yolo_outputs, num_tiles, classes, img_size)
+            #x_inpt = yolo_preprocessing(yolo_outputs, htiles, 0, classes, img_size)
+            #y_inpt = yolo_preprocessing(yolo_outputs, vtiles, 1, classes, img_size)
             x_inpt = Variable(x_inpt.type(Tensor), requires_grad=False)
-            y_inpt = Variable(y_inpt.type(Tensor), requires_grad=False)
-            loss_h, output_x, h_score = fine_model_h(x_inpt, targets)
-            loss_v, output_y, v_score = fine_model_v(y_inpt, targets)
+            #y_inpt = Variable(y_inpt.type(Tensor), requires_grad=False)
+            #loss_h, output_x, h_score = fine_model_h(x_inpt, targets)
+            #loss_v, output_y, v_score = fine_model_v(y_inpt, targets)
+            loss, output, score = fine_model(x_inpt, targets)
+            print('Testing score')
+            print(score)
 
-        sample_metrics += get_batch_statistics(outputs, targets, iou_threshold=iou_thres)
+        #sample_metrics += get_batch_statistics(outputs, targets, iou_threshold=iou_thres)
 
     # Concatenate sample statistics
-    true_positives, pred_scores, pred_labels = [np.concatenate(x, 0) for x in list(zip(*sample_metrics))]
-    precision, recall, AP, f1, ap_class = ap_per_class(true_positives, pred_scores, pred_labels, labels)
-
-    return precision, recall, AP, f1, ap_class
+    #true_positives, pred_scores, pred_labels = [np.concatenate(x, 0) for x in list(zip(*sample_metrics))]
+    #precision, recall, AP, f1, ap_class = ap_per_class(true_positives, pred_scores, pred_labels, labels)
+    return score
+    #return precision, recall, AP, f1, ap_class
 
 
 if __name__ == "__main__":

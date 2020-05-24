@@ -181,10 +181,22 @@ if __name__ == "__main__":
             print(log_str)
 
             base_model.seen += imgs.size(0)
-'''
+
         if epoch % opt.evaluation_interval == 0:
             print("\n---- Evaluating Model ----")
             # Evaluate the model on the validation set
+            test_score = evaluate(
+                base_model,
+                fine_model,
+                path=valid_path,
+                conf_thres=opt.conf_thres,
+                nms_thres=opt.nms_thres,
+                img_size=opt.img_size,
+                num_tiles=opt.htiles,
+                classes=opt.classes,
+                batch_size=8,
+            )
+'''
             precision, recall, AP, f1, ap_class = evaluate(
                 base_model,
                 fine_model_h,
