@@ -330,9 +330,9 @@ def yolo_preprocessing(yolo_outputs, num_tiles, h_or_v, classes, img_dim=416):
     print('NUM SAMPLES ' + str(num_samples))
     tile_size = img_dim // num_tiles
     # Tensors for cuda support
-    FloatTensor = torch.cuda.FloatTensor if yolo_outputs.is_cuda else torch.FloatTensor
-    LongTensor = torch.cuda.LongTensor if yolo_outputs.is_cuda else torch.LongTensor
-    ByteTensor = torch.cuda.ByteTensor if yolo_outputs.is_cuda else torch.ByteTensor
+    FloatTensor = torch.cuda.FloatTensor
+    LongTensor = torch.cuda.LongTensor
+    ByteTensor = torch.cuda.ByteTensor
     #yolo_outputs = non_max_suppression(yolo_outputs, conf_thres, nms_thres)
     x_inpt = torch.zeros([num_samples, num_tiles, classes]).type(FloatTensor)
     for image_i, image_pred in enumerate(yolo_outputs):
