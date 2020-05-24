@@ -327,7 +327,7 @@ def build_targets(pred_boxes, pred_cls, target, anchors, ignore_thres):
 
 def yolo_preprocessing(yolo_outputs, num_tiles, h_or_v, classes, img_dim=416):
     num_samples = len(yolo_outputs)
-    print('NUM SAMPLES ' + str(num_samples))
+    #print('NUM SAMPLES ' + str(num_samples))
     tile_size = img_dim // num_tiles
     # Tensors for cuda support
     FloatTensor = torch.cuda.FloatTensor
@@ -358,7 +358,7 @@ def yolo_preprocessing(yolo_outputs, num_tiles, h_or_v, classes, img_dim=416):
 
 def yolo_single_tile(yolo_outputs, num_tiles, classes, img_dim=416):
     num_samples = len(yolo_outputs)
-    print('NUM SAMPLES ' + str(num_samples))
+    #print('NUM SAMPLES ' + str(num_samples))
     tile_size = img_dim // num_tiles
     # Tensors for cuda support
     FloatTensor = torch.cuda.FloatTensor
