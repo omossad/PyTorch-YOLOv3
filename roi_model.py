@@ -377,26 +377,26 @@ class ROI(nn.Module):
         self.img_size = img_size
         self.loss_func = nn.CrossEntropyLoss()
         self.fc_out_x = nn.Sequential(
-            nn.Linear(self.num_classes * self.num_htiles, 512),
+            nn.Linear(self.num_classes * self.num_htiles, 16),
             nn.LeakyReLU(inplace=True),
             nn.Dropout(),
-            nn.Linear(512, 256),
+            nn.Linear(16, 16),
             nn.LeakyReLU(inplace=True),
-            nn.BatchNorm1d(256),
-            nn.Linear(256, 128),
+            nn.BatchNorm1d(16),
+            nn.Linear(16, 12),
             nn.LeakyReLU(inplace=True),
-            nn.Linear(128, self.num_htiles)
+            nn.Linear(12, self.num_htiles)
         )
         self.fc_out_y = nn.Sequential(
-            nn.Linear(self.num_classes * self.num_vtiles, 512),
+            nn.Linear(self.num_classes * self.num_vtiles, 16),
             nn.LeakyReLU(inplace=True),
             nn.Dropout(),
-            nn.Linear(512, 256),
+            nn.Linear(16, 16),
             nn.LeakyReLU(inplace=True),
-            nn.BatchNorm1d(256),
-            nn.Linear(256, 128),
+            nn.BatchNorm1d(16),
+            nn.Linear(16, 12),
             nn.LeakyReLU(inplace=True),
-            nn.Linear(128, self.num_vtiles)
+            nn.Linear(12, self.num_vtiles)
         )
 
     def forward(self, x, y, targets=None):
