@@ -366,7 +366,10 @@ def yolo_single_tile(yolo_outputs, num_tiles, classes, img_dim=416):
     ByteTensor = torch.cuda.ByteTensor
     #yolo_outputs = non_max_suppression(yolo_outputs, conf_thres, nms_thres)
     #x_inpt = torch.zeros([num_samples, num_tiles, classes]).type(FloatTensor)
-    x_inpt = torch.zeros([num_samples, num_tiles * num_tiles, classes]).type(FloatTensor)
+    #x_inpt = torch.zeros([num_samples, num_tiles * num_tiles, classes]).type(FloatTensor)
+    x_inpt1 = torch.zeros([num_samples, num_tiles * num_tiles]).type(FloatTensor)
+    x_inpt2 = torch.zeros([num_samples, num_tiles * num_tiles]).type(FloatTensor)
+    x_inpt3 = torch.zeros([num_samples, num_tiles * num_tiles]).type(FloatTensor)
     #x_inpt = torch.zeros([num_samples, num_tiles * num_tiles]).type(FloatTensor)
     for image_i, image_pred in enumerate(yolo_outputs):
         if image_pred is not None:
@@ -386,9 +389,19 @@ def yolo_single_tile(yolo_outputs, num_tiles, classes, img_dim=416):
                 s_conf = obj_conf.data.tolist()[i]
                 #x_inpt[image_i][x_tile][s_obj] += 1
                 #x_inpt[image_i][s_tile] += (0.1 + s_obj)**s_conf
-                x_inpt[image_i][s_tile][s_obj] += s_conf
+                #x_inpt[image_i][s_tile][s_obj] += s_conf
+                if s_obj == 0:
+                    x_inpt1[image_i][s_tile] += s_conf
+                if s_obj == 1:
+                    x_inpt2[image_i][s_tile] += s_conf
+                if s_obj == 2:
+                    x_inpt3[image_i][s_tile] += s_conf
             #x_inpt[image_i] = (x_inpt[image_i]- x_in
             #x_inpt[image_i] = (x_inpt[image_i]- x_inpt[image_i].mean())/x_inpt[image_i].std()
             #y_inpt[image_i] = (y_inpt[image_i]- y_inpt[image_i].mean())/y_inpt[image_i].std()
-    x = x_inpt.view(x_inpt.size(0), -1)
-    return x
+
+    #x = x_inpt.view(x_inpt.size(0), -1)
+    x1 = x_inpt1.view(x_inpt1.size(0), -1)
+    x2 = x_inpt2.view(x_inpt2.size(0), -1)
+    x3 = x_inpt3.view(x_inpt3.size(0), -1)
+    return x1, x2, x3

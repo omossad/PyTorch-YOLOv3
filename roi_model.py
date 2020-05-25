@@ -376,9 +376,44 @@ class ROI(nn.Module):
         #self.roi_layers = [layer[0] for layer in self.module_list if hasattr(layer[0], "metrics")]
         self.img_size = img_size
         self.loss_func = nn.CrossEntropyLoss()
+        self.fc_out_1 = nn.Sequential(
+            nn.Linear(self.num_tiles, 64),
+            nn.LeakyReLU(inplace=False),
+            #nn.BatchNorm1d(128),
+            nn.Linear(64, 64),
+            nn.LeakyReLU(inplace=False),
+            nn.Dropout(0.2),
+            nn.Linear(64, 32),
+            nn.LeakyReLU(inplace=False),
+            nn.Dropout(0.2),
+        )
+        self.fc_out_2 = nn.Sequential(
+            nn.Linear(self.num_tiles, 64),
+            nn.LeakyReLU(inplace=False),
+            #nn.BatchNorm1d(128),
+            nn.Linear(64, 64),
+            nn.LeakyReLU(inplace=False),
+            nn.Dropout(0.2),
+            nn.Linear(64, 32),
+            nn.LeakyReLU(inplace=False),
+            nn.Dropout(0.2),
+            #nn.Sigmoid(inplace=True)
+        )
+        self.fc_out_3 = nn.Sequential(
+            nn.Linear(self.num_tiles, 64),
+            nn.LeakyReLU(inplace=False),
+            #nn.BatchNorm1d(128),
+            nn.Linear(64, 64),
+            nn.LeakyReLU(inplace=False),
+            nn.Dropout(0.2),
+            nn.Linear(64, 32),
+            nn.LeakyReLU(inplace=False),
+            nn.Dropout(0.2),
+            #nn.Sigmoid(inplace=True)
+        )
         self.fc_out = nn.Sequential(
             #nn.Linear(self.num_tiles, 128),
-            nn.Linear(self.num_tiles * self.num_classes, 128),
+            nn.Linear(self.num_tiles * 2 * self.num_classes, 128),
             nn.LeakyReLU(inplace=False),
             nn.BatchNorm1d(128),
             nn.Linear(128, 128),
@@ -393,7 +428,7 @@ class ROI(nn.Module):
             #nn.Sigmoid(inplace=True)
         )
 
-    def forward(self, x, targets=None):
+    def forward(self, x1, x2, x3, targets=None):
 
         FloatTensor = torch.cuda.FloatTensor if x.is_cuda else torch.FloatTensor
         LongTensor = torch.cuda.LongTensor if x.is_cuda else torch.LongTensor
@@ -401,6 +436,13 @@ class ROI(nn.Module):
 
         num_samples = x.shape[0]
         #img_dim = x.shape[2]
+        x1 = self.fc_out_1(x1)
+        x2 = self.fc_out_2(x2)
+        x3 = self.fc_out_3(x3)
+        print(x1.shape)
+        print(x2.shape)
+        x = torch.cat([x1,x2,x3],1)
+        print(x.shape)
         x = self.fc_out(x)
         loss = 0
         if targets is None:
