@@ -382,10 +382,10 @@ class ROI(nn.Module):
             #nn.BatchNorm1d(128),
             nn.Linear(64, 64),
             nn.LeakyReLU(inplace=False),
-            nn.Dropout(0.2),
+            #nn.Dropout(0.2),
             nn.Linear(64, 32),
             nn.LeakyReLU(inplace=False),
-            nn.Dropout(0.2),
+            #nn.Dropout(0.2),
         )
         self.fc_out_2 = nn.Sequential(
             nn.Linear(self.num_tiles, 64),
@@ -393,10 +393,10 @@ class ROI(nn.Module):
             #nn.BatchNorm1d(128),
             nn.Linear(64, 64),
             nn.LeakyReLU(inplace=False),
-            nn.Dropout(0.2),
+            #nn.Dropout(0.2),
             nn.Linear(64, 32),
             nn.LeakyReLU(inplace=False),
-            nn.Dropout(0.2),
+            #nn.Dropout(0.2),
             #nn.Sigmoid(inplace=True)
         )
         self.fc_out_3 = nn.Sequential(
@@ -405,15 +405,15 @@ class ROI(nn.Module):
             #nn.BatchNorm1d(128),
             nn.Linear(64, 64),
             nn.LeakyReLU(inplace=False),
-            nn.Dropout(0.2),
+            #nn.Dropout(0.2),
             nn.Linear(64, 32),
             nn.LeakyReLU(inplace=False),
-            nn.Dropout(0.2),
+            #nn.Dropout(0.2),
             #nn.Sigmoid(inplace=True)
         )
         self.fc_out = nn.Sequential(
             #nn.Linear(self.num_tiles, 128),
-            nn.Linear(self.num_tiles * 2 * self.num_classes, 128),
+            nn.Linear(self.num_tiles * 2, 128),
             nn.LeakyReLU(inplace=False),
             nn.BatchNorm1d(128),
             nn.Linear(128, 128),
@@ -441,7 +441,8 @@ class ROI(nn.Module):
         x3 = self.fc_out_3(x3)
         print(x1.shape)
         print(x2.shape)
-        x = torch.cat([x1,x2,x3],1)
+        x = x1+x2+x3
+        #x = torch.cat([x1,x2,x3],1)
         print(x.shape)
         x = self.fc_out(x)
         loss = 0
