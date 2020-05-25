@@ -429,7 +429,7 @@ class ROI(nn.Module):
         )
 
     def forward(self, x1, x2, x3, targets=None):
-
+        x = x1
         FloatTensor = torch.cuda.FloatTensor if x.is_cuda else torch.FloatTensor
         LongTensor = torch.cuda.LongTensor if x.is_cuda else torch.LongTensor
         ByteTensor = torch.cuda.ByteTensor if x.is_cuda else torch.ByteTensor
