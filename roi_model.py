@@ -389,18 +389,18 @@ class ROI(nn.Module):
             nn.Linear(64, 64),
             nn.ReLU(inplace=False),
             nn.Dropout(0.2),
-            nn.Linear(64, 32),
+            nn.Linear(64, 64),
             nn.ReLU(inplace=False)
         )
         self.fc_out_3 = nn.Sequential(
             nn.Linear(64, 64),
             nn.ReLU(inplace=False),
             nn.Dropout(0.2),
-            nn.Linear(64, 32),
+            nn.Linear(64, 64),
             nn.ReLU(inplace=False)
         )
         self.fc_out_4 = nn.Sequential(
-            nn.Linear(32, 32),
+            nn.Linear(64, 32),
             nn.ReLU(inplace=False),
             nn.Linear(32, self.num_tiles),
             nn.Sigmoid()
