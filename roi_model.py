@@ -402,8 +402,8 @@ class ROI(nn.Module):
         self.fc_out_4 = nn.Sequential(
             nn.Linear(32, 32),
             nn.ReLU(inplace=False),
-            nn.Linear(32, self.num_tiles)
-            nn.sigmoid()
+            nn.Linear(32, self.num_tiles),
+            nn.Sigmoid()
         )
 
     def forward(self, x, targets=None):
