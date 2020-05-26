@@ -383,19 +383,19 @@ class ROI(nn.Module):
             #nn.BatchNorm1d(128),
             nn.Linear(128, 64),
             nn.ReLU(inplace=False),
-            nn.Dropout(0.2)
+            #nn.Dropout(0.2)
         )
         self.fc_out_2 = nn.Sequential(
             nn.Linear(64, 64),
             nn.ReLU(inplace=False),
-            nn.Dropout(0.2),
+            #nn.Dropout(0.2),
             nn.Linear(64, 64),
             nn.ReLU(inplace=False)
         )
         self.fc_out_3 = nn.Sequential(
             nn.Linear(64, 64),
             nn.ReLU(inplace=False),
-            nn.Dropout(0.2),
+            #nn.Dropout(0.2),
             nn.Linear(64, 64),
             nn.ReLU(inplace=False)
         )
