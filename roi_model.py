@@ -393,7 +393,7 @@ class ROI(nn.Module):
             #nn.Sigmoid(inplace=True)
         )
 
-    def forward(self, x targets=None):
+    def forward(self, x, targets=None):
         FloatTensor = torch.cuda.FloatTensor if x.is_cuda else torch.FloatTensor
         LongTensor = torch.cuda.LongTensor if x.is_cuda else torch.LongTensor
         ByteTensor = torch.cuda.ByteTensor if x.is_cuda else torch.ByteTensor
