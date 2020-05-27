@@ -55,7 +55,7 @@ with open('frames_info') as csv_file:
 
 
 f = open("move_files.sh", "w")
-f.write("#!/bin/bash \n")
+#f.write("#!/bin/bash \n")
 
 
 for i in range(num_files):
@@ -63,8 +63,18 @@ for i in range(num_files):
     start_frame = int(frame_info[i][0])
     end_frame = int(frame_info[i][1])
     current_frame = start_frame
+    current_tile = -1
+    counter = 0
+    counters = []
     for lbl in labels:
+        previous_tile = current_tile
         s_tile = get_tile(lbl[0],lbl[1])
+        current_tile = s_tile
+        if current_tile == previous_tile:
+            counter += 1
+        else:
+            counters.append(counter)
+            counter = 0
         #sx_tile, sy_tile = get_tileXY(lbl[0],lbl[1])
         filename = 'ha_' + str(i) + '_frame_' + str(current_frame).zfill(5)
         #command = 'cp ' + frame_dir + 'ha_' + str(i) + '/frame_' + str(current_frame).zfill(5) + '.jpg ' + out_dir + 'images/'
@@ -79,6 +89,7 @@ for i in range(num_files):
         #command = "echo '"+ str(sx_tile) +' '+ str(sy_tile) + "' > " + out_dir + 'labels/'
         command = command + filename + '.txt \n'
         #command = command + filelist
-        f.write(command)
+        #f.write(command)
         current_frame = current_frame + 1
+print(counters)
 f.close()
