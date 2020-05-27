@@ -91,5 +91,5 @@ for i in range(num_files):
         #command = command + filelist
         #f.write(command)
         current_frame = current_frame + 1
-print(counters)
+    print(counters)
 f.close()
