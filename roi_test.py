@@ -49,7 +49,7 @@ def evaluate(base_model, fine_model, path, conf_thres, nms_thres, img_size, num_
             #outputs = model(imgs)
             #outputs = non_max_suppression(outputs, conf_thres=conf_thres, nms_thres=nms_thres)
             yolo_outputs  = base_model(imgs)
-            yolo_outputs = non_max_suppression(yolo_outputs, conf_thres, nms_thres)
+            yolo_outputs = custom_nms(yolo_outputs, conf_thres, nms_thres)
             #x_inpt = yolo_single_tile(yolo_outputs, num_tiles, classes, img_size)
             #x_inpt = yolo_preprocessing(yolo_outputs, htiles, 0, classes, img_size)
             #y_inpt = yolo_preprocessing(yolo_outputs, vtiles, 1, classes, img_size)

@@ -115,7 +115,7 @@ if __name__ == "__main__":
             #print('YOLO OUTPUTS')
             #print(yolo_outputs.shape)
             #print(yolo_outputs)
-            yolo_outputs = non_max_suppression(yolo_outputs, opt.conf_thres, opt.nms_thres)
+            yolo_outputs = custom_nms(yolo_outputs, opt.conf_thres, opt.nms_thres)
             #x_inpt = yolo_preprocessing(yolo_outputs, opt.htiles, 0, opt.classes, opt.img_size)
             #y_inpt = yolo_preprocessing(yolo_outputs, opt.vtiles, 1, opt.classes, opt.img_size)
             x_inpt = yolo_single_tile(yolo_outputs, opt.htiles, opt.classes, opt.img_size)
