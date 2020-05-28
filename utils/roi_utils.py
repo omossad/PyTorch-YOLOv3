@@ -264,9 +264,6 @@ def custom_nms(prediction, conf_thres=0.2, nms_thres=0.2):
             detections[0, :4] = (weights * detections[invalid, :4]).sum(0) / weights.sum()
             keep_boxes += [detections[0]]
             detections = detections[~invalid]
-            print('DETECTIONS')
-            print(detections.shape)
-            print(detections)
         if keep_boxes:
             output[image_i] = torch.stack(keep_boxes)
         print('OUTPUT')
