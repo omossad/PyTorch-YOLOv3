@@ -251,9 +251,7 @@ def custom_nms(prediction, conf_thres=0.2, nms_thres=0.2):
         image_pred = image_pred[(-score).argsort()]
         class_confs, class_preds = image_pred[:, 5:].max(1, keepdim=True)
         detections = torch.cat((image_pred[:, :5], class_confs.float(), class_preds.float()), 1)
-        print('DETECTIONS')
-        print(detections.shape)
-        print(detections)
+
         # Perform non-maximum suppression
         keep_boxes = []
         while detections.size(0):
@@ -266,6 +264,9 @@ def custom_nms(prediction, conf_thres=0.2, nms_thres=0.2):
             detections[0, :4] = (weights * detections[invalid, :4]).sum(0) / weights.sum()
             keep_boxes += [detections[0]]
             detections = detections[~invalid]
+            print('DETECTIONS')
+            print(detections.shape)
+            print(detections)
         if keep_boxes:
             output[image_i] = torch.stack(keep_boxes)
         print('OUTPUT')
