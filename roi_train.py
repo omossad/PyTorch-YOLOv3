@@ -142,7 +142,7 @@ if __name__ == "__main__":
             print(encoder.hidden)
             inputs = Variable(inputs.to(device))
             hidden = encoder(inputs)
-            loss = decoder(targets, hidden)
+            loss, score = decoder(targets, hidden)
             loss.backward()
             encoder_optimizer.step()
             decoder_optimizer.step()

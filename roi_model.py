@@ -490,6 +490,7 @@ class Decoder(nn.Module):
         # Convert (batch_size, output_size) to (seq_len, batch_size, output_size)
         input = input.unsqueeze(0)
         loss = 0
+        score = 0
         for i in range(num_steps):
             # Push current input through LSTM: (seq_len=1, batch_size, input_size=1)
             print(input.shape)
@@ -507,8 +508,11 @@ class Decoder(nn.Module):
             tx = torch.zeros([1,self.num_tiles]).type(FloatTensor)
             tx.scatter_(1, x_label, 1)
             _, corr_x = torch.max(tx, 1)
+            _, pred_x = torch.max(output, 1)
             print(corr_x)
             loss += self.loss_func(output, corr_x)
+            score += torch.eq(pred_x, corr_x).type(FloatTensor)
+            print(score)
             print('LOSS')
             print(loss)
-        return loss
+        return loss, score
