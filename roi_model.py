@@ -446,6 +446,8 @@ class Encoder(nn.Module):
 
     def __init__(self, input_size, hidden_dim, num_layers=1):
         super(Encoder, self).__init__()
+        # Tensors for cuda support
+
 
         self.input_size = input_size
         self.hidden_dim = hidden_dim
@@ -454,8 +456,11 @@ class Encoder(nn.Module):
         self.hidden = None
 
     def init_hidden(self, batch_size):
-        return (torch.zeros(self.num_layers, batch_size, self.hidden_dim),
-                torch.zeros(self.num_layers, batch_size, self.hidden_dim))
+        FloatTensor = torch.cuda.FloatTensor
+        LongTensor = torch.cuda.LongTensor
+        ByteTensor = torch.cuda.ByteTensor
+        return (torch.zeros(self.num_layers, batch_size, self.hidden_dim).type(FloatTensor),
+                torch.zeros(self.num_layers, batch_size, self.hidden_dim).type(FloatTensor))
 
     def forward(self, inputs):
         # Push through RNN layer (the ouput is irrelevant)
@@ -472,6 +477,11 @@ class Decoder(nn.Module):
         self.loss_func = nn.CrossEntropyLoss()
 
     def forward(self, outputs, hidden, criterion):
+        # Tensors for cuda support
+        FloatTensor = torch.cuda.FloatTensor
+        LongTensor = torch.cuda.LongTensor
+        ByteTensor = torch.cuda.ByteTensor 
+
         batch_size = 1
         num_steps = outputs.shape(0)
         # Create initial start value/token
