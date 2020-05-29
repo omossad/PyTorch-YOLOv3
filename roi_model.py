@@ -440,3 +440,52 @@ class ROI(nn.Module):
                 "acc" : to_cpu(acc).item(),
             }
         return loss, x, score
+
+
+class Encoder(nn.Module):
+
+    def __init__(self, input_size, hidden_dim, num_layers=1):
+        super(Encoder, self).__init__()
+
+        self.input_size = input_size
+        self.hidden_dim = hidden_dim
+        self.num_layers = num_layers
+        self.lstm = nn.LSTM(self.input_size, self.hidden_dim, num_layers=self.num_layers)
+        self.hidden = None
+
+    def init_hidden(self, batch_size):
+        return (torch.zeros(self.num_layers, batch_size, self.hidden_dim),
+                torch.zeros(self.num_layers, batch_size, self.hidden_dim))
+
+    def forward(self, inputs):
+        # Push through RNN layer (the ouput is irrelevant)
+        _, self.hidden = self.lstm(inputs, self.hidden)
+        return self.hidden
+
+
+class Decoder(nn.Module):
+
+    def __init__(self, hidden_dim, num_layers=1):
+        super(Decoder, self).__init__()
+        # input_size=1 since the output are single values
+        self.lstm = nn.LSTM(1, hidden_dim, num_layers=num_layers)
+        self.out = nn.Linear(hidden_dim, 1)
+
+    def forward(self, outputs, hidden, criterion):
+        batch_size, num_steps = outputs.shape
+        # Create initial start value/token
+        input = torch.tensor([[0.0]] * batch_size, dtype=torch.float)
+        # Convert (batch_size, output_size) to (seq_len, batch_size, output_size)
+        input = input.unsqueeze(0)
+
+        loss = 0
+        for i in range(num_steps):
+            # Push current input through LSTM: (seq_len=1, batch_size, input_size=1)
+            output, hidden = self.lstm(input, hidden)
+            # Push the output of last step through linear layer; returns (batch_size, 1)
+            output = self.out(output[-1])
+            # Generate input for next step by adding seq_len dimension (see above)
+            input = output.unsqueeze(0)
+            # Compute loss between predicted value and true value
+            loss += criterion(output, outputs[:, i])
+        return loss

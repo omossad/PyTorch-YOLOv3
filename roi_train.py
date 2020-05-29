@@ -110,6 +110,7 @@ if __name__ == "__main__":
         for batch_i, (_, imgs, targets) in enumerate(dataloader):
             batches_done = len(dataloader) * epoch + batch_i
             imgs = Variable(imgs.to(device))
+            print(imgs.shape)
             targets = Variable(targets.to(device), requires_grad=False)
             yolo_outputs  = base_model(imgs)
             #print('YOLO OUTPUTS')
@@ -120,7 +121,7 @@ if __name__ == "__main__":
             #y_inpt = yolo_preprocessing(yolo_outputs, opt.vtiles, 1, opt.classes, opt.img_size)
             x_inpt = yolo_single_tile(yolo_outputs, opt.htiles, opt.classes, opt.img_size)
             print(x_inpt.shape)
-            print(x_inpt)
+            #print(x_inpt)
             x_inpt = Variable(x_inpt.to(device))
             #y_inpt = Variable(y_inpt.to(device))
             #loss_h, output_x, h_score = fine_model_h(x_inpt, targets)
