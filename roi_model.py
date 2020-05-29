@@ -488,7 +488,7 @@ class Decoder(nn.Module):
         input = torch.tensor([[0.0]] * batch_size).type(LongTensor)
         # Convert (batch_size, output_size) to (seq_len, batch_size, output_size)
         input = input.unsqueeze(0)
-        x_label = outputs[..., self.h_or_v].view(num_steps,-1).type(LongTensor)
+        x_label = outputs[..., 1].view(num_steps,-1).type(LongTensor)
         tx = torch.zeros([num_steps, self.num_tiles]).type(FloatTensor)
         tx.scatter_(1, x_label, 1)
         _, corr_x = torch.max(tx, 1)
