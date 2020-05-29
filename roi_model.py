@@ -506,6 +506,6 @@ class Decoder(nn.Module):
             input = output.unsqueeze(0)
             # Compute loss between predicted value and true value
             print(output)
-            print(outputs[:, i])
+            print(outputs[i, 1])
             loss += self.loss_func(output, outputs[i, 1])
         return loss
