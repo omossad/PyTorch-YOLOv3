@@ -474,7 +474,7 @@ class Decoder(nn.Module):
         # input_size=1 since the output are single values
         self.lstm = nn.LSTM(1, hidden_dim, num_layers=num_layers).cuda()
         self.out = nn.Linear(hidden_dim, 1).cuda()
-        self.loss_func = nn.CrossEntropyLoss()
+        self.loss_func = nn.MSELoss()
         self.num_tiles = 16
 
     def forward(self, outputs, hidden):
@@ -505,5 +505,7 @@ class Decoder(nn.Module):
             # Generate input for next step by adding seq_len dimension (see above)
             input = output.unsqueeze(0)
             # Compute loss between predicted value and true value
+            print(output)
+            print(outputs[:, i])
             loss += self.loss_func(output, outputs[:, i])
         return loss
