@@ -254,6 +254,7 @@ if __name__ == "__main__":
             print('Test accuracy: ' + str(test_score.item()))
             print('\n')
 '''
+'''
             precision, recall, AP, f1, ap_class = evaluate(
                 base_model,
                 fine_model_h,
