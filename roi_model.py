@@ -472,10 +472,10 @@ class Decoder(nn.Module):
     def __init__(self, hidden_dim, num_layers=1):
         super(Decoder, self).__init__()
         # input_size=1 since the output are single values
-        self.lstm = nn.LSTM(1, hidden_dim, num_layers=num_layers).cuda()
-        self.out = nn.Linear(hidden_dim, 1).cuda()
-        self.loss_func = nn.MSELoss()
         self.num_tiles = 16
+        self.lstm = nn.LSTM(1, hidden_dim, num_layers=num_layers).cuda()
+        self.out = nn.Linear(hidden_dim, self.num_tiles).cuda()
+        self.loss_func = nn.CrossEntropyLoss()
 
     def forward(self, outputs, hidden):
         # Tensors for cuda support
@@ -507,5 +507,5 @@ class Decoder(nn.Module):
             # Compute loss between predicted value and true value
             print(output)
             print(outputs[:, i])
-            loss += self.loss_func(output, outputs[:, i])
+            loss += self.loss_func(output, outputs[i, 1])
         return loss
