@@ -109,7 +109,9 @@ if __name__ == "__main__":
         base_model.eval()
         #fine_model_h.train()
         #fine_model_v.train()
-        fine_model.train()
+        #fine_model.train()
+        encoder.train()
+        decoder.train()
         start_time = time.time()
         for batch_i, (_, imgs, targets) in enumerate(dataloader):
             batches_done = len(dataloader) * epoch + batch_i
