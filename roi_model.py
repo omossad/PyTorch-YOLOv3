@@ -493,9 +493,9 @@ class Decoder(nn.Module):
         score = 0
         for i in range(num_steps):
             # Push current input through LSTM: (seq_len=1, batch_size, input_size=1)
-            print(input.shape)
+            #print(input.shape)
             output, hidden = self.lstm(input, hidden)
-            print(output.shape)
+            #print(output.shape)
             # Push the output of last step through linear layer; returns (batch_size, 1)
             output = self.out(output[-1])
             print(output.shape)
