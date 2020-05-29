@@ -166,7 +166,9 @@ if __name__ == "__main__":
             #train_accuracy   += overall_score.mean()
             #train_accuracy_h += h_score.mean()
             #train_accuracy_v += v_score.mean()
-            train_accuracy += score.mean()
+
+            #train_accuracy += score.mean()
+            train_accuracy += score/opt.batch_size
             #print(train_accuracy_h/(batch_i+1))
             #print(train_accuracy_v/(batch_i+1))
             #print(train_accuracy/(batch_i+1))
