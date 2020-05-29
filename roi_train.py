@@ -67,11 +67,11 @@ if __name__ == "__main__":
             base_model.load_darknet_weights(opt.pretrained_weights)
 
     # Get dataloader
-    dataset = ListDataset(train_path, augment=True, multiscale=opt.multiscale_training)
+    dataset = ListDataset(train_path, augment=False, multiscale=opt.multiscale_training)
     dataloader = torch.utils.data.DataLoader(
         dataset,
         batch_size=opt.batch_size,
-        shuffle=True,
+        shuffle=False,
         num_workers=opt.n_cpu,
         pin_memory=True,
         collate_fn=dataset.collate_fn,
@@ -119,9 +119,12 @@ if __name__ == "__main__":
             #x_inpt = yolo_preprocessing(yolo_outputs, opt.htiles, 0, opt.classes, opt.img_size)
             #y_inpt = yolo_preprocessing(yolo_outputs, opt.vtiles, 1, opt.classes, opt.img_size)
             x_inpt = yolo_single_tile(yolo_outputs, opt.htiles, opt.classes, opt.img_size)
+            print(x_inpt.shape)
+            print(x_inpt)
             x_inpt = Variable(x_inpt.to(device))
             #y_inpt = Variable(y_inpt.to(device))
             #loss_h, output_x, h_score = fine_model_h(x_inpt, targets)
+
             loss, output, score = fine_model(x_inpt, targets)
 
             loss.backward()

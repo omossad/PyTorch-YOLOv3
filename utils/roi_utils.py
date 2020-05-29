@@ -266,9 +266,9 @@ def custom_nms(prediction, conf_thres=0.2, nms_thres=0.2):
             detections = detections[~invalid]
         if keep_boxes:
             output[image_i] = torch.stack(keep_boxes)
-        print('OUTPUT')
-        print(len(output))
-        print(output)
+        #print('OUTPUT')
+        #print(len(output))
+        #print(output)
     return output
 
 
