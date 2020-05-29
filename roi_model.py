@@ -464,28 +464,34 @@ class Encoder(nn.Module):
 
 
 class Decoder(nn.Module):
-
     def __init__(self, hidden_dim, num_layers=1):
         super(Decoder, self).__init__()
         # input_size=1 since the output are single values
         self.lstm = nn.LSTM(1, hidden_dim, num_layers=num_layers)
         self.out = nn.Linear(hidden_dim, 1)
+        self.loss_func = nn.CrossEntropyLoss()
 
     def forward(self, outputs, hidden, criterion):
-        batch_size, num_steps = outputs.shape
+        batch_size = 1
+        num_steps = outputs.shape(0)
         # Create initial start value/token
         input = torch.tensor([[0.0]] * batch_size, dtype=torch.float)
         # Convert (batch_size, output_size) to (seq_len, batch_size, output_size)
         input = input.unsqueeze(0)
-
+        x_label = targets[..., self.h_or_v].view(num_steps,-1).type(LongTensor)
+        tx = torch.zeros([num_steps, self.num_tiles]).type(FloatTensor)
+        tx.scatter_(1, x_label, 1)
+        _, corr_x = torch.max(tx, 1)
         loss = 0
         for i in range(num_steps):
             # Push current input through LSTM: (seq_len=1, batch_size, input_size=1)
             output, hidden = self.lstm(input, hidden)
+            print(output.shape)
             # Push the output of last step through linear layer; returns (batch_size, 1)
             output = self.out(output[-1])
+            print(output.shape)
             # Generate input for next step by adding seq_len dimension (see above)
             input = output.unsqueeze(0)
             # Compute loss between predicted value and true value
-            loss += criterion(output, outputs[:, i])
+            loss += loss_func(output, outputs[:, i])
         return loss

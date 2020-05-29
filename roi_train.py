@@ -59,6 +59,8 @@ if __name__ == "__main__":
     #fine_model_h = ROI(opt.fine_model_def, opt.htiles, opt.classes, 1, opt.img_size).to(device)
     #fine_model_v = ROI(opt.fine_model_def, opt.vtiles, opt.classes, 2, opt.img_size).to(device)
     fine_model = ROI(opt.fine_model_def, opt.htiles * opt.htiles, opt.classes, 1, opt.img_size).to(device)
+    encoder = Encoder(48, 128)
+    decoder = Decoder(128)
     # If specified we start from checkpoint
     if opt.pretrained_weights:
         if opt.pretrained_weights.endswith(".pth"):
@@ -84,6 +86,8 @@ if __name__ == "__main__":
     #optimizer = torch.optim.SGD(fine_model.parameters(), lr=0.001, momentum=0.9, weight_decay=0.005)
     #optimizer = torch.optim.Adam(fine_model.parameters(), lr=0.0001, weight_decay=0.0005)
     optimizer = torch.optim.Adam(fine_model.parameters(), lr=0.0001)
+    encoder_optimizer = torch.optim.Adam(encoder.parameters(), lr=0.001)
+    decoder_optimizer = torch.optim.Adam(decoder.parameters(), lr=0.001)
     #optimizer_h = torch.optim.Adam(fine_model_h.parameters(), lr=learning_rate, weight_decay=wd)
     #optimizer_v = torch.optim.Adam(fine_model_v.parameters(), lr=learning_rate, weight_decay=wd)
     #optimizer = torch.optim.Adam(fine_model.parameters(), lr=learning_rate)
@@ -120,22 +124,32 @@ if __name__ == "__main__":
             #x_inpt = yolo_preprocessing(yolo_outputs, opt.htiles, 0, opt.classes, opt.img_size)
             #y_inpt = yolo_preprocessing(yolo_outputs, opt.vtiles, 1, opt.classes, opt.img_size)
             x_inpt = yolo_single_tile(yolo_outputs, opt.htiles, opt.classes, opt.img_size)
-            print(x_inpt.shape)
-            print(targets.shape)
-            print(targets)
             #print(x_inpt)
             x_inpt = Variable(x_inpt.to(device))
+            print(x_inpt.shape)
+            x_input = x_input.view(1, opt.batch_size, -1)
+            print(x_inpt.shape)
+            x_input = x_input.transpose(1,0)
+            print(x_inpt.shape)
             #y_inpt = Variable(y_inpt.to(device))
             #loss_h, output_x, h_score = fine_model_h(x_inpt, targets)
 
-            loss, output, score = fine_model(x_inpt, targets)
-
+            #loss, output, score = fine_model(x_inpt, targets)
+            encoder_optimizer.zero_grad()
+            decoder_optimizer.zero_grad()
+            encoder.hidden = encoder.init_hidden(inputs.shape[1])
+            hidden = encoder(inputs)
+            loss = decoder(outputs, hidden, criterion)
             loss.backward()
+            encoder_optimizer.step()
+            decoder_optimizer.step()
+            print("Loss:", loss.item())
+            #loss.backward()
             #optimizer_h.zero_grad()
             #loss_h.backward()
-            if batches_done % opt.gradient_accumulations:
-                optimizer.step()
-                optimizer.zero_grad()
+            #if batches_done % opt.gradient_accumulations:
+            #    optimizer.step()
+            #    optimizer.zero_grad()
                 # Accumulates gradient before each step
             #optimizer_h.step()
 
