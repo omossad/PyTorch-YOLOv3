@@ -138,7 +138,7 @@ if __name__ == "__main__":
             encoder_optimizer.zero_grad()
             decoder_optimizer.zero_grad()
             encoder.hidden = encoder.init_hidden(inputs.shape[1])
-            encoder.hidden = Variable(encoder.hidden.to(device))
+            #encoder.hidden = Variable(encoder.hidden.to(device))
             print(encoder.hidden)
             inputs = Variable(inputs.to(device))
             hidden = encoder(inputs)
