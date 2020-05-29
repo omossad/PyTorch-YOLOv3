@@ -507,5 +507,8 @@ class Decoder(nn.Module):
             tx = torch.zeros([1,self.num_tiles]).type(FloatTensor)
             tx.scatter_(1, x_label, 1)
             _, corr_x = torch.max(tx, 1)
+            print(corr_x)
             loss += self.loss_func(output, corr_x)
+            print('LOSS')
+            print(loss)
         return loss
