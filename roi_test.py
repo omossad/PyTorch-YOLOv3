@@ -61,7 +61,7 @@ def evaluate(base_model, encoder, decoder, path, conf_thres, nms_thres, img_size
             inputs = x_inpt.view(1, batch_size, -1)
             inputs = inputs.transpose(1,0)
             encoder.hidden = encoder.init_hidden(inputs.shape[1])
-            inputs = Variable(inputs.to(device))
+            inputs = Variable(inputs.type(Tensor), requires_grad=False)
             hidden = encoder(inputs)
             loss, score = decoder(targets, hidden)
 
