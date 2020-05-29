@@ -505,5 +505,5 @@ class Decoder(nn.Module):
             # Generate input for next step by adding seq_len dimension (see above)
             input = output.unsqueeze(0)
             # Compute loss between predicted value and true value
-            loss += loss_func(output, outputs[:, i])
+            loss += self.loss_func(output, outputs[:, i])
         return loss
