@@ -503,7 +503,7 @@ class Decoder(nn.Module):
             # Compute loss between predicted value and true value
             print(output)
             print(outputs[i, 1])
-            x_label = outputs[i, 1].view(num_steps,-1).type(LongTensor)
+            x_label = outputs[i, 1].view(1,-1).type(LongTensor)
             tx = torch.zeros([num_steps, self.num_tiles]).type(FloatTensor)
             tx.scatter_(1, x_label, 1)
             _, corr_x = torch.max(tx, 1)
