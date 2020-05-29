@@ -476,7 +476,7 @@ class Decoder(nn.Module):
         self.out = nn.Linear(hidden_dim, 1)
         self.loss_func = nn.CrossEntropyLoss()
 
-    def forward(self, outputs, hidden, criterion):
+    def forward(self, outputs, hidden):
         # Tensors for cuda support
         FloatTensor = torch.cuda.FloatTensor
         LongTensor = torch.cuda.LongTensor
