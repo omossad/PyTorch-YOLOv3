@@ -489,10 +489,6 @@ class Decoder(nn.Module):
         input = torch.tensor([[0.0]] * batch_size).type(FloatTensor)
         # Convert (batch_size, output_size) to (seq_len, batch_size, output_size)
         input = input.unsqueeze(0)
-        x_label = outputs[..., 1].view(num_steps,-1).type(LongTensor)
-        tx = torch.zeros([num_steps, self.num_tiles]).type(FloatTensor)
-        tx.scatter_(1, x_label, 1)
-        _, corr_x = torch.max(tx, 1)
         loss = 0
         for i in range(num_steps):
             # Push current input through LSTM: (seq_len=1, batch_size, input_size=1)
@@ -507,5 +503,9 @@ class Decoder(nn.Module):
             # Compute loss between predicted value and true value
             print(output)
             print(outputs[i, 1])
-            loss += self.loss_func(output, torch.tensor(outputs[i, 1]))
+            x_label = outputs[i, 1].view(num_steps,-1).type(LongTensor)
+            tx = torch.zeros([num_steps, self.num_tiles]).type(FloatTensor)
+            tx.scatter_(1, x_label, 1)
+            _, corr_x = torch.max(tx, 1)
+            loss += self.loss_func(output, corr_x)
         return loss
