@@ -507,5 +507,5 @@ class Decoder(nn.Module):
             # Compute loss between predicted value and true value
             print(output)
             print(outputs[i, 1])
-            loss += self.loss_func(output, outputs[i, 1])
+            loss += self.loss_func(output, torch.tensor(outputs[i, 1].item()).type(LongTensor))
         return loss
