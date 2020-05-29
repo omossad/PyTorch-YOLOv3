@@ -452,7 +452,7 @@ class Encoder(nn.Module):
         self.input_size = input_size
         self.hidden_dim = hidden_dim
         self.num_layers = num_layers
-        self.lstm = nn.LSTM(self.input_size, self.hidden_dim, num_layers=self.num_layers)
+        self.lstm = nn.LSTM(self.input_size, self.hidden_dim, num_layers=self.num_layers).cuda()
         self.hidden = None
 
     def init_hidden(self, batch_size):
