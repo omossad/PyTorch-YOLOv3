@@ -485,7 +485,7 @@ class Decoder(nn.Module):
         batch_size = 1
         num_steps = outputs.size(0)
         # Create initial start value/token
-        input = torch.tensor([[0.0]] * batch_size, dtype=torch.cuda.FloatTensor)
+        input = torch.tensor([[0.0]] * batch_size).type(LongTensor)
         # Convert (batch_size, output_size) to (seq_len, batch_size, output_size)
         input = input.unsqueeze(0)
         x_label = targets[..., self.h_or_v].view(num_steps,-1).type(LongTensor)
