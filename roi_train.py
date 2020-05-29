@@ -122,6 +122,7 @@ if __name__ == "__main__":
             x_inpt = yolo_single_tile(yolo_outputs, opt.htiles, opt.classes, opt.img_size)
             print(x_inpt.shape)
             print(targets.shape)
+            print(targets)
             #print(x_inpt)
             x_inpt = Variable(x_inpt.to(device))
             #y_inpt = Variable(y_inpt.to(device))
