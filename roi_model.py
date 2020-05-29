@@ -473,7 +473,7 @@ class Decoder(nn.Module):
         super(Decoder, self).__init__()
         # input_size=1 since the output are single values
         self.num_tiles = 16
-        self.lstm = nn.LSTM(1, hidden_dim, num_layers=num_layers).cuda()
+        self.lstm = nn.LSTM(self.num_tiles, hidden_dim, num_layers=num_layers).cuda()
         self.out = nn.Linear(hidden_dim, self.num_tiles).cuda()
         self.loss_func = nn.CrossEntropyLoss()
 
@@ -486,7 +486,7 @@ class Decoder(nn.Module):
         batch_size = 1
         num_steps = outputs.size(0)
         # Create initial start value/token
-        input = torch.tensor([[0.0]] * batch_size).type(FloatTensor)
+        input = torch.tensor([[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]] * batch_size).type(FloatTensor)
         # Convert (batch_size, output_size) to (seq_len, batch_size, output_size)
         input = input.unsqueeze(0)
         loss = 0
