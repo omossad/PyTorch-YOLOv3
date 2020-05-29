@@ -475,6 +475,7 @@ class Decoder(nn.Module):
         self.lstm = nn.LSTM(1, hidden_dim, num_layers=num_layers)
         self.out = nn.Linear(hidden_dim, 1)
         self.loss_func = nn.CrossEntropyLoss()
+        self.num_tiles = 4
 
     def forward(self, outputs, hidden):
         # Tensors for cuda support
