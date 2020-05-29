@@ -472,7 +472,7 @@ class Decoder(nn.Module):
     def __init__(self, hidden_dim, num_layers=1):
         super(Decoder, self).__init__()
         # input_size=1 since the output are single values
-        self.lstm = nn.LSTM(1, hidden_dim, num_layers=num_layers)
+        self.lstm = nn.LSTM(1, hidden_dim, num_layers=num_layers).cuda()
         self.out = nn.Linear(hidden_dim, 1)
         self.loss_func = nn.CrossEntropyLoss()
         self.num_tiles = 4
