@@ -504,7 +504,7 @@ class Decoder(nn.Module):
             print(output)
             print(outputs[i, 1])
             x_label = outputs[i, 1].view(1,-1).type(LongTensor)
-            tx = torch.zeros([num_steps, self.num_tiles]).type(FloatTensor)
+            tx = torch.zeros([1,self.num_tiles]).type(FloatTensor)
             tx.scatter_(1, x_label, 1)
             _, corr_x = torch.max(tx, 1)
             loss += self.loss_func(output, corr_x)
