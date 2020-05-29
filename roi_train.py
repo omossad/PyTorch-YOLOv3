@@ -139,7 +139,6 @@ if __name__ == "__main__":
             decoder_optimizer.zero_grad()
             encoder.hidden = encoder.init_hidden(inputs.shape[1])
             print(encoder.hidden)
-            print(encoder.hidden.shape)
             hidden = encoder(inputs)
             loss = decoder(outputs, hidden, criterion)
             loss.backward()
