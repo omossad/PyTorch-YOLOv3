@@ -58,7 +58,7 @@ def evaluate(base_model, encoder, decoder, path, conf_thres, nms_thres, img_size
             #loss_h, output_x, h_score = fine_model_h(x_inpt, targets)
             #loss_v, output_y, v_score = fine_model_v(y_inpt, targets)
             x_inpt = yolo_single_tile(yolo_outputs, num_tiles, classes, img_size)
-            inputs = x_inpt.view(1, opt.batch_size, -1)
+            inputs = x_inpt.view(1, batch_size, -1)
             inputs = inputs.transpose(1,0)
             encoder.hidden = encoder.init_hidden(inputs.shape[1])
             inputs = Variable(inputs.to(device))
