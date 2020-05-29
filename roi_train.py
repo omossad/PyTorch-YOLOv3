@@ -126,11 +126,11 @@ if __name__ == "__main__":
             x_inpt = yolo_single_tile(yolo_outputs, opt.htiles, opt.classes, opt.img_size)
             #print(x_inpt)
             #x_inpt = Variable(x_inpt.to(device))
-            print(x_inpt.shape)
+            #print(x_inpt.shape)
             inputs = x_inpt.view(1, opt.batch_size, -1)
-            print(inputs.shape)
+            #print(inputs.shape)
             inputs = inputs.transpose(1,0)
-            print(inputs.shape)
+            #print(inputs.shape)
             #y_inpt = Variable(y_inpt.to(device))
             #loss_h, output_x, h_score = fine_model_h(x_inpt, targets)
 
@@ -139,7 +139,7 @@ if __name__ == "__main__":
             decoder_optimizer.zero_grad()
             encoder.hidden = encoder.init_hidden(inputs.shape[1])
             #encoder.hidden = Variable(encoder.hidden.to(device))
-            print(encoder.hidden)
+            #print(encoder.hidden)
             inputs = Variable(inputs.to(device))
             hidden = encoder(inputs)
             loss, score = decoder(targets, hidden)
@@ -168,7 +168,12 @@ if __name__ == "__main__":
             #train_accuracy_v += v_score.mean()
 
             #train_accuracy += score.mean()
+
             train_accuracy += score/opt.batch_size
+            print('TRAIN ACC')
+            print(train_accuracy)
+            print('AVG')
+            print(train_accuracy/(batch_i+1))
             #print(train_accuracy_h/(batch_i+1))
             #print(train_accuracy_v/(batch_i+1))
             #print(train_accuracy/(batch_i+1))
@@ -213,7 +218,7 @@ if __name__ == "__main__":
             print ("\r batch {}".format(batch_i) + ' of ' + str(len(dataloader)) + ": loss: {}".format(loss.item()) + ' -  accuracy: {}'.format(str(train_accuracy.item()/(batch_i+1))), end="")
 
             base_model.seen += imgs.size(0)
-        print('\n Epoch ' + str(epoch) + ' of ' + str(opt.epochs) + ' accuracy: ' + str(train_accuracy.item()/(batch_i+1)))
+        #print('\n Epoch ' + str(epoch) + ' of ' + str(opt.epochs) + ' accuracy: ' + str(train_accuracy.item()/(batch_i+1)))
         if epoch % opt.evaluation_interval == 0:
             print("\n---- Evaluating Model ----")
             # Evaluate the model on the validation set
