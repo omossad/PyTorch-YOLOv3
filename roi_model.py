@@ -459,8 +459,8 @@ class Encoder(nn.Module):
         FloatTensor = torch.cuda.FloatTensor
         LongTensor = torch.cuda.LongTensor
         ByteTensor = torch.cuda.ByteTensor
-        return (torch.zeros(self.num_layers, batch_size, self.hidden_dim).type(FloatTensor),
-                torch.zeros(self.num_layers, batch_size, self.hidden_dim).type(FloatTensor))
+        return (torch.zeros(self.num_layers, batch_size, self.hidden_dim).type(LongTensor),
+                torch.zeros(self.num_layers, batch_size, self.hidden_dim).type(LongTensor))
 
     def forward(self, inputs):
         # Push through RNN layer (the ouput is irrelevant)
