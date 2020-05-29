@@ -19,7 +19,60 @@ from torchvision import transforms
 from torch.autograd import Variable
 import torch.optim as optim
 
+def evaluate(base_model, encoder, decoder, path, conf_thres, nms_thres, img_size, num_tiles, classes, batch_size):
+    base_model.eval()
+    encoder.eval()
+    decoder.eval()
 
+    # Get dataloader
+    dataset = ListDataset(path, img_size=img_size, augment=False, multiscale=False)
+    dataloader = torch.utils.data.DataLoader(
+        dataset, batch_size=batch_size, shuffle=False, num_workers=4, collate_fn=dataset.collate_fn
+    )
+
+    Tensor = torch.cuda.FloatTensor if torch.cuda.is_available() else torch.FloatTensor
+
+    labels = []
+    sample_metrics = []  # List of tuples (TP, confs, pred)
+    test_accuracy = 0
+    for batch_i, (_, imgs, targets) in enumerate(tqdm.tqdm(dataloader, desc="Detecting objects")):
+
+        # Extract labels
+        #labels += targets[:, 1].tolist()
+        # Rescale target
+        #targets[:, 2:] = xywh2xyxy(targets[:, 2:])
+        #targets[:, 2:] *= img_size
+
+        imgs = Variable(imgs.type(Tensor), requires_grad=False)
+
+        with torch.no_grad():
+            #outputs = model(imgs)
+            #outputs = non_max_suppression(outputs, conf_thres=conf_thres, nms_thres=nms_thres)
+            yolo_outputs  = base_model(imgs)
+            yolo_outputs = custom_nms(yolo_outputs, conf_thres, nms_thres)
+            #x_inpt = yolo_single_tile(yolo_outputs, num_tiles, classes, img_size)
+            #x_inpt = yolo_preprocessing(yolo_outputs, htiles, 0, classes, img_size)
+            #y_inpt = yolo_preprocessing(yolo_outputs, vtiles, 1, classes, img_size)
+            #x_inpt = Variable(x_inpt.type(Tensor), requires_grad=False)
+            #y_inpt = Variable(y_inpt.type(Tensor), requires_grad=False)
+            #loss_h, output_x, h_score = fine_model_h(x_inpt, targets)
+            #loss_v, output_y, v_score = fine_model_v(y_inpt, targets)
+            x_inpt = yolo_single_tile(yolo_outputs, num_tiles, classes, img_size)
+            inputs = x_inpt.view(1, opt.batch_size, -1)
+            inputs = inputs.transpose(1,0)
+            encoder.hidden = encoder.init_hidden(inputs.shape[1])
+            inputs = Variable(inputs.to(device))
+            hidden = encoder(inputs)
+            loss, score = decoder(targets, hidden)
+
+            test_accuracy += score/batch_size
+    # Concatenate sample statistics
+    #true_positives, pred_scores, pred_labels = [np.concatenate(x, 0) for x in list(zip(*sample_metrics))]
+    #precision, recall, AP, f1, ap_class = ap_per_class(true_positives, pred_scores, pred_labels, labels)
+    return test_accuracy/(batch_i+1)
+    #return precision, recall, AP, f1, ap_class
+
+'''
 def evaluate(base_model, fine_model, path, conf_thres, nms_thres, img_size, num_tiles, classes, batch_size):
     base_model.eval()
     fine_model.eval()
@@ -77,7 +130,7 @@ def evaluate(base_model, fine_model, path, conf_thres, nms_thres, img_size, num_
     #precision, recall, AP, f1, ap_class = ap_per_class(true_positives, pred_scores, pred_labels, labels)
     return test_accuracy/(batch_i+1)
     #return precision, recall, AP, f1, ap_class
-
+'''
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

@@ -498,7 +498,7 @@ class Decoder(nn.Module):
             #print(output.shape)
             # Push the output of last step through linear layer; returns (batch_size, 1)
             output = self.out(output[-1])
-            print(output.shape)
+            #print(output.shape)
             # Generate input for next step by adding seq_len dimension (see above)
             input = output.unsqueeze(0)
             # Compute loss between predicted value and true value
@@ -511,7 +511,7 @@ class Decoder(nn.Module):
             _, pred_x = torch.max(output, 1)
             #print(corr_x)
             #print(pred_x)
-            print(torch.eq(pred_x, corr_x).type(FloatTensor))
+            #print(torch.eq(pred_x, corr_x).type(FloatTensor))
 
             loss += self.loss_func(output, corr_x)
             score += torch.eq(pred_x, corr_x).type(FloatTensor)
