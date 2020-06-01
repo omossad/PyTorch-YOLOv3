@@ -487,6 +487,7 @@ class Decoder(nn.Module):
         num_steps = outputs.size(0)
         # Create initial start value/token
         input = torch.tensor([[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]] * batch_size).type(FloatTensor)
+        #input = torch.tensor([[0.0]] * batch_size).type(FloatTensor)
         # Convert (batch_size, output_size) to (seq_len, batch_size, output_size)
         input = input.unsqueeze(0)
         loss = 0
@@ -495,9 +496,14 @@ class Decoder(nn.Module):
             # Push current input through LSTM: (seq_len=1, batch_size, input_size=1)
             #print(input.shape)
             output, hidden = self.lstm(input, hidden)
+            print('HIDDEN')
+            print(output)
+            print(hidden)
             #print(output.shape)
             # Push the output of last step through linear layer; returns (batch_size, 1)
             output = self.out(output[-1])
+            print('BEFIRE LINEAR')
+            print(output)
             #print(output.shape)
             # Generate input for next step by adding seq_len dimension (see above)
             input = output.unsqueeze(0)
