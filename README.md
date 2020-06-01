@@ -8,6 +8,9 @@ Implementation of ROI detection using PyTorch
 #### Install virtual environment if necessary
     $ sudo pip3 install -r requirements.txt
 
+#### Use existing virtual environment
+    $ source /home/omossad/scratch/ROI-PyTorch/venv3/bin/activate
+
 ##### Download pretrained weights
   Pretrained weights are available under
     /home/omossad/scratch/ROI-PyTorch/checkpoints/tiny_yolo.pth
@@ -18,7 +21,7 @@ Implementation of ROI detection using PyTorch
   variable size for testing or full trial
 
 ##### Quick running
-python roi_train.py
+  $ python roi_train.py
 
 ##### File structure
 roi_train.py : the file including the training iterations and commands
