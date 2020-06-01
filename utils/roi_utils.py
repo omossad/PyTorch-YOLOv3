@@ -252,6 +252,7 @@ def custom_nms(prediction, conf_thres=0.2, nms_thres=0.2):
         class_confs, class_preds = image_pred[:, 5:].max(1, keepdim=True)
         detections = torch.cat((image_pred[:, :5], class_confs.float(), class_preds.float()), 1)
 
+
         # Perform non-maximum suppression
         keep_boxes = []
         while detections.size(0):
@@ -270,6 +271,7 @@ def custom_nms(prediction, conf_thres=0.2, nms_thres=0.2):
         #print(len(output))
         #print(output)
     return output
+    
 
 
 def non_max_suppression(prediction, conf_thres=0.5, nms_thres=0.4):
