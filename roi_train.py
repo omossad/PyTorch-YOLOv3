@@ -144,6 +144,7 @@ if __name__ == "__main__":
             #print(encoder.hidden)
             inputs = Variable(inputs.to(device))
             hidden = encoder(inputs)
+            print(hidden)
             _, pred_x = torch.max(hidden)
             #loss, score = decoder(targets, hidden)
             loss, score = decoder(targets, pred_x)
