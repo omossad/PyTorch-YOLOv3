@@ -228,7 +228,7 @@ def bbox_iou(box1, box2, x1y1x2y2=True):
 
     return iou
 
-def custom_nms(prediction, conf_thres=0.2, nms_thres=0.2):
+def custom_nms(prediction, conf_thres=0.0, nms_thres=0.0):
     """
     Removes detections with lower object confidence score than 'conf_thres' and performs
     Non-Maximum Suppression to further filter detections.
@@ -271,7 +271,7 @@ def custom_nms(prediction, conf_thres=0.2, nms_thres=0.2):
         #print(len(output))
         #print(output)
     return output
-    
+
 
 
 def non_max_suppression(prediction, conf_thres=0.5, nms_thres=0.4):
@@ -299,6 +299,7 @@ def non_max_suppression(prediction, conf_thres=0.5, nms_thres=0.4):
         detections = torch.cat((image_pred[:, :5], class_confs.float(), class_preds.float()), 1)
         # Perform non-maximum suppression
         keep_boxes = []
+
         while detections.size(0):
             large_overlap = bbox_iou(detections[0, :4].unsqueeze(0), detections[:, :4]) > nms_thres
             label_match = detections[0, -1] == detections[:, -1]
