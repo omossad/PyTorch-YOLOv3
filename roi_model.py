@@ -474,7 +474,8 @@ class Decoder(nn.Module):
         # input_size=1 since the output are single values
         self.num_tiles = 16
         self.lstm = nn.LSTM(self.num_tiles, hidden_dim, num_layers=num_layers).cuda()
-        self.out = nn.Linear(hidden_dim, self.num_tiles).cuda()
+        self.out_1 = nn.Linear(hidden_dim, 64).cuda()
+        self.out_2 = nn.Linear(64, self.num_tiles).cuda()
         self.loss_func = nn.CrossEntropyLoss()
 
     def forward(self, outputs, hidden):
@@ -496,14 +497,15 @@ class Decoder(nn.Module):
             # Push current input through LSTM: (seq_len=1, batch_size, input_size=1)
             #print(input.shape)
             output, hidden = self.lstm(input, hidden)
-            print('HIDDEN')
-            print(output)
-            print(hidden)
+            #print('HIDDEN')
+            #print(output)
+            #print(hidden)
             #print(output.shape)
             # Push the output of last step through linear layer; returns (batch_size, 1)
-            output = self.out(output[-1])
-            print('BEFIRE LINEAR')
-            print(output)
+            output = self.out_1(output[-1])
+            output = self.out_2(output)
+            #print('BEFORE LINEAR')
+            #print(output)
             #print(output.shape)
             # Generate input for next step by adding seq_len dimension (see above)
             input = output.unsqueeze(0)

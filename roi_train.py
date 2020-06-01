@@ -59,8 +59,8 @@ if __name__ == "__main__":
     #fine_model_h = ROI(opt.fine_model_def, opt.htiles, opt.classes, 1, opt.img_size).to(device)
     #fine_model_v = ROI(opt.fine_model_def, opt.vtiles, opt.classes, 2, opt.img_size).to(device)
     fine_model = ROI(opt.fine_model_def, opt.htiles * opt.htiles, opt.classes, 1, opt.img_size).to(device)
-    encoder = Encoder(48, 128)
-    decoder = Decoder(128)
+    encoder = Encoder(48, 32)
+    decoder = Decoder(32)
     # If specified we start from checkpoint
     if opt.pretrained_weights:
         if opt.pretrained_weights.endswith(".pth"):
