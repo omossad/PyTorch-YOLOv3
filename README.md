@@ -4,7 +4,8 @@ Implementation of ROI detection using PyTorch
 ## Installation
 ##### Clone and install requirements
     $ git clone https://github.com/omossad/ROI-PyTorch.git
-    $ cd PyTorch-YOLOv3/
+    $ cd ROI-PyTorch/
+#### Install virtual environment if necessary
     $ sudo pip3 install -r requirements.txt
 
 ##### Download pretrained weights
