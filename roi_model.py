@@ -375,7 +375,7 @@ class ROI(nn.Module):
         #self.hyperparams, self.module_list = create_fine_modules(self.module_defs)
         #self.roi_layers = [layer[0] for layer in self.module_list if hasattr(layer[0], "metrics")]
         self.img_size = img_size
-        self.loss_func = nn.CrossEntropyLoss()
+        self.loss_func = nn.CrossEntropyLoss(reduction='sum')
         self.fc_out_1 = nn.Sequential(
             #nn.Linear(self.num_tiles, 128),
             nn.Linear(self.num_tiles * self.num_classes, 256),
