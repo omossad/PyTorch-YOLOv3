@@ -115,7 +115,7 @@ def evaluateCNN(base_model, fine_model, path, conf_thres, nms_thres, img_size, n
             #y_inpt = Variable(y_inpt.to(device))
             #loss_h, output_x, h_score = fine_model_h(x_inpt, targets)
             loss, output, score = fine_model(x_inpt, targets)
-            confidenceROI(output, targets)
+            confidenceBasedROI(output, targets)
 
             #loss, output, score = fine_model(x_inpt, targets)
             test_accuracy += score.mean()
