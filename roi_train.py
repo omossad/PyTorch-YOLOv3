@@ -4,7 +4,7 @@ from roi_model import *
 from utils.roi_utils import *
 from utils.roi_datasets import *
 from utils.parse_config import *
-from roi_test import evaluate
+from roi_test import evaluateCNN, evaluateLSTM
 
 import os
 import sys
