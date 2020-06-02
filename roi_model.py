@@ -403,7 +403,7 @@ class ROI(nn.Module):
             nn.Linear(64, 32),
             nn.ReLU(inplace=False),
             nn.Linear(32, self.num_tiles),
-            nn.Sigmoid()
+            #nn.Sigmoid()
         )
 
     def forward(self, x, targets=None):
