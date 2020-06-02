@@ -378,16 +378,16 @@ class ROI(nn.Module):
         self.loss_func = nn.CrossEntropyLoss(reduction='sum')
         self.fc_out_1 = nn.Sequential(
             #nn.Linear(self.num_tiles, 128),
-            nn.Linear(self.num_tiles * self.num_classes, 256),
+            nn.Linear(self.num_tiles * self.num_classes, 32),
             nn.ReLU(inplace=False),
             #nn.BatchNorm1d(128),
-            nn.Linear(256, 128),
-            nn.ReLU(inplace=False),
-            nn.Linear(128, 64),
-            nn.ReLU(inplace=False),
+            #nn.Linear(256, 128),
+            #nn.ReLU(inplace=False),
+            #nn.Linear(128, 64),
+            #nn.ReLU(inplace=False),
             #nn.BatchNorm1d(128),
-            nn.Linear(64, 32),
-            nn.ReLU(inplace=False),
+            #nn.Linear(64, 32),
+            #nn.ReLU(inplace=False),
             nn.Linear(32, self.num_tiles),
             nn.Softmax()
             #nn.Dropout(0.2)
