@@ -151,6 +151,7 @@ if __name__ == "__main__":
                 if batches_done % opt.gradient_accumulations:
                     optimizer.step()
                     optimizer.zero_grad()
+                train_accuracy += score.mean()
             elif lstm:
                 inputs = x_inpt.view(1, opt.batch_size, -1)
                 inputs = inputs.transpose(1,0)
@@ -162,6 +163,7 @@ if __name__ == "__main__":
                 loss, score = decoder(targets, hidden)
                 encoder_optimizer.step()
                 decoder_optimizer.step()
+                train_accuracy += score/opt.batch_size
             #y_inpt = Variable(y_inpt.to(device))
             #loss_h, output_x, h_score = fine_model_h(x_inpt, targets)
 
@@ -195,7 +197,7 @@ if __name__ == "__main__":
 
             #train_accuracy += score.mean()
 
-            train_accuracy += score/opt.batch_size
+
             #print('TRAIN ACC')
             #print(train_accuracy)
             #print('AVG')
