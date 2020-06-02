@@ -72,7 +72,7 @@ if __name__ == "__main__":
         #fine_model_h = ROI(opt.fine_model_def, opt.htiles, opt.classes, 1, opt.img_size).to(device)
         #fine_model_v = ROI(opt.fine_model_def, opt.vtiles, opt.classes, 2, opt.img_size).to(device)
         fine_model = ROI(opt.fine_model_def, opt.htiles * opt.htiles, opt.classes, 1, opt.img_size).to(device)
-        optimizer = torch.optim.Adam(fine_model.parameters(), lr=0.0001)
+        optimizer = torch.optim.Adam(fine_model.parameters(), lr=0.001)
     elif lstm:
         encoder = Encoder(48, 32)
         decoder = Decoder(32)
