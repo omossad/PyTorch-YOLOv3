@@ -42,7 +42,7 @@ if __name__ == "__main__":
 
     opt = parser.parse_args()
     print(opt)
-    opt.network == 0:
+    if opt.network == 0:
         cnn = True
         lstm = False
     else:
