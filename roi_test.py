@@ -76,7 +76,7 @@ def evaluateLSTM(base_model, encoder, decoder, path, conf_thres, nms_thres, img_
 def evaluateCNN(base_model, fine_model, path, conf_thres, nms_thres, img_size, num_tiles, classes, batch_size):
     base_model.eval()
     fine_model.eval()
-
+    batch_size = 1
     # Get dataloader
     dataset = ListDataset(path, img_size=img_size, augment=False, multiscale=False)
     dataloader = torch.utils.data.DataLoader(
@@ -115,8 +115,8 @@ def evaluateCNN(base_model, fine_model, path, conf_thres, nms_thres, img_size, n
             #y_inpt = Variable(y_inpt.to(device))
             #loss_h, output_x, h_score = fine_model_h(x_inpt, targets)
             loss, output, score = fine_model(x_inpt, targets)
-            print(output)
-            print(targets)
+            print(output.item())
+            print(targets.item())
             #loss, output, score = fine_model(x_inpt, targets)
             test_accuracy += score.mean()
             #print('TEST ACCURACY')
