@@ -378,13 +378,21 @@ class ROI(nn.Module):
         self.loss_func = nn.CrossEntropyLoss()
         self.fc_out_1 = nn.Sequential(
             #nn.Linear(self.num_tiles, 128),
-            nn.Linear(self.num_tiles * self.num_classes, 128),
+            nn.Linear(self.num_tiles * self.num_classes, 256),
             nn.ReLU(inplace=False),
             #nn.BatchNorm1d(128),
+            nn.Linear(256, 128),
+            nn.ReLU(inplace=False),
             nn.Linear(128, 64),
             nn.ReLU(inplace=False),
+            #nn.BatchNorm1d(128),
+            nn.Linear(64, 32),
+            nn.ReLU(inplace=False),
+            nn.Linear(32, self.num_tiles),
+            nn.Softmax()
             #nn.Dropout(0.2)
         )
+        '''
         self.fc_out_2 = nn.Sequential(
             nn.Linear(64, 64),
             nn.ReLU(inplace=False),
@@ -405,19 +413,19 @@ class ROI(nn.Module):
             nn.Linear(32, self.num_tiles),
             #nn.Sigmoid()
         )
-
+        '''
     def forward(self, x, targets=None):
         FloatTensor = torch.cuda.FloatTensor if x.is_cuda else torch.FloatTensor
         LongTensor = torch.cuda.LongTensor if x.is_cuda else torch.LongTensor
         ByteTensor = torch.cuda.ByteTensor if x.is_cuda else torch.ByteTensor
 
         num_samples = x.shape[0]
-        x1 = self.fc_out_1(x)
-        x2 = self.fc_out_2(x1)
-        x3 = x1 + x2
-        x4 = self.fc_out_3(x3)
-        x5 = x2 + x4
-        x  = self.fc_out_4(x5)
+        x = self.fc_out_1(x)
+        #x2 = self.fc_out_2(x1)
+        #x3 = x1 + x2
+        #x4 = self.fc_out_3(x3)
+        #x5 = x2 + x4
+        #x  = self.fc_out_4(x5)
         loss = 0
         if targets is None:
             return x, 0
