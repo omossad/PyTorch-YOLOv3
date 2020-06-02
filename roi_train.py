@@ -38,10 +38,16 @@ if __name__ == "__main__":
     parser.add_argument("--htiles", type=int, default=4, help="number of horizontal tiles")
     parser.add_argument("--vtiles", type=int, default=4, help="number of vertical tiles")
     parser.add_argument("--classes", type=int, default=3, help="number of classes")
+    parser.add_argument("--network", type=int, default=0, help="type of network")
 
     opt = parser.parse_args()
     print(opt)
-
+    if network == 0:
+        cnn = True
+        lstm = False
+    else:
+        lstm  = True
+        cnn = False
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     os.makedirs("output", exist_ok=True)
@@ -56,17 +62,24 @@ if __name__ == "__main__":
     # Initiate model
     base_model = Darknet(opt.base_model_def).to(device)
     base_model.apply(weights_init_normal)
-    #fine_model_h = ROI(opt.fine_model_def, opt.htiles, opt.classes, 1, opt.img_size).to(device)
-    #fine_model_v = ROI(opt.fine_model_def, opt.vtiles, opt.classes, 2, opt.img_size).to(device)
-    fine_model = ROI(opt.fine_model_def, opt.htiles * opt.htiles, opt.classes, 1, opt.img_size).to(device)
-    encoder = Encoder(48, 32)
-    decoder = Decoder(32)
-    # If specified we start from checkpoint
     if opt.pretrained_weights:
         if opt.pretrained_weights.endswith(".pth"):
             base_model.load_state_dict(torch.load(opt.pretrained_weights))
         else:
             base_model.load_darknet_weights(opt.pretrained_weights)
+
+    if cnn:
+        #fine_model_h = ROI(opt.fine_model_def, opt.htiles, opt.classes, 1, opt.img_size).to(device)
+        #fine_model_v = ROI(opt.fine_model_def, opt.vtiles, opt.classes, 2, opt.img_size).to(device)
+        fine_model = ROI(opt.fine_model_def, opt.htiles * opt.htiles, opt.classes, 1, opt.img_size).to(device)
+        optimizer = torch.optim.Adam(fine_model.parameters(), lr=0.0001)
+    elif lstm:
+        encoder = Encoder(48, 32)
+        decoder = Decoder(32)
+        encoder_optimizer = torch.optim.Adam(encoder.parameters(), lr=0.001)
+        decoder_optimizer = torch.optim.Adam(decoder.parameters(), lr=0.001)
+    # If specified we start from checkpoint
+
 
     # Get dataloader
     dataset = ListDataset(train_path, augment=False, multiscale=opt.multiscale_training)
@@ -85,9 +98,8 @@ if __name__ == "__main__":
     #optimizer_v = torch.optim.SGD(fine_model_v.parameters(), lr=0.005, momentum=0.9)
     #optimizer = torch.optim.SGD(fine_model.parameters(), lr=0.001, momentum=0.9, weight_decay=0.005)
     #optimizer = torch.optim.Adam(fine_model.parameters(), lr=0.0001, weight_decay=0.0005)
-    optimizer = torch.optim.Adam(fine_model.parameters(), lr=0.0001)
-    encoder_optimizer = torch.optim.Adam(encoder.parameters(), lr=0.001)
-    decoder_optimizer = torch.optim.Adam(decoder.parameters(), lr=0.001)
+
+
     #optimizer_h = torch.optim.Adam(fine_model_h.parameters(), lr=learning_rate, weight_decay=wd)
     #optimizer_v = torch.optim.Adam(fine_model_v.parameters(), lr=learning_rate, weight_decay=wd)
     #optimizer = torch.optim.Adam(fine_model.parameters(), lr=learning_rate)
@@ -107,11 +119,14 @@ if __name__ == "__main__":
         #train_accuracy_h = 0
         #train_accuracy_v = 0
         base_model.eval()
+        if cnn:
         #fine_model_h.train()
         #fine_model_v.train()
-        #fine_model.train()
-        encoder.train()
-        decoder.train()
+            fine_model.train()
+        elif lstm:
+            encoder.train()
+            decoder.train()
+
         start_time = time.time()
         for batch_i, (_, imgs, targets) in enumerate(dataloader):
             batches_done = len(dataloader) * epoch + batch_i
@@ -129,25 +144,34 @@ if __name__ == "__main__":
             #print(x_inpt)
             #x_inpt = Variable(x_inpt.to(device))
             #print(x_inpt.shape)
-            inputs = x_inpt.view(1, opt.batch_size, -1)
-            #print(inputs.shape)
-            inputs = inputs.transpose(1,0)
-            #print(inputs.shape)
+            if cnn:
+                x_inpt = Variable(x_inpt.to(device))
+                loss, output, score = fine_model(x_inpt, targets)
+                loss.backward()
+                if batches_done % opt.gradient_accumulations:
+                    optimizer.step()
+                    optimizer.zero_grad()
+            elif lstm:
+                inputs = x_inpt.view(1, opt.batch_size, -1)
+                inputs = inputs.transpose(1,0)
+                encoder_optimizer.zero_grad()
+                decoder_optimizer.zero_grad()
+                encoder.hidden = encoder.init_hidden(inputs.shape[1])
+                inputs = Variable(inputs.to(device))
+                hidden = encoder(inputs)
+                loss, score = decoder(targets, hidden)
+                encoder_optimizer.step()
+                decoder_optimizer.step()
             #y_inpt = Variable(y_inpt.to(device))
             #loss_h, output_x, h_score = fine_model_h(x_inpt, targets)
 
             #loss, output, score = fine_model(x_inpt, targets)
-            encoder_optimizer.zero_grad()
-            decoder_optimizer.zero_grad()
-            encoder.hidden = encoder.init_hidden(inputs.shape[1])
+
             #encoder.hidden = Variable(encoder.hidden.to(device))
             #print(encoder.hidden)
-            inputs = Variable(inputs.to(device))
-            hidden = encoder(inputs)
-            loss, score = decoder(targets, hidden)
-            loss.backward()
-            encoder_optimizer.step()
-            decoder_optimizer.step()
+
+
+
             #print("Loss:", loss.item())
             #loss.backward()
             #optimizer_h.zero_grad()
@@ -224,18 +248,32 @@ if __name__ == "__main__":
         if epoch % opt.evaluation_interval == 0:
             print("\n---- Evaluating Model ----")
             # Evaluate the model on the validation set
-            test_score = evaluate(
-                base_model,
-                encoder,
-                decoder,
-                path=valid_path,
-                conf_thres=opt.conf_thres,
-                nms_thres=opt.nms_thres,
-                img_size=opt.img_size,
-                num_tiles=opt.htiles,
-                classes=opt.classes,
-                batch_size=opt.batch_size,
-            )
+            test_score = 0
+            if cnn:
+                test_score = evaluateCNN(
+                    base_model,
+                    fine_model,
+                    path=valid_path,
+                    conf_thres=opt.conf_thres,
+                    nms_thres=opt.nms_thres,
+                    img_size=opt.img_size,
+                    num_tiles=opt.htiles,
+                    classes=opt.classes,
+                    batch_size=opt.batch_size,
+                    )
+            elif lstm:
+                test_score = evaluateLSTM(
+                    base_model,
+                    encoder,
+                    decoder,
+                    path=valid_path,
+                    conf_thres=opt.conf_thres,
+                    nms_thres=opt.nms_thres,
+                    img_size=opt.img_size,
+                    num_tiles=opt.htiles,
+                    classes=opt.classes,
+                    batch_size=opt.batch_size,
+                    )
             print('Test accuracy: ' + str(test_score.item()))
             print('\n')
 '''

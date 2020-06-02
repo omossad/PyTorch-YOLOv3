@@ -19,7 +19,7 @@ from torchvision import transforms
 from torch.autograd import Variable
 import torch.optim as optim
 
-def evaluate(base_model, encoder, decoder, path, conf_thres, nms_thres, img_size, num_tiles, classes, batch_size):
+def evaluateLSTM(base_model, encoder, decoder, path, conf_thres, nms_thres, img_size, num_tiles, classes, batch_size):
     base_model.eval()
     encoder.eval()
     decoder.eval()
@@ -72,8 +72,8 @@ def evaluate(base_model, encoder, decoder, path, conf_thres, nms_thres, img_size
     return test_accuracy/(batch_i+1)
     #return precision, recall, AP, f1, ap_class
 
-'''
-def evaluate(base_model, fine_model, path, conf_thres, nms_thres, img_size, num_tiles, classes, batch_size):
+
+def evaluateCNN(base_model, fine_model, path, conf_thres, nms_thres, img_size, num_tiles, classes, batch_size):
     base_model.eval()
     fine_model.eval()
 
@@ -130,7 +130,7 @@ def evaluate(base_model, fine_model, path, conf_thres, nms_thres, img_size, num_
     #precision, recall, AP, f1, ap_class = ap_per_class(true_positives, pred_scores, pred_labels, labels)
     return test_accuracy/(batch_i+1)
     #return precision, recall, AP, f1, ap_class
-'''
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
