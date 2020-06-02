@@ -145,7 +145,7 @@ def confidenceROI(predictions, targets):
     f.close()
 
 def confidenceBasedROI(predictions, targets):
-    threshold = 0.1
+    threshold = 0.01
     num_predictions = targets.size(0)
     #batch_size = 1
     output_file = 'predictions.txt'
