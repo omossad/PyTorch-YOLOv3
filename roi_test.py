@@ -118,9 +118,9 @@ def evaluateCNN(base_model, fine_model, path, conf_thres, nms_thres, img_size, n
             #y_inpt = Variable(y_inpt.to(device))
             #loss_h, output_x, h_score = fine_model_h(x_inpt, targets)
             loss, output, score = fine_model(x_inpt, targets)
-            f.write(np.array_str(targets[...,1].numpy()))
+            f.write(np.array_str(to_cpu(targets[...,1]).numpy()))
             f.write(', ')
-            f.write(np.array_str(output.numpy()))
+            f.write(np.array_str(to_cpu(output).numpy()))
             f.write('\n')
 
             #loss, output, score = fine_model(x_inpt, targets)
