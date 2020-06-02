@@ -157,7 +157,7 @@ def confidenceBasedROI(predictions, targets):
         print(pred_arr)
         pred_tile = np.argmax(pred_arr)
         print(pred_tile)
-        pred_arr = pred_arr - pred_arr.max()
+        pred_arr = np.abs(pred_arr - pred_arr.max())
         print(pred_arr)
         print(np.where(pred_arr < threshold))
         f.write(np.array_str(trgt_arr))
