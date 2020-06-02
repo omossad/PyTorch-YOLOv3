@@ -133,13 +133,15 @@ def evaluateCNN(base_model, fine_model, path, conf_thres, nms_thres, img_size, n
     #return precision, recall, AP, f1, ap_class
 
 def confidenceROI(predictions, targets):
-    batch_size = 1
+    num_predictions = targets.size(0)
+    #batch_size = 1
     output_file = 'predictions.txt'
     f = open(output_file, "w")
-    f.write(np.array_str(to_cpu(targets[...,1]).numpy()))
-    f.write(', ')
-    f.write(np.array_str(to_cpu(predictions).numpy()))
-    f.write('\n')
+    for i in range(num_predictions):
+        f.write(np.array_str(to_cpu(targets[i,1]).numpy()))
+        f.write(', ')
+        f.write(np.array_str(to_cpu(predictions[i]).numpy()))
+        f.write('\n')
     f.close()
 
 
