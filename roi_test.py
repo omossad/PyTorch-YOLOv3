@@ -144,7 +144,27 @@ def confidenceROI(predictions, targets):
         f.write('\n')
     f.close()
 
+def confidenceBasedROI(predictions, targets):
+    threshold = 0.1
+    num_predictions = targets.size(0)
+    #batch_size = 1
+    output_file = 'predictions.txt'
+    f = open(output_file, "w")
+    for i in range(num_predictions):
 
+        trgt_arr = to_cpu(targets[i,1]).numpy()
+        pred_arr = to_cpu(predictions[i]).numpy()
+        print(pred_arr)
+        pred_tile = np.argmax(pred_arr)
+        print(pred_tile)
+        pred_arr = pred_arr - pred_arr.max()
+        print(pred_arr)
+        print(np.where(pred_arr < threshold)
+        f.write(np.array_str(trgt_arr))
+        f.write(', ')
+        f.write(np.array_str(pred_arr))
+        f.write('\n')
+    f.close()
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
