@@ -146,6 +146,7 @@ if __name__ == "__main__":
             #print(x_inpt.shape)
             if cnn:
                 x_inpt = Variable(x_inpt.to(device))
+                print(x_inpt)
                 loss, output, score = fine_model(x_inpt, targets)
                 loss.backward()
                 if batches_done % opt.gradient_accumulations:
