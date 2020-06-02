@@ -11,7 +11,7 @@ import time
 import datetime
 import argparse
 import tqdm
-
+import numpy as np
 import torch
 from torch.utils.data import DataLoader
 from torchvision import datasets
@@ -118,9 +118,9 @@ def evaluateCNN(base_model, fine_model, path, conf_thres, nms_thres, img_size, n
             #y_inpt = Variable(y_inpt.to(device))
             #loss_h, output_x, h_score = fine_model_h(x_inpt, targets)
             loss, output, score = fine_model(x_inpt, targets)
-            f.write(targets[...,1].numpy())
+            f.write(np.array_str(targets[...,1].numpy()))
             f.write(', ')
-            f.write(output.numpy())
+            f.write(np.array_str(output.numpy()))
             f.write('\n')
 
             #loss, output, score = fine_model(x_inpt, targets)
