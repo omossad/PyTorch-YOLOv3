@@ -76,9 +76,6 @@ def evaluateLSTM(base_model, encoder, decoder, path, conf_thres, nms_thres, img_
 def evaluateCNN(base_model, fine_model, path, conf_thres, nms_thres, img_size, num_tiles, classes, batch_size):
     base_model.eval()
     fine_model.eval()
-    batch_size = 1
-    output_file = 'predictions.txt'
-    f = open(output_file, "w")
 
     # Get dataloader
     dataset = ListDataset(path, img_size=img_size, augment=False, multiscale=False)
@@ -118,10 +115,7 @@ def evaluateCNN(base_model, fine_model, path, conf_thres, nms_thres, img_size, n
             #y_inpt = Variable(y_inpt.to(device))
             #loss_h, output_x, h_score = fine_model_h(x_inpt, targets)
             loss, output, score = fine_model(x_inpt, targets)
-            f.write(np.array_str(to_cpu(targets[...,1]).numpy()))
-            f.write(', ')
-            f.write(np.array_str(to_cpu(output).numpy()))
-            f.write('\n')
+            confidenceROI(output, targets)
 
             #loss, output, score = fine_model(x_inpt, targets)
             test_accuracy += score.mean()
@@ -135,9 +129,19 @@ def evaluateCNN(base_model, fine_model, path, conf_thres, nms_thres, img_size, n
     # Concatenate sample statistics
     #true_positives, pred_scores, pred_labels = [np.concatenate(x, 0) for x in list(zip(*sample_metrics))]
     #precision, recall, AP, f1, ap_class = ap_per_class(true_positives, pred_scores, pred_labels, labels)
-    f.close()
     return test_accuracy/(batch_i+1)
     #return precision, recall, AP, f1, ap_class
+
+def confidenceROI(predictions, targets):
+    batch_size = 1
+    output_file = 'predictions.txt'
+    f = open(output_file, "w")
+    f.write(np.array_str(to_cpu(targets[...,1]).numpy()))
+    f.write(', ')
+    f.write(np.array_str(to_cpu(predictions).numpy()))
+    f.write('\n')
+    f.close()
+
 
 
 if __name__ == "__main__":
