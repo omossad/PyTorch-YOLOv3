@@ -50,8 +50,8 @@ class LSTM(nn.Module):
         return y_pred.view(-1)
 
 output_dim = 1
-lstm_input_size = 48
-num_train = 1
+lstm_input_size = 48*4
+num_train = 4
 h1 = 128
 num_layers = 2
 learning_rate = 0.001
