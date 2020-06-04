@@ -57,6 +57,7 @@ num_layers = 2
 learning_rate = 0.001
 num_epochs = 10
 X_train = torch.from_numpy(data).float().to(device)
+X_train = X_train.view(8,-1)
 y_train = torch.from_numpy(targets).float().to(device)
 
 print(X_train.shape)
