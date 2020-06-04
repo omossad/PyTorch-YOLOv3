@@ -54,6 +54,8 @@ lstm_input_size = 48
 num_train = 4
 h1 = 128
 num_layers = 2
+learning_rate = 0.001
+num_epochs = 10
 X_train = torch.from_numpy(data).float().to(device)
 y_train = torch.from_numpy(targets).float().to(device)
 
