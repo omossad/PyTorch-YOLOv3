@@ -120,13 +120,18 @@ if __name__ == "__main__":
         #print(tx_label)
         #print(ty_label)
         #f = open(f"output/{filename}.txt", "a")
+        W = img.shape[1]
+        H = img.shape[0]
+        tile_width  = W/num_tiles
+        tile_height = H/num_tiles
+        print(W)
+        print(H)
 
         if detections is not None:
             det = []
             # Rescale boxes to original image
             detections = rescale_boxes(detections, opt.img_size, img.shape[:2])
-            W = img.shape[1]
-            H = img.shape[0]
+
             unique_labels = detections[:, -1].cpu().unique()
             n_cls_preds = len(unique_labels)
             #bbox_colors = random.sample(colors, n_cls_preds)
@@ -148,5 +153,5 @@ if __name__ == "__main__":
                     #f.write(to_write)
             data_item.append(det)
         data.append(data_item)
-        print(data)
+        #print(data)
         #f.close()
