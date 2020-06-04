@@ -94,7 +94,7 @@ if __name__ == "__main__":
     print("\nSaving images:")
     # Iterate through images and save plot of detections
     for img_i, (path, detections) in enumerate(zip(imgs, img_detections)):
-
+        img = np.array(Image.open(path))
         print("(%d) Image: '%s'" % (img_i, path))
 
         # Draw bounding boxes and labels of detections
