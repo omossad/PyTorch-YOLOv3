@@ -146,11 +146,13 @@ if __name__ == "__main__":
                 box_h = y2 - y1
                 x_tile = int(x_c.item()/tile_width)
                 y_tile = int(y_c.item()/tile_height)
-                s_tile = x_tile + y_tile * num_tiles
+                s_tile = int(x_tile + y_tile * num_tiles)
                 #to_write = str(int(cls_pred)) + " "
                 #to_write = str(int(cls_pred)) + " "
                 #to_write = to_write + str(x_c.item()/W)    + " " + str(y_c.item()/H)    + " "
                 #to_write = to_write + str(box_w.item()/W) + " " + str(box_h.item()/H) + "\n"
+                print(s_tile)
+                print(int(cls_pred))
                 det[s_tile][int(cls_pred)] += conf.item()
                 det_x[x_tile][int(cls_pred)] += conf.item()
                 det_y[y_tile][int(cls_pred)] += conf.item()
