@@ -50,14 +50,14 @@ class LSTM(nn.Module):
         return y_pred.view(-1)
 
 output_dim = 1
-lstm_input_size = 48*4
-num_train = 8
+lstm_input_size = 48
+num_train = 4
 h1 = 128
 num_layers = 2
 learning_rate = 0.001
 num_epochs = 10
 X_train = torch.from_numpy(data).float().to(device)
-X_train = X_train.view(8,-1)
+X_train = X_train.view(2,-1)
 y_train = torch.from_numpy(targets).float().to(device)
 
 print(X_train.shape)
