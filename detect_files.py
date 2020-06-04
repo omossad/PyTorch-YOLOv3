@@ -91,8 +91,11 @@ if __name__ == "__main__":
     #colors = [cmap(i) for i in np.linspace(0, 1, 20)]
 
     print("\nSaving images:")
+    t_labels_path = '/home/omossad/scratch/temp/roi/labels4x4/'
+    txy_labels_path = '/home/omossad/scratch/temp/roi/labels/'
     # Iterate through images and save plot of detections
     for img_i, (path, detections) in enumerate(zip(imgs, img_detections)):
+
         img = np.array(Image.open(path))
         print("(%d) Image: '%s'" % (img_i, path))
         print(img_i)
@@ -101,6 +104,16 @@ if __name__ == "__main__":
         # Draw bounding boxes and labels of detections
         filename = path.split("/")[-1].split(".")[0]
         print(filename)
+        t_file = fopen(t_labels_path + filename + '.txt', "r")
+        print(t_file)
+        t_label = int(t_file)
+        print(t_label)
+        txy_file = fopen(txy_labels_path + filename + '.txt', "r")
+        print(t_file)
+        tx_label = int(t_file.split()[0])
+        ty_label = int(t_file.split()[1])
+        print(tx_label)
+        print(ty_label)
         #f = open(f"output/{filename}.txt", "a")
         if detections is not None:
             # Rescale boxes to original image
@@ -113,7 +126,7 @@ if __name__ == "__main__":
             for x1, y1, x2, y2, conf, cls_conf, cls_pred in detections:
                 #if int(cls_pred) == 0:
                 #: or int(cls_pred) == 32):
-                print("\t+ Label: %s, Conf: %.5f" % (classes[int(cls_pred)], cls_conf.item()))
+                #print("\t+ Label: %s, Conf: %.5f" % (classes[int(cls_pred)], cls_conf.item()))
                 x_c = (x1+x2)/2
                 y_c = (y1+y2)/2
                 box_w = x2 - x1
