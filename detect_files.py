@@ -146,8 +146,10 @@ if __name__ == "__main__":
                 box_h = y2 - y1
                 print(x_c.item())
                 print(y_c.item())
-                x_tile = min(int(x_c.item()/tile_width), num_tiles-1)
-                y_tile = min(int(y_c.item()/tile_height),num_tiles-1)
+                x_tile = max(int(x_c.item()/tile_width), 0)
+                y_tile = max(int(y_c.item()/tile_height),0)
+                x_tile = min(x_tile, num_tiles-1)
+                y_tile = min(y_tile, num_tiles-1)
                 s_tile = x_tile + y_tile * num_tiles
                 #to_write = str(int(cls_pred)) + " "
                 #to_write = str(int(cls_pred)) + " "
