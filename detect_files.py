@@ -21,6 +21,9 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 from matplotlib.ticker import NullLocator
 import numpy as np
+import pickle
+
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -171,9 +174,12 @@ if __name__ == "__main__":
                     #f.write(to_write)
             #data_item.append(det)
         data.append(det)
-        np.savetxt(out_path + 'data_array.dat', np.asarray(data))
-        np.savetxt(out_path + 'trgt_array.dat', np.asarray(tgts))
-        np.savetxt(out_path + 't_xy_array.dat', np.asarray(tgts_xy))
+        #np.savetxt(out_path + 'data_array.dat', np.asarray(data))
+    output = open(out_path + 'data_array.pkl', 'wb')
+    pickle.dump(data, output)
+    output.close()
+    np.savetxt(out_path + 'trgt_array.dat', np.asarray(tgts))
+    np.savetxt(out_path + 't_xy_array.dat', np.asarray(tgts_xy))
         #data.append(data_item)
         #print(data)
         #f.close()
