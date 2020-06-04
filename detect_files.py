@@ -20,6 +20,7 @@ from torch.autograd import Variable
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 from matplotlib.ticker import NullLocator
+import numpy as np
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -64,7 +65,7 @@ if __name__ == "__main__":
 
     imgs = []  # Stores image paths
     img_detections = []  # Stores detections for each image index
-
+    num_tiles = 4
     print("\nPerforming object detection:")
     prev_time = time.time()
     for batch_i, (img_paths, input_imgs) in enumerate(dataloader):
@@ -77,10 +78,10 @@ if __name__ == "__main__":
             detections = non_max_suppression(detections, opt.conf_thres, opt.nms_thres)
 
         # Log progress
-        current_time = time.time()
-        inference_time = datetime.timedelta(seconds=current_time - prev_time)
-        prev_time = current_time
-        print("\t+ Batch %d, Inference Time: %s" % (batch_i, inference_time))
+        #current_time = time.time()
+        #inference_time = datetime.timedelta(seconds=current_time - prev_time)
+        #prev_time = current_time
+        #print("\t+ Batch %d, Inference Time: %s" % (batch_i, inference_time))
 
         # Save image and detections
         imgs.extend(img_paths)
@@ -94,28 +95,34 @@ if __name__ == "__main__":
     txy_labels_path = '/home/omossad/scratch/temp/roi/labels4x4/'
     t_labels_path = '/home/omossad/scratch/temp/roi/labels/'
     # Iterate through images and save plot of detections
+    data = []
     for img_i, (path, detections) in enumerate(zip(imgs, img_detections)):
-
+        data_item = []
         img = np.array(Image.open(path))
         print("(%d) Image: '%s'" % (img_i, path))
-        print(img_i)
-        print(path)
+        #print(img_i)
+        #print(path)
 
         # Draw bounding boxes and labels of detections
         filename = path.split("/")[-1].split(".")[0]
+        data_item.append(filename)
         print(filename)
         t_file = open(t_labels_path + filename + '.txt', "r").read()
         #print(t_file)
         t_label = int(t_file)
-        print(t_label)
+        data_item.append(t_label)
+        #print(t_label)
         txy_file = open(txy_labels_path + filename + '.txt', "r").read()
         #print(txy_file)
         tx_label = int(txy_file.split()[0])
         ty_label = int(txy_file.split()[1])
-        print(tx_label)
-        print(ty_label)
+        data_item.append([tx_label, ty_label])
+        #print(tx_label)
+        #print(ty_label)
         #f = open(f"output/{filename}.txt", "a")
+
         if detections is not None:
+            det = []
             # Rescale boxes to original image
             detections = rescale_boxes(detections, opt.img_size, img.shape[:2])
             W = img.shape[1]
@@ -136,7 +143,10 @@ if __name__ == "__main__":
                 #to_write = str(int(cls_pred)) + " "
                 to_write = to_write + str(x_c.item()/W)    + " " + str(y_c.item()/H)    + " "
                 to_write = to_write + str(box_w.item()/W) + " " + str(box_h.item()/H) + "\n"
+                det.append([int(cls_pred), conf, x_c.item()/W, y_c.item()/H, box_w.item()/W, box_h.item()/H])
                 #print(to_write)
                     #f.write(to_write)
-
+            data_item.append(det)
+        data.append(data_item)
+        print(data)
         #f.close()
