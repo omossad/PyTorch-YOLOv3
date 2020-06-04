@@ -49,11 +49,11 @@ class LSTM(nn.Module):
         y_pred = self.linear(lstm_out[-1].view(self.batch_size, -1))
         return y_pred.view(-1)
 
-output_dim = 1
+output_dim = 4
 lstm_input_size = 48
-num_train = 4
+num_train = 2
 h1 = 128
-num_layers = 2
+num_layers = 4
 learning_rate = 0.001
 num_epochs = 10
 X_train = torch.from_numpy(data).float().to(device)
