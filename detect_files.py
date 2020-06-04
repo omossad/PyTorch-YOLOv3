@@ -99,7 +99,8 @@ if __name__ == "__main__":
         print(path)
 
         # Draw bounding boxes and labels of detections
-        #filename = path.split("/")[-1].split(".")[0]
+        filename = path.split("/")[-1].split(".")[0]
+        print(filename)
         #f = open(f"output/{filename}.txt", "a")
         if detections is not None:
             # Rescale boxes to original image
@@ -122,7 +123,7 @@ if __name__ == "__main__":
                 #to_write = str(int(cls_pred)) + " "
                 to_write = to_write + str(x_c.item()/W)    + " " + str(y_c.item()/H)    + " "
                 to_write = to_write + str(box_w.item()/W) + " " + str(box_h.item()/H) + "\n"
-                print(to_write)
+                #print(to_write)
                     #f.write(to_write)
 
         #f.close()
