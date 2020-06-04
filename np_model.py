@@ -5,6 +5,7 @@ data_path = '/home/omossad/scratch/temp/numpy/'
 pkl_file = open(data_path + 'data_array.pkl', 'rb')
 
 data = pickle.load(pkl_file)
+print(len(data))
 targets = np.loadtxt(data_path + 'trgt_array.dat')
 #pprint.pprint(data1)
 print(data.shape)
