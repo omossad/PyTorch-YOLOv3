@@ -32,7 +32,6 @@ if __name__ == "__main__":
     parser.add_argument("--batch_size", type=int, default=1, help="size of the batches")
     parser.add_argument("--n_cpu", type=int, default=0, help="number of cpu threads to use during batch generation")
     parser.add_argument("--img_size", type=int, default=416, help="size of each image dimension")
-    parser.add_argument("--checkpoint_model", type=str, help="path to checkpoint model")
     opt = parser.parse_args()
     print(opt)
 
@@ -101,6 +100,7 @@ if __name__ == "__main__":
         #filename = path.split("/")[-1].split(".")[0]
         #f = open(f"output/{filename}.txt", "a")
         if detections is not None:
+            print(detections)
             # Rescale boxes to original image
             detections = rescale_boxes(detections, opt.img_size, img.shape[:2])
             W = img.shape[1]
