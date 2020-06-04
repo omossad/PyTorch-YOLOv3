@@ -105,11 +105,11 @@ if __name__ == "__main__":
         filename = path.split("/")[-1].split(".")[0]
         print(filename)
         t_file = open(t_labels_path + filename + '.txt', "r").read()
-        print(t_file)
+        #print(t_file)
         t_label = int(t_file)
         print(t_label)
         txy_file = open(txy_labels_path + filename + '.txt', "r").read()
-        print(txy_file)
+        #print(txy_file)
         tx_label = int(txy_file.split()[0])
         ty_label = int(txy_file.split()[1])
         print(tx_label)
