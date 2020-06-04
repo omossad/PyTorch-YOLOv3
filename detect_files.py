@@ -144,9 +144,11 @@ if __name__ == "__main__":
                 y_c = (y1+y2)/2
                 box_w = x2 - x1
                 box_h = y2 - y1
+                print(x_c.item())
+                print(y_c.item())
                 x_tile = int(x_c.item()/tile_width)
                 y_tile = int(y_c.item()/tile_height)
-                s_tile = int(x_tile + y_tile * num_tiles)
+                s_tile = x_tile + y_tile * num_tiles
                 #to_write = str(int(cls_pred)) + " "
                 #to_write = str(int(cls_pred)) + " "
                 #to_write = to_write + str(x_c.item()/W)    + " " + str(y_c.item()/H)    + " "
