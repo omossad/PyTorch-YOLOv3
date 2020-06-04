@@ -104,11 +104,11 @@ if __name__ == "__main__":
         # Draw bounding boxes and labels of detections
         filename = path.split("/")[-1].split(".")[0]
         print(filename)
-        t_file = fopen(t_labels_path + filename + '.txt', "r")
+        t_file = open(t_labels_path + filename + '.txt', "r")
         print(t_file)
         t_label = int(t_file)
         print(t_label)
-        txy_file = fopen(txy_labels_path + filename + '.txt', "r")
+        txy_file = open(txy_labels_path + filename + '.txt', "r")
         print(t_file)
         tx_label = int(t_file.split()[0])
         ty_label = int(t_file.split()[1])
