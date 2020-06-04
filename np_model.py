@@ -55,8 +55,8 @@ h1 = 128
 X_train = torch.from_numpy(data).float().to(device)
 y_train = torch.from_numpy(targets).float().to(device)
 
-print(X_train)
-print(y_train)
+print(X_train.shape)
+print(y_train.shape)
 
 model = LSTM(lstm_input_size, h1, batch_size=num_train, output_dim=output_dim, num_layers=num_layers)
 loss_fn = torch.nn.MSELoss(size_average=False)
