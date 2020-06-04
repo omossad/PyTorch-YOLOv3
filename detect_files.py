@@ -101,6 +101,8 @@ if __name__ == "__main__":
     t_labels_path = '/home/omossad/scratch/temp/roi/labels/'
     # Iterate through images and save plot of detections
     data = []
+    tgts = []
+    tgts_xy = []
     for img_i, (path, detections) in enumerate(zip(imgs, img_detections)):
         data_item = []
         img = np.array(Image.open(path))
@@ -115,6 +117,7 @@ if __name__ == "__main__":
         t_file = open(t_labels_path + filename + '.txt', "r").read()
         #print(t_file)
         t_label = int(t_file)
+
         data_item.append(t_label)
         #print(t_label)
         txy_file = open(txy_labels_path + filename + '.txt', "r").read()
@@ -122,6 +125,8 @@ if __name__ == "__main__":
         tx_label = int(txy_file.split()[0])
         ty_label = int(txy_file.split()[1])
         data_item.append([tx_label, ty_label])
+        tgts.append(t_label)
+        tgts_xy.append([tx_label, ty_label])
         #print(tx_label)
         #print(ty_label)
         #f = open(f"output/{filename}.txt", "a")
@@ -165,6 +170,9 @@ if __name__ == "__main__":
                     #f.write(to_write)
             #data_item.append(det)
         data.append(det)
+        np.save('data_array', np.asarray(data))
+        np.save('trgt_array', np.asarray(tgts))
+        np.save('t_xy_array', np.asarray(tgts_xy))
         #data.append(data_item)
-        print(data)
+        #print(data)
         #f.close()
