@@ -1,16 +1,18 @@
-import pprint, pickle
+import pickle
 import numpy as np
+import torch
+
 
 data_path = '/home/omossad/scratch/temp/numpy/'
 pkl_file = open(data_path + 'data_array.pkl', 'rb')
-
 data = pickle.load(pkl_file)
-print(len(data))
-targets = np.loadtxt(data_path + 'trgt_array.dat')
-#pprint.pprint(data1)
-print(data.shape)
-
+data = np.asarray(data)
 pkl_file.close()
+
+targets = np.loadtxt(data_path + 'trgt_array.dat')
+targets = np.asarray(targets)
+
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 # Here we define our model as a class
 class LSTM(nn.Module):
@@ -46,7 +48,14 @@ class LSTM(nn.Module):
         y_pred = self.linear(lstm_out[-1].view(self.batch_size, -1))
         return y_pred.view(-1)
 
+output_dim = 1
+lstm_input_size = 48
+h1 = 128
+X_train = torch.from_numpy(data).float().to(device)
+y_train = torch.from_numpy(targets).float().to(device)
 
+print(X_train)
+print(y_train)
 
 model = LSTM(lstm_input_size, h1, batch_size=num_train, output_dim=output_dim, num_layers=num_layers)
 loss_fn = torch.nn.MSELoss(size_average=False)
