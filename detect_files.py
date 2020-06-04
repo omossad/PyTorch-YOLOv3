@@ -143,7 +143,7 @@ if __name__ == "__main__":
                 #to_write = str(int(cls_pred)) + " "
                 to_write = to_write + str(x_c.item()/W)    + " " + str(y_c.item()/H)    + " "
                 to_write = to_write + str(box_w.item()/W) + " " + str(box_h.item()/H) + "\n"
-                det.append([int(cls_pred), conf, x_c.item()/W, y_c.item()/H, box_w.item()/W, box_h.item()/H])
+                det.append([int(cls_pred), conf.item(), x_c.item()/W, y_c.item()/H, box_w.item()/W, box_h.item()/H])
                 #print(to_write)
                     #f.write(to_write)
             data_item.append(det)
