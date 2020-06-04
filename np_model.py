@@ -51,6 +51,7 @@ class LSTM(nn.Module):
 
 output_dim = 1
 lstm_input_size = 48
+num_train = 4
 h1 = 128
 X_train = torch.from_numpy(data).float().to(device)
 y_train = torch.from_numpy(targets).float().to(device)
