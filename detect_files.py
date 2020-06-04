@@ -66,6 +66,11 @@ if __name__ == "__main__":
     imgs = []  # Stores image paths
     img_detections = []  # Stores detections for each image index
     num_tiles = 4
+    W = 1920
+    H = 1080
+    tile_width  = W/num_tiles
+    tile_height = H/num_tiles
+
     print("\nPerforming object detection:")
     prev_time = time.time()
     for batch_i, (img_paths, input_imgs) in enumerate(dataloader):
@@ -120,15 +125,11 @@ if __name__ == "__main__":
         #print(tx_label)
         #print(ty_label)
         #f = open(f"output/{filename}.txt", "a")
-        W = img.shape[1]
-        H = img.shape[0]
-        tile_width  = W/num_tiles
-        tile_height = H/num_tiles
-        print(W)
-        print(H)
 
         if detections is not None:
-            det = []
+            det = [[[0,0,0] for i in range(num_tiles*num_tiles)]
+            det_x = [[0,0,0] for i in range(num_tiles)]
+            det_y = [[0,0,0] for i in range(num_tiles)]
             # Rescale boxes to original image
             detections = rescale_boxes(detections, opt.img_size, img.shape[:2])
 
@@ -143,15 +144,21 @@ if __name__ == "__main__":
                 y_c = (y1+y2)/2
                 box_w = x2 - x1
                 box_h = y2 - y1
-
-                to_write = str(int(cls_pred)) + " "
+                x_tile = int(x_c.item()/tile_width)
+                y_tile = int(y_c.item()/tile_height)
+                s_tile = x_tile + y_tile * num_tiles
                 #to_write = str(int(cls_pred)) + " "
-                to_write = to_write + str(x_c.item()/W)    + " " + str(y_c.item()/H)    + " "
-                to_write = to_write + str(box_w.item()/W) + " " + str(box_h.item()/H) + "\n"
-                det.append([int(cls_pred), conf.item(), x_c.item()/W, y_c.item()/H, box_w.item()/W, box_h.item()/H])
+                #to_write = str(int(cls_pred)) + " "
+                #to_write = to_write + str(x_c.item()/W)    + " " + str(y_c.item()/H)    + " "
+                #to_write = to_write + str(box_w.item()/W) + " " + str(box_h.item()/H) + "\n"
+                det[s_tile][int(cls_pred)] += conf.item()
+                det_x[x_tile][int(cls_pred)] += conf.item()
+                det_y[y_tile][int(cls_pred)] += conf.item()
+                #det.append([int(cls_pred), conf.item(), x_c.item()/W, y_c.item()/H, box_w.item()/W, box_h.item()/H])
                 #print(to_write)
                     #f.write(to_write)
-            data_item.append(det)
-        data.append(data_item)
-        #print(data)
+            #data_item.append(det)
+        data.append(det)
+        #data.append(data_item)
+        print(data)
         #f.close()
