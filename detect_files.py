@@ -127,7 +127,7 @@ if __name__ == "__main__":
         #f = open(f"output/{filename}.txt", "a")
 
         if detections is not None:
-            det = [[[0,0,0] for i in range(num_tiles*num_tiles)]
+            det = [[0,0,0] for i in range(num_tiles*num_tiles)]
             det_x = [[0,0,0] for i in range(num_tiles)]
             det_y = [[0,0,0] for i in range(num_tiles)]
             # Rescale boxes to original image
