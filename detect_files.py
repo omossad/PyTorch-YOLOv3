@@ -100,7 +100,6 @@ if __name__ == "__main__":
         #filename = path.split("/")[-1].split(".")[0]
         #f = open(f"output/{filename}.txt", "a")
         if detections is not None:
-            print(detections)
             # Rescale boxes to original image
             detections = rescale_boxes(detections, opt.img_size, img.shape[:2])
             W = img.shape[1]
@@ -111,19 +110,16 @@ if __name__ == "__main__":
             for x1, y1, x2, y2, conf, cls_conf, cls_pred in detections:
                 #if int(cls_pred) == 0:
                 #: or int(cls_pred) == 32):
-                if int(cls_pred) == 32:
-                    print("\t+ Label: %s, Conf: %.5f" % (classes[int(cls_pred)], cls_conf.item()))
-                    x_c = (x1+x2)/2
-                    y_c = (y1+y2)/2
-                    box_w = x2 - x1
-                    box_h = y2 - y1
-                    if int(cls_pred) == 32:
-                        to_write = "1 "
-                    else:
-                        to_write = str(int(cls_pred)) + " "
-                    #to_write = str(int(cls_pred)) + " "
-                    to_write = to_write + str(x_c.item()/W)    + " " + str(y_c.item()/H)    + " "
-                    to_write = to_write + str(box_w.item()/W) + " " + str(box_h.item()/H) + "\n"
+                print("\t+ Label: %s, Conf: %.5f" % (classes[int(cls_pred)], cls_conf.item()))
+                x_c = (x1+x2)/2
+                y_c = (y1+y2)/2
+                box_w = x2 - x1
+                box_h = y2 - y1
+
+                to_write = str(int(cls_pred)) + " "
+                #to_write = str(int(cls_pred)) + " "
+                to_write = to_write + str(x_c.item()/W)    + " " + str(y_c.item()/H)    + " "
+                to_write = to_write + str(box_w.item()/W) + " " + str(box_h.item()/H) + "\n"
                     #f.write(to_write)
 
         #f.close()
