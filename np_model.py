@@ -53,6 +53,7 @@ output_dim = 1
 lstm_input_size = 48
 num_train = 4
 h1 = 128
+num_layers = 2
 X_train = torch.from_numpy(data).float().to(device)
 y_train = torch.from_numpy(targets).float().to(device)
 
@@ -60,6 +61,7 @@ print(X_train.shape)
 print(y_train.shape)
 
 model = LSTM(lstm_input_size, h1, batch_size=num_train, output_dim=output_dim, num_layers=num_layers)
+model.to(device)
 loss_fn = torch.nn.MSELoss(size_average=False)
 
 optimiser = torch.optim.Adam(model.parameters(), lr=learning_rate)
