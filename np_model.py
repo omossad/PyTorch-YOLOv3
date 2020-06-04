@@ -1,6 +1,7 @@
 import pickle
 import numpy as np
 import torch
+import torch.nn as nn
 
 
 data_path = '/home/omossad/scratch/temp/numpy/'
