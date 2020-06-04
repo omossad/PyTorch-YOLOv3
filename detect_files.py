@@ -99,6 +99,7 @@ if __name__ == "__main__":
     print("\nSaving images:")
     txy_labels_path = '/home/omossad/scratch/temp/roi/labels4x4/'
     t_labels_path = '/home/omossad/scratch/temp/roi/labels/'
+    out_path = '/home/omossad/scratch/temp/numpy/'
     # Iterate through images and save plot of detections
     data = []
     tgts = []
@@ -170,9 +171,9 @@ if __name__ == "__main__":
                     #f.write(to_write)
             #data_item.append(det)
         data.append(det)
-        np.save('data_array', np.asarray(data))
-        np.save('trgt_array', np.asarray(tgts))
-        np.save('t_xy_array', np.asarray(tgts_xy))
+        np.savetxt(out_path + 'data_array.dat', np.asarray(data))
+        np.savetxt(out_path + 'trgt_array.dat', np.asarray(tgts))
+        np.savetxt(out_path + 't_xy_array.dat', np.asarray(tgts_xy))
         #data.append(data_item)
         #print(data)
         #f.close()
