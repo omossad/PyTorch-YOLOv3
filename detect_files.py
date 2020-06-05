@@ -68,7 +68,7 @@ if __name__ == "__main__":
 
     imgs = []  # Stores image paths
     img_detections = []  # Stores detections for each image index
-    num_tiles = 4
+    num_tiles = 8
     W = 1920
     H = 1080
     tile_width  = W/num_tiles
