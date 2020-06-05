@@ -30,7 +30,7 @@ data = np.transpose(data, (0, 2, 1, 3))
 
 #### TARGET MANIPULATION ####
 targets = np.loadtxt(data_path + 'trgt_array.dat')
-targets = [i for i in range(num_images)]
+#targets = [i for i in range(num_images)]
 targets = np.asarray(targets)
 print(targets)
 targets = np.reshape(targets, (num_images//(time_steps*batch_size), batch_size, time_steps, -1))
@@ -50,10 +50,10 @@ loss = nn.CrossEntropyLoss()
 #input_seq = Variable(torch.randn(time_steps, batch_size, in_size))
 for e in range(epochs):
     for d in range(len(data)):
-        input_seq = Variable(torch.from_numpy(data[d]).float())
+        #input_seq = Variable(torch.from_numpy(data[d]).float())
         #print(input_seq.shape)
         #print(input_seq)
-        #input_seq = Variable(torch.randn(time_steps, batch_size, in_size))
+        input_seq = Variable(torch.randn(10,time_steps, batch_size, in_size))
         #print(input_seq.shape)
         #print(input_seq)
         output_seq, _ = model(input_seq)
@@ -61,8 +61,8 @@ for e in range(epochs):
 
         last_output = output_seq[-1]
         #print(last_output.shape)
-        #target = Variable(torch.LongTensor(batch_size).random_(0, classes_no-1))
-        target = Variable(torch.from_numpy(targets[d][-1]).view(-1))
+        target = Variable(torch.LongTensor(10,batch_size).random_(0, classes_no-1))
+        #target = Variable(torch.from_numpy(targets[d][-1]).view(-1))
         print(target)
         #print(target.shape)
         err = loss(last_output, target)
