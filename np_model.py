@@ -113,7 +113,7 @@ for e in range(epochs):
         #print(err.item())
         loss_val += err.item()
         score_val += score.mean().item()
-    print('Epoch ' + str(e) + ' --- tr loss: ' + str(loss_val/len(data)) + ' ---- tr acc: ' + str(score_val/len(data)) + '\n')
+    print('Epoch ' + str(e) + ' --- tr loss: ' + str(loss_val/len(data)) + ' ---- tr acc: ' + str(score_val/len(data)))
     score_val = 0
     for d in range(20):
         input_seq = Variable(torch.from_numpy(data[len(data)-20+d]).float().to(device))
