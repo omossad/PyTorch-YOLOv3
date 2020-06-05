@@ -78,7 +78,7 @@ targets = np.transpose(targets, (0, 2, 1, 3))
 
 model = nn.LSTM(in_size, classes_no, 2)
 model.to(device)
-loss = nn.CrossEntropyLoss()
+loss = nn.CrossEntropyLoss(reduction='sum')
 optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate, weight_decay=weight_decay)
 #print(len(data))
 #input_seq = Variable(torch.randn(time_steps, batch_size, in_size))
