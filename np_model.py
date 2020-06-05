@@ -8,6 +8,7 @@ data_path = '/home/omossad/scratch/temp/numpy/'
 pkl_file = open(data_path + 'data_array.pkl', 'rb')
 data = pickle.load(pkl_file)
 data = np.asarray(data)
+print(data.shape)
 pkl_file.close()
 
 targets = np.loadtxt(data_path + 'trgt_array.dat')
@@ -16,7 +17,10 @@ targets = np.asarray(targets)
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 
-
+# time_steps are frames
+# batch size is the num_samples in a single batch
+# in_size features
+# class_no  is the number of tiles
 time_steps = 10
 batch_size = 3
 in_size = 5
