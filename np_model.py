@@ -114,7 +114,7 @@ for e in range(epochs):
         #print(err.item())
         loss_val += err.item()
         score_val += score.mean().item()
-    print('Epoch ' + str(e) + ' --- tr loss: ' + str(loss_val/(len(data)-test_size)) + ' ---- tr acc: ' + str(score_val/len(data)))
+    print('Epoch ' + str(e) + ' --- tr loss: ' + str(loss_val/(len(data)-test_size)) + ' ---- tr acc: ' + str(score_val/(len(data)-test_size)))
     score_val = 0
     for d in range(test_size):
         input_seq = Variable(torch.from_numpy(data[len(data)-test_size+d]).float().to(device))
