@@ -13,8 +13,8 @@ pkl_file.close()
 num_images = len(data)
 num_tiles = 4
 num_classes = 3
-time_steps = 2
-batch_size = 1
+time_steps = 1
+batch_size = 2
 epochs = 10
 in_size = num_tiles * num_tiles * num_classes
 classes_no = num_tiles * num_tiles
