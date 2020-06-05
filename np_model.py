@@ -19,7 +19,8 @@ num_classes = 3
 time_steps = 4
 batch_size = 8
 epochs = 200
-learning_rate = 0.0007
+learning_rate = 0.0005
+weight_decay = 5e-5
 test_size = 36
 adjust = 2
 in_size = num_tiles * num_tiles * num_classes
@@ -78,7 +79,7 @@ targets = np.transpose(targets, (0, 2, 1, 3))
 model = nn.LSTM(in_size, classes_no, 2)
 model.to(device)
 loss = nn.CrossEntropyLoss()
-optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
+optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate, weight_decay=weight_decay)
 #print(len(data))
 #input_seq = Variable(torch.randn(time_steps, batch_size, in_size))
 for e in range(epochs):
