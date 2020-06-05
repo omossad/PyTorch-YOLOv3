@@ -4,10 +4,7 @@ import torch
 import torch.nn as nn
 from torch.autograd import Variable
 
-a = np.arange(1,15)
-b = np.array([ a[i:i+4] for i in range(len(a)-3) ])
-print(a)
-print(b)
+
 
 data_path = '/home/omossad/scratch/temp/numpy/'
 pkl_file = open(data_path + 'data_array.pkl', 'rb')
@@ -17,7 +14,6 @@ pkl_file.close()
 
 ### PARAMS ####
 num_images = len(data)
-print(num_images)
 num_tiles = 4
 num_classes = 3
 time_steps = 4
@@ -28,6 +24,12 @@ learning_rate = 0.001
 in_size = num_tiles * num_tiles * num_classes
 classes_no = num_tiles * num_tiles
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+
+print(num_images)
+a = np.arange(0,num_images)
+b = np.array([ a[i:i+time_steps] for i in range(len(a)-time_steps-1) ])
+print(a)
+print(b)
 
 #### DATA MANIPULATION ####
 data = np.asarray(data)
