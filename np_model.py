@@ -20,7 +20,8 @@ time_steps = 4
 batch_size = 8
 epochs = 200
 learning_rate = 0.001
-
+test_size = 288
+adjust = 2
 in_size = num_tiles * num_tiles * num_classes
 classes_no = num_tiles * num_tiles
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -36,7 +37,7 @@ data = np.asarray(data)
 data = np.reshape(data, (num_images,-1))
 print(data.shape)
 img_data = []
-for i in range(len(indices)-2):
+for i in range(len(indices)-adjust):
     img_data.append(data[indices[i]])
 data = np.asarray(img_data)
 print(data.shape)
@@ -53,7 +54,7 @@ targets = np.asarray(targets)
 print(targets.shape)
 
 targets_data = []
-for i in range(len(indices)-2):
+for i in range(len(indices)-adjust):
     targets_data.append(targets[indices[i]])
 targets = np.asarray(targets_data)
 print(targets.shape)
@@ -83,7 +84,7 @@ optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
 for e in range(epochs):
     loss_val = 0
     score_val = 0
-    for d in range(len(data)-288):
+    for d in range(len(data)-test_size):
         input_seq = Variable(torch.from_numpy(data[d]).float().to(device))
         #print(input_seq.shape)
         #print(input_seq)
@@ -113,17 +114,17 @@ for e in range(epochs):
         #print(err.item())
         loss_val += err.item()
         score_val += score.mean().item()
-    print('Epoch ' + str(e) + ' --- tr loss: ' + str(loss_val/(len(data)-288)) + ' ---- tr acc: ' + str(score_val/len(data)))
+    print('Epoch ' + str(e) + ' --- tr loss: ' + str(loss_val/(len(data)-test_size)) + ' ---- tr acc: ' + str(score_val/len(data)))
     score_val = 0
-    for d in range(288):
-        input_seq = Variable(torch.from_numpy(data[len(data)-20+d]).float().to(device))
+    for d in range(test_size):
+        input_seq = Variable(torch.from_numpy(data[len(data)-test_size+d]).float().to(device))
         output_seq, _ = model(input_seq)
         last_output = output_seq[-1]
-        target = Variable(torch.from_numpy(targets[len(data)-20+d][-1]).long().view(-1).to(device))
+        target = Variable(torch.from_numpy(targets[len(data)-test_size+d][-1]).long().view(-1).to(device))
         _, pred_x = torch.max(last_output, 1)
         score = torch.eq(pred_x, target).float()
         score_val += score.mean().item()
-    print(' ---- test acc: ' + str(score_val/288) + '\n')
+    print(' ---- test acc: ' + str(score_val/test_size) + '\n')
 
 '''
 
