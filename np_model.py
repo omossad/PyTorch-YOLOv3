@@ -57,6 +57,7 @@ optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
 #input_seq = Variable(torch.randn(time_steps, batch_size, in_size))
 for e in range(epochs):
     loss_val = 0
+    score_val = 0
     for d in range(len(data)):
         input_seq = Variable(torch.from_numpy(data[d]).float().to(device))
         #print(input_seq.shape)
@@ -77,15 +78,18 @@ for e in range(epochs):
         #print(pred_x)
         score = torch.eq(pred_x, target).float()
         #print(score)
-        print(score.mean())
+        #print(score.mean())
         #print(target)
         #print(target.shape)
         err = loss(last_output, target)
         optimizer.zero_grad()
         err.backward()
         optimizer.step()
-        print(err.item())
+        #print(err.item())
         loss_val += err.item()
+        score_val += score.mean().item()
+    print(loss_val)
+    print(score_val)
 '''
 
 # Here we define our model as a class
