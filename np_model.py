@@ -17,7 +17,7 @@ num_tiles = 4
 num_classes = 3
 time_steps = 4
 batch_size = 8
-epochs = 2
+epochs = 1
 learning_rate = 0.001
 
 in_size = num_tiles * num_tiles * num_classes
@@ -54,9 +54,10 @@ model = nn.LSTM(in_size, classes_no, 2)
 model.to(device)
 loss = nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
-
+print(len(data))
 #input_seq = Variable(torch.randn(time_steps, batch_size, in_size))
 for e in range(epochs):
+    loss_val = 0
     for d in range(len(data)):
         input_seq = Variable(torch.from_numpy(data[d]).float().to(device))
         #print(input_seq.shape)
@@ -71,13 +72,16 @@ for e in range(epochs):
         #print(last_output.shape)
         #target = Variable(torch.LongTensor(batch_size).random_(0, classes_no-1))
         target = Variable(torch.from_numpy(targets[d][-1]).long().view(-1).to(device))
-        print(target)
+        print(targets[d][-1])
+        print(last_output)
+        #print(target)
         #print(target.shape)
         err = loss(last_output, target)
         optimizer.zero_grad()
         err.backward()
         optimizer.step()
-        print(err)
+        print(err.item())
+        loss_val += err.item()
 '''
 
 # Here we define our model as a class
