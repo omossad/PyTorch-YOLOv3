@@ -49,15 +49,20 @@ print(data.shape)
 
 #### TARGET MANIPULATION ####
 targets = np.loadtxt(data_path + 'trgt_array.dat')
-targets = targets[:len(indices)-5]
+targets = np.asarray(targets)
+print(targets.shape)
+
+targets_data = []
+for i in range(len(indices)-5):
+    targets_data.append(targets[indices[i]])
+targets = np.asarray(targets_data)
 print(targets.shape)
 
 #targets = [i for i in range(num_images)]
-targets = np.asarray(targets)
 #targets = np.array([ targets[i:i+time_steps-1] for i in range(len(targets)-time_steps-2) ])
 #targets = np.reshape(targets, (num_images//(time_steps*batch_size), batch_size, time_steps, -1))
 targets = np.reshape(targets, (len(targets)//batch_size, batch_size, time_steps, -1))
-
+print(targets.shape)
 targets = np.transpose(targets, (0, 2, 1, 3))
 
 #print(targets.shape)
