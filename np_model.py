@@ -4,6 +4,7 @@ import torch
 import torch.nn as nn
 from torch.autograd import Variable
 
+n=5
 A=np.array([1,2,3,4,5,6,7,8,9,10,11,12,13,14])
 B=np.array(zip(*(A[i:] for i in range(n))))
 print(A)
