@@ -26,8 +26,8 @@ classes_no = num_tiles * num_tiles
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 print(num_images)
-a = np.arange(0,num_images)
-b = np.array([ a[i:i+time_steps] for i in range(len(a)-time_steps+1) ])
+image_indices = np.arange(0,num_images)
+indices = np.array([ image_indices[i:i+time_steps] for i in range(len(image_indices)-time_steps+1) ])
 print(a)
 print(b)
 
@@ -35,14 +35,13 @@ print(b)
 data = np.asarray(data)
 data = np.reshape(data, (num_images,-1))
 print(data.shape)
-print(data[:8])
-data = np.array([ data[i:i+time_steps] for i in range(len(data)-time_steps-2) ])
-print(data[:8])
+img_data = []
+for i in range(len(indices)):
+    img_data.append(data[indices[i]])
+data = np.asarray(img_data)
 print(data.shape)
-data = np.reshape(data, (-1,num_tiles*num_tiles*num_classes))
-print(data[:8])
-print(data.shape)
-data = np.reshape(data, (num_images//time_steps, time_steps, -1))
+
+#data = np.reshape(data, (num_images//time_steps, time_steps, -1))
 data = np.reshape(data, (num_images//(time_steps*batch_size), batch_size, time_steps, -1))
 data = np.transpose(data, (0, 2, 1, 3))
 
