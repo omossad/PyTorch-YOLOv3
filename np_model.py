@@ -123,7 +123,7 @@ for e in range(epochs):
         _, pred_x = torch.max(last_output, 1)
         score = torch.eq(pred_x, target).float()
         score_val += score.mean().item()
-    print('Epoch ' + str(e) + ' ---- test acc: ' + str(score_val/20) + '\n')
+    print(' ---- test acc: ' + str(score_val/20) + '\n')
 
 '''
 
