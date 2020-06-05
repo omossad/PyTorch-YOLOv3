@@ -19,7 +19,7 @@ data = np.asarray(data)
 data = np.reshape(data, (num_images,-1))
 print(data)
 print(data.shape)
-data = np.reshape(data, (time_steps,-1))
+data = np.reshape(data, (time_steps, num_images/time_steps, -1))
 print(data)
 print(data.shape)
 
