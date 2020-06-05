@@ -49,7 +49,7 @@ print(data.shape)
 
 #### TARGET MANIPULATION ####
 targets = np.loadtxt(data_path + 'trgt_array.dat')
-targets = targets[time_steps-1:len(indices)-5]
+targets = targets[:len(indices)-5]
 print(targets.shape)
 
 #targets = [i for i in range(num_images)]
