@@ -7,7 +7,7 @@ from torch.autograd import Variable
 data_path = '/home/omossad/scratch/temp/numpy/'
 pkl_file = open(data_path + 'data_array.pkl', 'rb')
 data = pickle.load(pkl_file)
-data = data[:640]
+#data = data[:640]
 pkl_file.close()
 
 ### PARAMS ####
@@ -26,6 +26,7 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 #### DATA MANIPULATION ####
 data = np.asarray(data)
+data = np.array(zip(*(data[i:] for i in range(time_steps))))
 data = np.reshape(data, (num_images,-1))
 data = np.reshape(data, (num_images//time_steps, time_steps, -1))
 data = np.reshape(data, (num_images//(time_steps*batch_size), batch_size, time_steps, -1))
@@ -34,9 +35,11 @@ data = np.transpose(data, (0, 2, 1, 3))
 
 #### TARGET MANIPULATION ####
 targets = np.loadtxt(data_path + 'trgt_array.dat')
-targets = targets[:640]
+#targets = targets[:640]
+
 #targets = [i for i in range(num_images)]
 targets = np.asarray(targets)
+targets = np.array(zip(*(targets[i:] for i in range(time_steps))))
 targets = np.reshape(targets, (num_images//(time_steps*batch_size), batch_size, time_steps, -1))
 targets = np.transpose(targets, (0, 2, 1, 3))
 
