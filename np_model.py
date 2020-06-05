@@ -37,7 +37,6 @@ targets = np.loadtxt(data_path + 'trgt_array.dat')
 targets = targets[:640]
 #targets = [i for i in range(num_images)]
 targets = np.asarray(targets)
-print(targets)
 targets = np.reshape(targets, (num_images//(time_steps*batch_size), batch_size, time_steps, -1))
 targets = np.transpose(targets, (0, 2, 1, 3))
 
@@ -74,6 +73,7 @@ for e in range(epochs):
         target = Variable(torch.from_numpy(targets[d][-1]).long().view(-1).to(device))
         print(targets[d][-1])
         print(last_output)
+        print(last_output.max(dim=1))
         #print(target)
         #print(target.shape)
         err = loss(last_output, target)
