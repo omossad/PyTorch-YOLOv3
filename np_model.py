@@ -36,13 +36,14 @@ data = np.asarray(data)
 data = np.reshape(data, (num_images,-1))
 print(data.shape)
 img_data = []
-for i in range(len(indices)):
+for i in range(len(indices)-5):
     img_data.append(data[indices[i]])
 data = np.asarray(img_data)
 print(data.shape)
 
 #data = np.reshape(data, (num_images//time_steps, time_steps, -1))
-data = np.reshape(data, (num_images//(time_steps*batch_size), batch_size, time_steps, -1))
+data = np.reshape(data, (len(data)//(time_steps*batch_size), batch_size, time_steps, -1))
+#data = np.reshape(data, (num_images//(time_steps*batch_size), batch_size, time_steps, -1))
 data = np.transpose(data, (0, 2, 1, 3))
 
 
