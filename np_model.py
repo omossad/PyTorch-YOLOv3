@@ -13,8 +13,8 @@ pkl_file.close()
 num_images = len(data)
 num_tiles = 4
 num_classes = 3
-time_steps = 1
-batch_size = 2
+time_steps = 2
+batch_size = 1
 epochs = 10
 in_size = num_tiles * num_tiles * num_classes
 classes_no = num_tiles * num_tiles
@@ -63,6 +63,7 @@ for e in range(epochs):
         print(last_output.shape)
         #target = Variable(torch.LongTensor(batch_size).random_(0, classes_no-1))
         target = Variable(torch.from_numpy(targets[d][-1]))
+        print(target)
         print(target.shape)
         err = loss(last_output, target)
         err.backward()
