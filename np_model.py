@@ -22,7 +22,8 @@ print(data.shape)
 data = np.reshape(data, (num_images//time_steps, time_steps, -1))
 print(data)
 print(data.shape)
-
+data = np.reshape(data, (num_images//(time_steps*batch_size), batch_size, time_steps, -1))
+print(data.shape)
 pkl_file.close()
 
 targets = np.loadtxt(data_path + 'trgt_array.dat')
