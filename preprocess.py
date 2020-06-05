@@ -89,7 +89,7 @@ for i in range(num_files):
         #command = "echo '"+ str(sx_tile) +' '+ str(sy_tile) + "' > " + out_dir + 'labels/'
         command = command + filename + '.txt \n'
         #command = command + filelist
-        #f.write(command)
+        f.write(command)
         current_frame = current_frame + 1
     print(counters)
 f.close()
