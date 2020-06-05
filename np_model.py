@@ -18,6 +18,7 @@ batch_size = 1
 epochs = 10
 in_size = num_tiles * num_tiles * num_classes
 classes_no = num_tiles * num_tiles
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 #### DATA MANIPULATION ####
 data = np.asarray(data)
@@ -29,11 +30,11 @@ data = np.transpose(data, (0, 2, 1, 3))
 
 #### TARGET MANIPULATION ####
 targets = np.loadtxt(data_path + 'trgt_array.dat')
-print(targets)
+targets = [i for i in range(num_images)]
 targets = np.asarray(targets)
+print(targets)
 targets = np.reshape(targets, (num_images//(time_steps*batch_size), batch_size, time_steps, -1))
 print(targets)
-device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 
 # time_steps are frames
@@ -48,7 +49,7 @@ for e in range(epochs):
     for d in range(len(data)):
         input_seq = Variable(torch.from_numpy(data[d]).float())
         print(input_seq.shape)
-        print(input_seq)
+        #print(input_seq)
         #input_seq = Variable(torch.randn(time_steps, batch_size, in_size))
         #print(input_seq.shape)
         #print(input_seq)
