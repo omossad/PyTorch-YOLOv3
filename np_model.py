@@ -27,7 +27,7 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 print(num_images)
 a = np.arange(0,num_images)
-b = np.array([ a[i:i+time_steps] for i in range(len(a)-time_steps-1) ])
+b = np.array([ a[i:i+time_steps] for i in range(len(a)-time_steps+1) ])
 print(a)
 print(b)
 
