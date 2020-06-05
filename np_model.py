@@ -7,15 +7,17 @@ from torch.autograd import Variable
 data_path = '/home/omossad/scratch/temp/numpy/'
 pkl_file = open(data_path + 'data_array.pkl', 'rb')
 data = pickle.load(pkl_file)
+data = data[:640]
 pkl_file.close()
 
 ### PARAMS ####
 num_images = len(data)
+print(num_images)
 num_tiles = 4
 num_classes = 3
-time_steps = 2
-batch_size = 1
-epochs = 1
+time_steps = 4
+batch_size = 8
+epochs = 2
 learning_rate = 0.001
 
 in_size = num_tiles * num_tiles * num_classes
@@ -32,6 +34,7 @@ data = np.transpose(data, (0, 2, 1, 3))
 
 #### TARGET MANIPULATION ####
 targets = np.loadtxt(data_path + 'trgt_array.dat')
+targets = targets[:640]
 #targets = [i for i in range(num_images)]
 targets = np.asarray(targets)
 print(targets)
@@ -74,7 +77,7 @@ for e in range(epochs):
         optimizer.zero_grad()
         err.backward()
         optimizer.step()
-
+        print(err)
 '''
 
 # Here we define our model as a class
