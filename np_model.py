@@ -7,11 +7,22 @@ from torch.autograd import Variable
 data_path = '/home/omossad/scratch/temp/numpy/'
 pkl_file = open(data_path + 'data_array.pkl', 'rb')
 data = pickle.load(pkl_file)
+num_images = len(data)
+num_tiles = 4
+num_classes = 3
+time_steps = 4
+batch_size = 8
+in_size = num_tiles * num_tiles * num_classes
+classes_no = num_tiles * num_tiles
+
 data = np.asarray(data)
-print(data[0])
-data = np.reshape(data, (8,-1))
-print(data[0])
+data = np.reshape(data, (num_images,-1))
+print(data)
 print(data.shape)
+data = np.reshape(data, (time_steps,-1))
+print(data)
+print(data.shape)
+
 pkl_file.close()
 
 targets = np.loadtxt(data_path + 'trgt_array.dat')
@@ -24,12 +35,9 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 # batch size is the num_samples in a single batch
 # in_size features
 # class_no  is the number of tiles
-time_steps = 10
-batch_size = 3
-in_size = 5
-classes_no = 7
 
 model = nn.LSTM(in_size, classes_no, 2)
+
 input_seq = Variable(torch.randn(time_steps, batch_size, in_size))
 print(input_seq.shape)
 output_seq, _ = model(input_seq)
