@@ -19,7 +19,7 @@ num_classes = 3
 time_steps = 4
 batch_size = 8
 epochs = 200
-learning_rate = 0.0001
+learning_rate = 0.0007
 test_size = 36
 adjust = 2
 in_size = num_tiles * num_tiles * num_classes
@@ -75,7 +75,7 @@ targets = np.transpose(targets, (0, 2, 1, 3))
 # in_size features
 # class_no  is the number of tiles
 
-model = nn.LSTM(in_size, classes_no, 1)
+model = nn.LSTM(in_size, classes_no, 2)
 model.to(device)
 loss = nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
