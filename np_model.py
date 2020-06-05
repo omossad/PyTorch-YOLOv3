@@ -17,7 +17,7 @@ num_tiles = 4
 num_classes = 3
 time_steps = 4
 batch_size = 8
-epochs = 50
+epochs = 100
 learning_rate = 0.001
 
 in_size = num_tiles * num_tiles * num_classes
