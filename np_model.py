@@ -53,8 +53,8 @@ for e in range(epochs):
 
         last_output = output_seq[-1]
         print(last_output.shape)
-        #target = Variable(torch.LongTensor(batch_size).random_(0, classes_no-1))
-        target = Variable(torch.from_numpy(targets[d][-1]))
+        target = Variable(torch.LongTensor(batch_size).random_(0, classes_no-1))
+        #target = Variable(torch.from_numpy(targets[d][-1]))
         print(target.shape)
         err = loss(last_output, target)
         err.backward()
