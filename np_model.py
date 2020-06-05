@@ -36,7 +36,7 @@ data = np.asarray(data)
 data = np.reshape(data, (num_images,-1))
 print(data.shape)
 img_data = []
-for i in range(len(indices)-5):
+for i in range(len(indices)-2):
     img_data.append(data[indices[i]])
 data = np.asarray(img_data)
 print(data.shape)
@@ -53,7 +53,7 @@ targets = np.asarray(targets)
 print(targets.shape)
 
 targets_data = []
-for i in range(len(indices)-5):
+for i in range(len(indices)-2):
     targets_data.append(targets[indices[i]])
 targets = np.asarray(targets_data)
 print(targets.shape)
