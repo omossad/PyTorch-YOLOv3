@@ -88,8 +88,8 @@ for e in range(epochs):
         #print(err.item())
         loss_val += err.item()
         score_val += score.mean().item()
-    print(loss_val)
-    print(score_val)
+    print(loss_val/len(data))
+    print(score_val/len(data))
 '''
 
 # Here we define our model as a class
