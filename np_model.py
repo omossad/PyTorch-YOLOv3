@@ -103,6 +103,8 @@ for e in range(epochs):
         #print(last_output)
         _, pred_x = torch.max(last_output, 1)
         #print(pred_x)
+        print(pred_x)
+        print(target)
         score = torch.eq(pred_x, target).float()
         #print(score)
         #print(score.mean())
