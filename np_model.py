@@ -45,7 +45,7 @@ print(data.shape)
 data = np.reshape(data, (len(data)//batch_size, batch_size, time_steps, -1))
 #data = np.reshape(data, (num_images//(time_steps*batch_size), batch_size, time_steps, -1))
 data = np.transpose(data, (0, 2, 1, 3))
-
+print(data.shape)
 
 #### TARGET MANIPULATION ####
 targets = np.loadtxt(data_path + 'trgt_array.dat')
