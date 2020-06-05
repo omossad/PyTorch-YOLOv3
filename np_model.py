@@ -12,6 +12,7 @@ num_tiles = 4
 num_classes = 3
 time_steps = 2
 batch_size = 1
+epochs = 10
 in_size = num_tiles * num_tiles * num_classes
 classes_no = num_tiles * num_tiles
 
@@ -30,7 +31,8 @@ pkl_file.close()
 
 targets = np.loadtxt(data_path + 'trgt_array.dat')
 targets = np.asarray(targets)
-
+targets = np.reshape(targets, (num_images//(time_steps*batch_size), batch_size, time_steps, -1))
+print(targets)
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 
@@ -40,19 +42,22 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 # class_no  is the number of tiles
 
 model = nn.LSTM(in_size, classes_no, 2)
-
-input_seq = Variable(torch.randn(time_steps, batch_size, in_size))
-print(input_seq.shape)
-output_seq, _ = model(input_seq)
-print(output_seq.shape)
-
-last_output = output_seq[-1]
-print(last_output.shape)
 loss = nn.CrossEntropyLoss()
-target = Variable(torch.LongTensor(batch_size).random_(0, classes_no-1))
-print(target.shape)
-err = loss(last_output, target)
-err.backward()
+#input_seq = Variable(torch.randn(time_steps, batch_size, in_size))
+for e in range(epochs):
+    for d in range(len(data)):
+        input_seq = Variable(torch.from_numpy(data[d]))
+        print(input_seq.shape)
+        output_seq, _ = model(input_seq)
+        print(output_seq.shape)
+
+        last_output = output_seq[-1]
+        print(last_output.shape)
+        #target = Variable(torch.LongTensor(batch_size).random_(0, classes_no-1))
+        target = Variable(torch.from_numpy(targets[d][-1]))
+        print(target.shape)
+        err = loss(last_output, target)
+        err.backward()
 
 '''
 
