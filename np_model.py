@@ -28,8 +28,8 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 print(num_images)
 image_indices = np.arange(0,num_images)
 indices = np.array([ image_indices[i:i+time_steps] for i in range(len(image_indices)-time_steps+1) ])
-print(a)
-print(b)
+print(image_indices)
+print(indices)
 
 #### DATA MANIPULATION ####
 data = np.asarray(data)
