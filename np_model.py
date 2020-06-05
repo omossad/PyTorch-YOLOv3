@@ -108,6 +108,8 @@ for e in range(epochs):
         #print(score.mean())
         #print(target)
         #print(target.shape)
+        factor = torch.sum(torch.abs(pred_x-target))
+        print(factor)
         err = loss(last_output, target)
         optimizer.zero_grad()
         err.backward()
