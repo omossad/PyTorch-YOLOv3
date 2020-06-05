@@ -34,6 +34,8 @@ targets = [i for i in range(num_images)]
 targets = np.asarray(targets)
 print(targets)
 targets = np.reshape(targets, (num_images//(time_steps*batch_size), batch_size, time_steps, -1))
+targets = np.transpose(targets, (0, 2, 1, 3))
+
 print(targets.shape)
 print(targets)
 
