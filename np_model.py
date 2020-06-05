@@ -4,11 +4,10 @@ import torch
 import torch.nn as nn
 from torch.autograd import Variable
 
-n=5
-A=np.array([1,2,3,4,5,6,7,8,9,10,11,12,13,14])
-B=np.array(zip(*(A[i:] for i in range(n))))
-print(A)
-print(B)
+a = np.arange(1,15)
+b = np.array([ a[i:i+4] for i in range(len(a)-3) ])
+print(a)
+print(b)
 
 data_path = '/home/omossad/scratch/temp/numpy/'
 pkl_file = open(data_path + 'data_array.pkl', 'rb')
