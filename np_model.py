@@ -8,6 +8,9 @@ data_path = '/home/omossad/scratch/temp/numpy/'
 pkl_file = open(data_path + 'data_array.pkl', 'rb')
 data = pickle.load(pkl_file)
 data = np.asarray(data)
+print(data[0])
+data = np.reshape((8,-1))
+print(data[0])
 print(data.shape)
 pkl_file.close()
 
