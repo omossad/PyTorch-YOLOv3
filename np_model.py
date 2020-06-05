@@ -26,7 +26,9 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 #### DATA MANIPULATION ####
 data = np.asarray(data)
+print(data.shape)
 data = np.array(zip(*(data[i:] for i in range(time_steps))))
+print(data.shape)
 data = np.reshape(data, (num_images,-1))
 data = np.reshape(data, (num_images//time_steps, time_steps, -1))
 data = np.reshape(data, (num_images//(time_steps*batch_size), batch_size, time_steps, -1))
