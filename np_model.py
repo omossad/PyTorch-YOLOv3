@@ -16,6 +16,8 @@ num_classes = 3
 time_steps = 2
 batch_size = 1
 epochs = 1
+learning_rate = 0.001
+
 in_size = num_tiles * num_tiles * num_classes
 classes_no = num_tiles * num_tiles
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -46,14 +48,17 @@ targets = np.transpose(targets, (0, 2, 1, 3))
 # class_no  is the number of tiles
 
 model = nn.LSTM(in_size, classes_no, 2)
+model.to(device)
 loss = nn.CrossEntropyLoss()
+optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
+
 #input_seq = Variable(torch.randn(time_steps, batch_size, in_size))
 for e in range(epochs):
     for d in range(len(data)):
-        #input_seq = Variable(torch.from_numpy(data[d]).float())
+        input_seq = Variable(torch.from_numpy(data[d]).float().to(device))
         #print(input_seq.shape)
         #print(input_seq)
-        input_seq = Variable(torch.randn(10,time_steps, batch_size, in_size))
+        #input_seq = Variable(torch.randn(time_steps, batch_size, in_size))
         #print(input_seq.shape)
         #print(input_seq)
         output_seq, _ = model(input_seq)
@@ -61,12 +66,14 @@ for e in range(epochs):
 
         last_output = output_seq[-1]
         #print(last_output.shape)
-        target = Variable(torch.LongTensor(10,batch_size).random_(0, classes_no-1))
-        #target = Variable(torch.from_numpy(targets[d][-1]).view(-1))
+        #target = Variable(torch.LongTensor(batch_size).random_(0, classes_no-1))
+        target = Variable(torch.from_numpy(targets[d][-1]).view(-1).to(device))
         print(target)
         #print(target.shape)
         err = loss(last_output, target)
+        optimizer.zero_grad()
         err.backward()
+        optimizer.step()
 
 '''
 
