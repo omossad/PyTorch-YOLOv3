@@ -20,7 +20,7 @@ time_steps = 4
 batch_size = 8
 epochs = 200
 learning_rate = 0.001
-test_size = 288
+test_size = 36
 adjust = 2
 in_size = num_tiles * num_tiles * num_classes
 classes_no = num_tiles * num_tiles
@@ -84,7 +84,6 @@ optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
 for e in range(epochs):
     loss_val = 0
     score_val = 0
-    print(len(data))
     for d in range(len(data)-test_size):
         input_seq = Variable(torch.from_numpy(data[d]).float().to(device))
         #print(input_seq.shape)
