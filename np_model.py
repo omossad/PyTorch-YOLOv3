@@ -14,7 +14,7 @@ pkl_file.close()
 
 ### PARAMS ####
 num_images = len(data)
-num_tiles = 8
+num_tiles = 4
 num_classes = 3
 time_steps = 4
 batch_size = 4
