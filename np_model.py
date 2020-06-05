@@ -2,7 +2,7 @@ import pickle
 import numpy as np
 import torch
 import torch.nn as nn
-
+from torch.autograd import Variable
 
 data_path = '/home/omossad/scratch/temp/numpy/'
 pkl_file = open(data_path + 'data_array.pkl', 'rb')
@@ -14,6 +14,28 @@ targets = np.loadtxt(data_path + 'trgt_array.dat')
 targets = np.asarray(targets)
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+
+
+
+time_steps = 10
+batch_size = 3
+in_size = 5
+classes_no = 7
+
+model = nn.LSTM(in_size, classes_no, 2)
+input_seq = Variable(torch.randn(time_steps, batch_size, in_size))
+print(input_seq)
+output_seq, _ = model(input_seq)
+print(output_seq)
+
+last_output = output_seq[-1]
+
+loss = nn.CrossEntropyLoss()
+target = Variable(torch.LongTensor(batch_size).random_(0, classes_no-1))
+err = loss(last_output, target)
+err.backward()
+
+'''
 
 # Here we define our model as a class
 class LSTM(nn.Module):
@@ -99,3 +121,4 @@ for t in range(num_epochs):
 
     # Update parameters
     optimiser.step()
+'''
