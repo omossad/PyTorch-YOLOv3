@@ -83,7 +83,7 @@ optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
 for e in range(epochs):
     loss_val = 0
     score_val = 0
-    for d in range(len(data)):
+    for d in range(len(data)-288):
         input_seq = Variable(torch.from_numpy(data[d]).float().to(device))
         #print(input_seq.shape)
         #print(input_seq)
@@ -113,9 +113,9 @@ for e in range(epochs):
         #print(err.item())
         loss_val += err.item()
         score_val += score.mean().item()
-    print('Epoch ' + str(e) + ' --- tr loss: ' + str(loss_val/len(data)) + ' ---- tr acc: ' + str(score_val/len(data)))
+    print('Epoch ' + str(e) + ' --- tr loss: ' + str(loss_val/(len(data)-288)) + ' ---- tr acc: ' + str(score_val/len(data)))
     score_val = 0
-    for d in range(20):
+    for d in range(288):
         input_seq = Variable(torch.from_numpy(data[len(data)-20+d]).float().to(device))
         output_seq, _ = model(input_seq)
         last_output = output_seq[-1]
@@ -123,7 +123,7 @@ for e in range(epochs):
         _, pred_x = torch.max(last_output, 1)
         score = torch.eq(pred_x, target).float()
         score_val += score.mean().item()
-    print(' ---- test acc: ' + str(score_val/20) + '\n')
+    print(' ---- test acc: ' + str(score_val/288) + '\n')
 
 '''
 
