@@ -11,7 +11,7 @@ num_images = len(data)
 num_tiles = 4
 num_classes = 3
 time_steps = 2
-batch_size = 2
+batch_size = 1
 in_size = num_tiles * num_tiles * num_classes
 classes_no = num_tiles * num_tiles
 
@@ -23,6 +23,8 @@ data = np.reshape(data, (num_images//time_steps, time_steps, -1))
 print(data)
 print(data.shape)
 data = np.reshape(data, (num_images//(time_steps*batch_size), batch_size, time_steps, -1))
+print(data.shape)
+data = np.transpose(data, (0, 2, 1, 3))
 print(data.shape)
 pkl_file.close()
 
