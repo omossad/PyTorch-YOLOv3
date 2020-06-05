@@ -74,10 +74,10 @@ targets = np.transpose(targets, (0, 2, 1, 3))
 # in_size features
 # class_no  is the number of tiles
 
-model = nn.LSTM(in_size, classes_no, 2)
+model = nn.LSTM(in_size, classes_no, 20)
 model.to(device)
 loss = nn.CrossEntropyLoss(reduction='sum')
-optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
+optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate, weight_decay=5e-3)
 #print(len(data))
 #input_seq = Variable(torch.randn(time_steps, batch_size, in_size))
 for e in range(epochs):
