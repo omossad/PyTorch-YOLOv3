@@ -48,6 +48,10 @@ for e in range(epochs):
     for d in range(len(data)):
         input_seq = Variable(torch.from_numpy(data[d]))
         print(input_seq.shape)
+        print(input_seq)
+        input_seq = Variable(torch.randn(time_steps, batch_size, in_size))
+        print(input_seq.shape)
+        print(input_seq)
         output_seq, _ = model(input_seq)
         print(output_seq.shape)
 
