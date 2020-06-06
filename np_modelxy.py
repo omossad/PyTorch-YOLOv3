@@ -76,7 +76,7 @@ targets = np.transpose(targets, (0, 2, 1, 3))
 # in_size features
 # class_no  is the number of tiles
 
-model = nn.LSTM(in_size, classes_no, 3)
+model = nn.LSTM(in_size, classes_no, 1)
 model.to(device)
 loss = nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate, weight_decay=weight_decay)
