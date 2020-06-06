@@ -16,13 +16,13 @@ pkl_file.close()
 num_images = len(data)
 num_tiles = 8
 num_classes = 3
-time_steps = 5
-batch_size = 4
+time_steps = 4
+batch_size = 8
 epochs = 200
 learning_rate = 0.0007
 weight_decay = 0
-test_size = 104
-adjust = 9
+test_size = 52
+adjust = 10
 in_size = num_tiles * num_tiles * num_classes
 classes_no = num_tiles * num_tiles
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
