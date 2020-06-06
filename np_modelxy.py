@@ -96,7 +96,6 @@ for e in range(epochs):
         #print(output_seq.shape)
 
         last_output = output_seq[-1]
-        print(last_output.shape)
         #print(last_output.shape)
         #target = Variable(torch.LongTensor(batch_size).random_(0, classes_no-1))
         target = Variable(torch.from_numpy(targets[d][-1]).long().view(-1).to(device))
@@ -115,6 +114,7 @@ for e in range(epochs):
         #print(target)
         #print(torch.abs(pred_x-target))
         factor = torch.abs(pred_x-target).float().mean()
+        factor = 1
         #print(factor)
         err = loss(last_output, target)*factor
         optimizer.zero_grad()
