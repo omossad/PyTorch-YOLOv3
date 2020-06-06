@@ -50,7 +50,7 @@ data = np.transpose(data, (0, 2, 1, 3))
 print(data.shape)
 
 #### TARGET MANIPULATION ####
-targets = np.loadtxt(data_path + 't_xy_array.dat')
+targets = np.loadtxt(data_path + 'trgt_x_array.dat')
 targets = np.asarray(targets)
 print(targets.shape)
 
