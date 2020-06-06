@@ -105,10 +105,13 @@ if __name__ == "__main__":
     out_path = '/home/omossad/scratch/temp/numpy/'
     # Iterate through images and save plot of detections
     data = []
+    data_x = []
+    data_y = []
     tgts = []
-    tgts_xy = []
+    tgts_x = []
+    tgts_y = []
     for img_i, (path, detections) in enumerate(zip(imgs, img_detections)):
-        data_item = []
+        #data_item = []
         img = np.array(Image.open(path))
         print("(%d) Image: '%s'" % (img_i, path))
         #print(img_i)
@@ -128,9 +131,12 @@ if __name__ == "__main__":
         #print(txy_file)
         tx_label = int(txy_file.split()[0])
         ty_label = int(txy_file.split()[1])
-        data_item.append([tx_label, ty_label])
+        #data_item.append([tx_label, ty_label])
+
         tgts.append(t_label)
-        tgts_xy.append([tx_label, ty_label])
+        #tgts_xy.append([tx_label, ty_label])
+        tgts_x.append(tx_label)
+        tgts_y.append(ty_label)
         #print(tx_label)
         #print(ty_label)
         #f = open(f"output/{filename}.txt", "a")
@@ -174,12 +180,22 @@ if __name__ == "__main__":
                     #f.write(to_write)
             #data_item.append(det)
         data.append(det)
+        data_x.append(det_x)
+        data_y.append(det_y)
         #np.savetxt(out_path + 'data_array.dat', np.asarray(data))
     output = open(out_path + 'data_array.pkl', 'wb')
     pickle.dump(data, output)
     output.close()
+    output = open(out_path + 'data_array_x.pkl', 'wb')
+    pickle.dump(data_x, output)
+    output.close()
+    output = open(out_path + 'data_array_y.pkl', 'wb')
+    pickle.dump(data_y, output)
+    output.close()
     np.savetxt(out_path + 'trgt_array.dat', np.asarray(tgts))
-    np.savetxt(out_path + 't_xy_array.dat', np.asarray(tgts_xy))
+    np.savetxt(out_path + 'trgt_x_array.dat', np.asarray(tgts_x))
+    np.savetxt(out_path + 'trgt_y_array.dat', np.asarray(tgts_y))
+    #np.savetxt(out_path + 't_xy_array.dat', np.asarray(tgts_xy))
         #data.append(data_item)
         #print(data)
         #f.close()
