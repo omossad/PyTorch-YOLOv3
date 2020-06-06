@@ -100,8 +100,8 @@ if __name__ == "__main__":
     #colors = [cmap(i) for i in np.linspace(0, 1, 20)]
 
     print("\nSaving images:")
-    txy_labels_path = '/home/omossad/scratch/temp/roi/labels8x8/'
-    t_labels_path = '/home/omossad/scratch/temp/roi/labels/'
+    txy_labels_path = '/home/omossad/scratch/temp/roi/labels/'
+    t_labels_path = '/home/omossad/scratch/temp/roi/labels8/'
     out_path = '/home/omossad/scratch/temp/numpy/'
     # Iterate through images and save plot of detections
     data = []
