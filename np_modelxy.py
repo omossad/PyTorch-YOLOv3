@@ -107,7 +107,7 @@ for e in range(epochs):
 
         last_output = output_seq[-1]
         last_output = out_model(last_output)
-        print(last_output.shape)
+        #print(last_output.shape)
         #print(last_output.shape)
         #target = Variable(torch.LongTensor(batch_size).random_(0, classes_no-1))
         target = Variable(torch.from_numpy(targets[d][-1]).long().view(-1).to(device))
