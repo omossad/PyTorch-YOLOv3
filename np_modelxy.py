@@ -132,10 +132,10 @@ for e in range(epochs):
         #print(factor)
         err = loss(last_output, target)*factor
         optimizer.zero_grad()
-        optimizer2.zero_grad()
+        #optimizer2.zero_grad()
         err.backward()
         optimizer.step()
-        optimizer2.step()
+        #optimizer2.step()
         #print(err.item())
         loss_val += err.item()
         score_val += score.mean().item()
