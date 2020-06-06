@@ -114,9 +114,9 @@ for e in range(epochs):
         #print(target)
         #print(torch.abs(pred_x-target))
         factor = torch.abs(pred_x-target).float().mean()
-        factor = 1
+        #factor = 1
         #print(factor)
-        err = loss(last_output, target)*factor
+        err = loss(last_output, target)*np.exp(factor)
         optimizer.zero_grad()
         err.backward()
         optimizer.step()
