@@ -16,8 +16,8 @@ pkl_file.close()
 num_images = len(data)
 num_tiles = 8
 num_classes = 3
-time_steps = 4
-batch_size = 16
+time_steps = 8
+batch_size = 8
 epochs = 200
 learning_rate = 0.0007
 weight_decay = 0
