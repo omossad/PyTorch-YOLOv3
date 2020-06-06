@@ -77,6 +77,16 @@ targets = np.transpose(targets, (0, 2, 1, 3))
 # class_no  is the number of tiles
 
 model = nn.LSTM(in_size, classes_no, 2)
+out_model = nn.Sequential(
+    nn.Linear(classes_no, 32),
+    nn.ReLU(inplace=False),
+    nn.Linear(32, 32),
+    nn.ReLU(inplace=False),
+    #nn.Dropout(0.2),
+    nn.Linear(32, classes_no),
+    nn.ReLU(inplace=False)
+)
+out_model.to(device)
 model.to(device)
 loss = nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate, weight_decay=weight_decay)
@@ -96,6 +106,8 @@ for e in range(epochs):
         #print(output_seq.shape)
 
         last_output = output_seq[-1]
+        last_output = out_model(last_output)
+        print(last_output.shape)
         #print(last_output.shape)
         #target = Variable(torch.LongTensor(batch_size).random_(0, classes_no-1))
         target = Variable(torch.from_numpy(targets[d][-1]).long().view(-1).to(device))
