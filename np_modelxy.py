@@ -3,7 +3,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 from torch.autograd import Variable
-import math
+
 
 
 data_path = '/home/omossad/scratch/temp/numpy/'
@@ -19,7 +19,7 @@ num_classes = 3
 time_steps = 4
 batch_size = 4
 epochs = 200
-learning_rate = 0.00005
+learning_rate = 0.0001
 weight_decay = 0
 test_size = 104
 adjust = 10
@@ -116,7 +116,7 @@ for e in range(epochs):
         factor = torch.abs(pred_x-target).float().mean()
         #factor = 1
         #print(factor)
-        err = loss(last_output, target)* math.e**(factor)
+        err = loss(last_output, target)*factor
         optimizer.zero_grad()
         err.backward()
         optimizer.step()
