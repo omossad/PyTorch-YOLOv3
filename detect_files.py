@@ -111,7 +111,7 @@ if __name__ == "__main__":
     tgts_x = []
     tgts_y = []
     for img_i, (path, detections) in enumerate(zip(imgs, img_detections)):
-        #data_item = []
+        data_item = []
         img = np.array(Image.open(path))
         print("(%d) Image: '%s'" % (img_i, path))
         #print(img_i)
