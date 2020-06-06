@@ -7,7 +7,7 @@ from torch.autograd import Variable
 
 
 data_path = '/home/omossad/scratch/temp/numpy/'
-pkl_file = open(data_path + 'data_array.pkl', 'rb')
+pkl_file = open(data_path + 'data_array_x.pkl', 'rb')
 data = pickle.load(pkl_file)
 #data = data[:640]
 pkl_file.close()
@@ -23,8 +23,8 @@ learning_rate = 0.0007
 weight_decay = 1e-2
 test_size = 104
 adjust = 10
-in_size = num_tiles * num_tiles * num_classes
-classes_no = num_tiles * num_tiles
+in_size = num_tiles * num_classes
+classes_no = num_tiles
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 print(num_images)
@@ -50,7 +50,7 @@ data = np.transpose(data, (0, 2, 1, 3))
 print(data.shape)
 
 #### TARGET MANIPULATION ####
-targets = np.loadtxt(data_path + 'trgt_array.dat')
+targets = np.loadtxt(data_path + 't_xy_array.dat')
 targets = np.asarray(targets)
 print(targets.shape)
 
