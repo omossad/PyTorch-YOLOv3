@@ -75,7 +75,7 @@ for i in range(num_files):
         else:
             counters.append(counter)
             counter = 0
-        #sx_tile, sy_tile = get_tileXY(lbl[0],lbl[1])
+        sx_tile, sy_tile = get_tileXY(lbl[0],lbl[1])
         filename = 'ha_' + str(i) + '_frame_' + str(current_frame).zfill(5)
         #command = 'cp ' + frame_dir + 'ha_' + str(i) + '/frame_' + str(current_frame).zfill(5) + '.jpg ' + out_dir + 'images/'
         #filelist = "echo '" + out_dir + 'images/' + filename + ".jpg' >> " + out_dir
@@ -85,8 +85,8 @@ for i in range(num_files):
         #    filelist = filelist + 'valid.txt \n'
         #command = command + filename + '.jpg \n'
         #command = command + "echo '"+ str(s_tile) +" 0.1 0.1 0.1 0.1' > " + out_dir + 'labels/'
-        command = "echo '"+ str(s_tile) + "' > " + out_dir + 'labels/'
-        #command = "echo '"+ str(sx_tile) +' '+ str(sy_tile) + "' > " + out_dir + 'labels/'
+        #command = "echo '"+ str(s_tile) + "' > " + out_dir + 'labels/'
+        command = "echo '"+ str(sx_tile) +' '+ str(sy_tile) + "' > " + out_dir + 'labels/'
         command = command + filename + '.txt \n'
         #command = command + filelist
         f.write(command)
