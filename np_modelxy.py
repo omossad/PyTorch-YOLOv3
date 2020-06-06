@@ -89,7 +89,7 @@ out_model = nn.Sequential(
 out_model.to(device)
 model.to(device)
 loss = nn.CrossEntropyLoss()
-optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate, weight_decay=weight_decay)
+optimizer = torch.optim.Adam([model.parameters(), out_model.parameters()], lr=learning_rate, weight_decay=weight_decay)
 #print(len(data))
 #input_seq = Variable(torch.randn(time_steps, batch_size, in_size))
 for e in range(epochs):
