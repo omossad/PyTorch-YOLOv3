@@ -89,7 +89,9 @@ out_model = nn.Sequential(
 out_model.to(device)
 model.to(device)
 loss = nn.CrossEntropyLoss()
-optimizer = torch.optim.Adam([model.parameters(), out_model.parameters()], lr=learning_rate, weight_decay=weight_decay)
+optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate, weight_decay=weight_decay)
+optimizer2 = torch.optim.Adam(out_model.parameters(), lr=learning_rate, weight_decay=weight_decay)
+
 #print(len(data))
 #input_seq = Variable(torch.randn(time_steps, batch_size, in_size))
 for e in range(epochs):
@@ -130,8 +132,10 @@ for e in range(epochs):
         #print(factor)
         err = loss(last_output, target)*factor
         optimizer.zero_grad()
+        optimizer2.zero_grad()
         err.backward()
         optimizer.step()
+        optimizer2.step()
         #print(err.item())
         loss_val += err.item()
         score_val += score.mean().item()
@@ -141,6 +145,7 @@ for e in range(epochs):
         input_seq = Variable(torch.from_numpy(data[len(data)-test_size+d]).float().to(device))
         output_seq, _ = model(input_seq)
         last_output = output_seq[-1]
+        last_output = out_model(last_output)
         target = Variable(torch.from_numpy(targets[len(data)-test_size+d][-1]).long().view(-1).to(device))
         _, pred_x = torch.max(last_output, 1)
         score = torch.eq(pred_x, target).float()
