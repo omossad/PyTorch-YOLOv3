@@ -3,7 +3,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 from torch.autograd import Variable
-
+import math
 
 
 data_path = '/home/omossad/scratch/temp/numpy/'
@@ -116,7 +116,7 @@ for e in range(epochs):
         factor = torch.abs(pred_x-target).float().mean()
         #factor = 1
         #print(factor)
-        err = loss(last_output, target)*np.exp(factor)
+        err = loss(last_output, target)* math.e**(factor)
         optimizer.zero_grad()
         err.backward()
         optimizer.step()
