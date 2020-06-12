@@ -44,7 +44,7 @@ with open('frames_info', 'r') as f:
         num_files += 1
 # number of files is the number of files to be processed #
 num_files = num_files - 1
-print("Total number of files is:", count)
+print("Total number of files is:", num_files)
 
 
 frame_time = np.zeros((num_files,1))
