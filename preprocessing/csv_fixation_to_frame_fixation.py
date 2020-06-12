@@ -94,4 +94,4 @@ for i in range(num_files):
 #		print(idx)
 #		print(fixations_val[idx])
 		labels.append(fixations_val[idx])
-	np.savetxt(output_folder+'labels_'+file_names[i]+'.txt', labels)
+	np.savetxt(output_folder+file_names[i]+'.txt', labels)
