@@ -64,7 +64,7 @@ with open('frames_info') as csv_file:
             file_names.append(row[0])
 			frame_info[line_count-1] = [int(row[2]), int(row[3])]
 			line_count += 1
-		else:
+        else:
 			break
 print(file_names)
 
