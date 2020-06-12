@@ -42,9 +42,9 @@ num_files = 0
 with open('frames_info', 'r') as f:
     for line in f:
         num_files += 1
-print("Total number of lines is:", count)
 # number of files is the number of files to be processed #
 num_files = num_files - 1
+print("Total number of files is:", count)
 
 
 frame_time = np.zeros((num_files,1))
@@ -57,13 +57,14 @@ with open('frames_info') as csv_file:
 		if line_count == 0:
 			line_count += 1
 		elif line_count < num_files+1:
-			filenames.append(row[0])
+			file_names.append(row[0])
 			frame_time[line_count-1] = int(row[5])
 			frame_info[line_count-1] = [int(row[2]), int(row[3])]
 			line_count += 1
 		else:
 			break
-
+print('Files read in order are')
+print(file_names)
 for i in range(num_files):
 	fixations_time = []
 	fixations_val  = []
