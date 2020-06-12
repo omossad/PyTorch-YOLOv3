@@ -55,17 +55,17 @@ frame_info = np.zeros((num_files,2))
 file_names = []
 #with open('../ROI-detection/frames_info') as csv_file:
 with open('frames_info') as csv_file:
-	csv_reader = csv.reader(csv_file, delimiter=',')
-	line_count = 0
-	for row in csv_reader:
-		if line_count == 0:
-			line_count += 1
-		elif line_count < num_files+1:
+    csv_reader = csv.reader(csv_file, delimiter=',')
+    line_count = 0
+    for row in csv_reader:
+        if line_count == 0:
+            line_count += 1
+        elif line_count < num_files+1:
             file_names.append(row[0])
-			frame_info[line_count-1] = [int(row[2]), int(row[3])]
-			line_count += 1
+            frame_info[line_count-1] = [int(row[2]), int(row[3])]
+            line_count += 1
         else:
-			break
+            break
 print(file_names)
 
 f = open("move_files.sh", "w")
