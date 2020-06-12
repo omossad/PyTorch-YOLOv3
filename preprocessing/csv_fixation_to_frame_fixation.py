@@ -17,8 +17,6 @@ input_folder = '/home/omossad/scratch/Gaming-Dataset/labels/fifa/'
 output_folder = '/home/omossad/scratch/Gaming-Dataset/processed/raw_frame_labels/fifa/'
 
 
-base_dir = '/home/omossad/scratch/temp/fixations/'
-out_dir = '/home/omossad/scratch/temp/labels/'
 
 
 
@@ -65,6 +63,7 @@ with open('frames_info') as csv_file:
 			break
 print('Files read in order are')
 print(file_names)
+
 for i in range(num_files):
 	fixations_time = []
 	fixations_val  = []
