@@ -27,14 +27,14 @@ import pickle
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--image_folder", type=str, default="/home/omossad/scratch/temp/roi/ha_0_images", help="path to dataset")
+    parser.add_argument("--image_folder", type=str, default="/home/omossad/scratch/Gaming-Dataset/selected_frames/fifa/ha_0", help="path to dataset")
     parser.add_argument("--model_def", type=str, default="config/base_model.cfg", help="path to model definition file")
     parser.add_argument("--weights_path", type=str, default="checkpoints/tiny_yolo.pth", help="path to weights file")
     parser.add_argument("--class_path", type=str, default="data/custom/annotations/classes.names", help="path to class label file")
     parser.add_argument("--conf_thres", type=float, default=0.0, help="object confidence threshold")
     parser.add_argument("--nms_thres", type=float, default=0.0, help="iou thresshold for non-maximum suppression")
     parser.add_argument("--batch_size", type=int, default=1, help="size of the batches")
-    parser.add_argument("--n_cpu", type=int, default=0, help="number of cpu threads to use during batch generation")
+    parser.add_argument("--n_cpu", type=int, default=8, help="number of cpu threads to use during batch generation")
     parser.add_argument("--img_size", type=int, default=416, help="size of each image dimension")
     opt = parser.parse_args()
     print(opt)
@@ -66,16 +66,31 @@ if __name__ == "__main__":
 
     Tensor = torch.cuda.FloatTensor if torch.cuda.is_available() else torch.FloatTensor
 
-    imgs = []  # Stores image paths
-    img_detections = []  # Stores detections for each image index
+
     num_tiles = 8
+    num_classes = 3
     W = 1920
     H = 1080
     tile_width  = W/num_tiles
     tile_height = H/num_tiles
+    detections_folder = '/home/omossad/scratch/Gaming-Dataset/processed/detections/fifa/'
+    lstm_input_64 = '/home/omossad/scratch/Gaming-Dataset/processed/lstm_input/input_64/fifa/'
+    lstm_input_8x8 = '/home/omossad/scratch/Gaming-Dataset/processed/lstm_input/input_8x8/fifa/'
+    lstm_label_64 = '/home/omossad/scratch/Gaming-Dataset/processed/lstm_labels/labels_64/fifa'
+    lstm_label_8x8 = '/home/omossad/scratch/Gaming-Dataset/processed/lstm_labels/labels_8x8/fifa'
+
+    t_labels_path = '/home/omossad/scratch/Gaming-Dataset/processed/labels_64/fifa/'
+    txy_labels_path = '/home/omossad/scratch/Gaming-Dataset/processed/labels_8x8/fifa/'
+
+    #txy_labels_path = '/home/omossad/scratch/temp/roi/labels/'
+    #t_labels_path = '/home/omossad/scratch/temp/roi/labels8/'
+    #out_path = '/home/omossad/scratch/temp/numpy/'
 
     print("\nPerforming object detection:")
     prev_time = time.time()
+    imgs = []  # Stores image paths
+    img_detections = []  # Stores detections for each image index
+
     for batch_i, (img_paths, input_imgs) in enumerate(dataloader):
         # Configure input
         input_imgs = Variable(input_imgs.type(Tensor))
@@ -93,16 +108,22 @@ if __name__ == "__main__":
 
         # Save image and detections
         imgs.extend(img_paths)
+        filename = img_paths.split("/")[-1].split(".")[0]
+        filename = detections_folder + filename + '.dat'
+
+        np.savetxt(filename, np.asarray(detections))
+
         img_detections.extend(detections)
+
 
     # Bounding-box colors
     #cmap = plt.get_cmap("tab20b")
     #colors = [cmap(i) for i in np.linspace(0, 1, 20)]
 
     print("\nSaving images:")
-    txy_labels_path = '/home/omossad/scratch/temp/roi/labels/'
-    t_labels_path = '/home/omossad/scratch/temp/roi/labels8/'
-    out_path = '/home/omossad/scratch/temp/numpy/'
+
+
+
     # Iterate through images and save plot of detections
     data = []
     data_x = []
@@ -111,27 +132,20 @@ if __name__ == "__main__":
     tgts_x = []
     tgts_y = []
     for img_i, (path, detections) in enumerate(zip(imgs, img_detections)):
-        data_item = []
         img = np.array(Image.open(path))
         print("(%d) Image: '%s'" % (img_i, path))
-        #print(img_i)
-        #print(path)
+
 
         # Draw bounding boxes and labels of detections
         filename = path.split("/")[-1].split(".")[0]
-        data_item.append(filename)
-        print(filename)
         t_file = open(t_labels_path + filename + '.txt', "r").read()
-        #print(t_file)
         t_label = int(t_file)
 
-        data_item.append(t_label)
         #print(t_label)
         txy_file = open(txy_labels_path + filename + '.txt', "r").read()
         #print(txy_file)
         tx_label = int(txy_file.split()[0])
         ty_label = int(txy_file.split()[1])
-        #data_item.append([tx_label, ty_label])
 
         tgts.append(t_label)
         #tgts_xy.append([tx_label, ty_label])
@@ -142,9 +156,9 @@ if __name__ == "__main__":
         #f = open(f"output/{filename}.txt", "a")
 
         if detections is not None:
-            det = [[0,0,0] for i in range(num_tiles*num_tiles)]
-            det_x = [[0,0,0] for i in range(num_tiles)]
-            det_y = [[0,0,0] for i in range(num_tiles)]
+            det = [[0 for j in range(num_classes)] for i in range(num_tiles*num_tiles)]
+            det_x = [[0 for j in range(num_classes)] for i in range(num_tiles)]
+            det_y = [[0 for j in range(num_classes)] for i in range(num_tiles)]
             # Rescale boxes to original image
             detections = rescale_boxes(detections, opt.img_size, img.shape[:2])
 
@@ -183,18 +197,26 @@ if __name__ == "__main__":
         data_x.append(det_x)
         data_y.append(det_y)
         #np.savetxt(out_path + 'data_array.dat', np.asarray(data))
-    output = open(out_path + 'data_array.pkl', 'wb')
+
+        lstm_input_64
+        lstm_input_8x8
+        lstm_label_64
+        lstm_label_8x8
+
+    dump_name = opt.image_folder.split("/")[-1]
+    output = open(lstm_input_64 + dump_name + '.pkl', 'wb')
     pickle.dump(data, output)
     output.close()
-    output = open(out_path + 'data_array_x.pkl', 'wb')
+    output = open(lstm_input_8x8 + dump_name + '_x.pkl', 'wb')
     pickle.dump(data_x, output)
     output.close()
-    output = open(out_path + 'data_array_y.pkl', 'wb')
+    output = open(lstm_input_8x8 + dump_name + '_y.pkl', 'wb')
     pickle.dump(data_y, output)
     output.close()
-    np.savetxt(out_path + 'trgt_array.dat', np.asarray(tgts))
-    np.savetxt(out_path + 'trgt_x_array.dat', np.asarray(tgts_x))
-    np.savetxt(out_path + 'trgt_y_array.dat', np.asarray(tgts_y))
+
+    np.savetxt(lstm_label_64  + dump_name + '.dat', np.asarray(tgts))
+    np.savetxt(lstm_label_8x8 + dump_name + '_x.dat', np.asarray(tgts_x))
+    np.savetxt(lstm_label_8x8 + dump_name + '_y.dat', np.asarray(tgts_y))
     #np.savetxt(out_path + 't_xy_array.dat', np.asarray(tgts_xy))
         #data.append(data_item)
         #print(data)
