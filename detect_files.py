@@ -108,6 +108,8 @@ if __name__ == "__main__":
 
         # Save image and detections
         imgs.extend(img_paths)
+        print(img_paths)
+        print(opt.image_folder.split("/")[-1])
         filename = img_paths.split("/")[-1].split(".")[0]
         filename = detections_folder + filename + '.dat'
 
