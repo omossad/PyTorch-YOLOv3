@@ -109,9 +109,10 @@ if __name__ == "__main__":
         # Save image and detections
         imgs.extend(img_paths)
         filename = img_paths[0].split("/")[-1].split(".")[0]
-        filename = detections_folder + filename + '.dat'
-
-        np.savetxt(filename, np.asarray(detections))
+        filename = detections_folder + filename + '.pkl'
+        output = open(filename, 'wb')
+        pickle.dump(detections, output)
+        output.close()
 
         img_detections.extend(detections)
 
