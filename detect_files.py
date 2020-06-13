@@ -198,10 +198,6 @@ if __name__ == "__main__":
         data_y.append(det_y)
         #np.savetxt(out_path + 'data_array.dat', np.asarray(data))
 
-        lstm_input_64
-        lstm_input_8x8
-        lstm_label_64
-        lstm_label_8x8
 
     dump_name = opt.image_folder.split("/")[-1]
     output = open(lstm_input_64 + dump_name + '.pkl', 'wb')
