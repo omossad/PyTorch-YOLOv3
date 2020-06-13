@@ -76,8 +76,8 @@ if __name__ == "__main__":
     detections_folder = '/home/omossad/scratch/Gaming-Dataset/processed/detections/fifa/'
     lstm_input_64 = '/home/omossad/scratch/Gaming-Dataset/processed/lstm_input/input_64/fifa/'
     lstm_input_8x8 = '/home/omossad/scratch/Gaming-Dataset/processed/lstm_input/input_8x8/fifa/'
-    lstm_label_64 = '/home/omossad/scratch/Gaming-Dataset/processed/lstm_labels/labels_64/fifa'
-    lstm_label_8x8 = '/home/omossad/scratch/Gaming-Dataset/processed/lstm_labels/labels_8x8/fifa'
+    lstm_label_64 = '/home/omossad/scratch/Gaming-Dataset/processed/lstm_labels/labels_64/fifa/'
+    lstm_label_8x8 = '/home/omossad/scratch/Gaming-Dataset/processed/lstm_labels/labels_8x8/fifa/'
 
     t_labels_path = '/home/omossad/scratch/Gaming-Dataset/processed/labels_64/fifa/'
     txy_labels_path = '/home/omossad/scratch/Gaming-Dataset/processed/labels_8x8/fifa/'
