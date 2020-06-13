@@ -110,7 +110,7 @@ if __name__ == "__main__":
         imgs.extend(img_paths)
         filename = img_paths[0].split("/")[-1].split(".")[0]
         filename = detections_folder + filename + '.dat'
-        print(detections)
+        print(detections.numpy())
         np.savetxt(filename, np.asarray(detections))
 
         img_detections.extend(detections)
