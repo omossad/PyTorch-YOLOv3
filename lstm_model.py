@@ -12,6 +12,17 @@ num_classes = 3
 time_steps = 4
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
+def closestNumber(n, m) :
+    q = int(n / m)
+    n1 = m * q
+    if((n * m) > 0) :
+        n2 = (m * (q + 1))
+    else :
+        n2 = (m * (q - 1))
+    if (abs(n - n1) < abs(n - n2)) :
+        return n1
+    return n2
+
 
 def read_info():
     file_names = []
@@ -47,8 +58,9 @@ def process_data(data):
     data = np.asarray(data)
     data = np.reshape(data, (num_images,-1))
     img_data = []
-    print(len(indices))
-    for i in range(len(indices)):
+    selected_indices = closestNumber(batch_size, len(indices))
+    print(selected_indices)
+    for i in range(selected_indices):
         img_data.append(data[indices[i]])
     data = np.asarray(img_data)
     data = np.reshape(data, (len(data)//batch_size, batch_size, time_steps, -1))
