@@ -42,12 +42,12 @@ def read_file(filename):
 def process_data(data):
     batch_size = 4
     num_images = len(data)
-    print(num_images)
     image_indices = np.arange(0,num_images)
     indices = np.array([ image_indices[i:i+time_steps] for i in range(len(image_indices)-time_steps+1) ])
     data = np.asarray(data)
     data = np.reshape(data, (num_images,-1))
     img_data = []
+    print(len(indices))
     for i in range(len(indices)):
         img_data.append(data[indices[i]])
     data = np.asarray(img_data)
