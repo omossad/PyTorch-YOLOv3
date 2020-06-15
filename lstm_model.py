@@ -143,7 +143,7 @@ def train(train_data, test_data, train_labels, test_labels, model):
             optimizer.step()
             loss_val += err.item()
             score_val += score.mean().item()
-        print('Epoch ' + str(e) + ' --- tr loss: ' + str(loss_val/train_size) + ' ---- tr acc: ' + str(score_val/(len(data)-test_size)))
+        print('Epoch ' + str(e) + ' --- tr loss: ' + str(loss_val/train_size) + ' ---- tr acc: ' + str(score_val/train_size))
         test(model, test_data, test_labels)
 
 
