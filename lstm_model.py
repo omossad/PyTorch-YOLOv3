@@ -143,6 +143,7 @@ def train(train_data, test_data, train_labels, test_labels, model):
 def main():
     filenames = read_info()
     for f in filenames:
+        print(f)
         data = read_file(f)
         if f.startswith('ha'):
             test_data = process_data(data)
