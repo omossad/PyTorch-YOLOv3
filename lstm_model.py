@@ -155,7 +155,8 @@ def main():
     filenames = read_info()
     train_data = []
     train_labels = []
-    file_count = 0
+    train_file_count = 0
+    test_file_count = 0
     for f in filenames:
         print(f)
         data = read_file(f)
@@ -164,7 +165,7 @@ def main():
             test_data = process_data(data)
             test_labels = process_labels(labels)
         else:
-            if file_count  == 0:
+            if train_file_count  == 0:
                 train_data = np.asarray(process_data(data))
                 train_labels = np.asarray(process_labels(labels))
             else:
@@ -172,6 +173,7 @@ def main():
                 train_labels = np.vstack(train_labels , process_labels(labels))
             print(train_data.shape)
             print(train_labels.shape)
+            train_file_count = train_file_count + 1
             #train_data = np.vstack(train_data, process_data(data))
             #train_labels = np.vstack(train_data , process_labels(labels))
             #print(np.asarray(train_data).shape)
