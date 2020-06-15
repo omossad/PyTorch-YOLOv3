@@ -11,6 +11,7 @@ labels_path = '/home/omossad/scratch/Gaming-Dataset/processed/lstm_labels/labels
 num_tiles = 8
 num_classes = 3
 time_steps = 4
+batch_size = 16
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 def closestNumber(n, m) :
@@ -45,7 +46,7 @@ def read_file(filename):
 
 
 def process_data(data):
-    batch_size = 4
+
     num_images = len(data)
     image_indices = np.arange(0,num_images)
     indices = np.array([ image_indices[i:i+time_steps] for i in range(num_images-time_steps) ])
@@ -67,7 +68,6 @@ def read_labels(filename):
     return targets
 
 def process_labels(targets):
-    batch_size = 4
     targets = targets[time_steps:]
     selected_indices = closestNumber(len(targets), batch_size)
     targets = targets[:selected_indices]
