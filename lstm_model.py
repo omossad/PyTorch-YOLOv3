@@ -82,7 +82,7 @@ def lstm_model():
     in_size = num_tiles * num_classes
     classes_no = num_tiles
 
-    model = nn.LSTM(in_size, classes_no, 3)
+    model = nn.LSTM(in_size, classes_no, 2)
     out_model = nn.Sequential(
         nn.Linear(classes_no, 32),
         nn.ReLU(inplace=False),
