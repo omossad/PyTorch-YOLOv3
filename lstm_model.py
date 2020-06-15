@@ -156,7 +156,7 @@ def main():
         print(f)
         data = read_file(f)
         labels = read_labels(f)
-        if f.startswith('pu'):
+        if f.startswith('se'):
             if test_file_count == 0:
                 test_data = np.asarray(process_data(data))
                 test_labels = np.asarray(process_labels(labels))
