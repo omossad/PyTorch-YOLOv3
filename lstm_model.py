@@ -82,7 +82,7 @@ def lstm_model():
     in_size = num_tiles * num_classes
     classes_no = num_tiles
 
-    model = nn.LSTM(in_size, classes_no, 2)
+    model = nn.LSTM(in_size, classes_no, 3)
     out_model = nn.Sequential(
         nn.Linear(classes_no, 32),
         nn.ReLU(inplace=False),
@@ -114,7 +114,7 @@ def test(model, test_data, test_labels):
 
 def train(train_data, test_data, train_labels, test_labels, model):
     epochs = 200
-    learning_rate = 0.007
+    learning_rate = 0.0001
     weight_decay = 0
     loss = nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate, weight_decay=weight_decay)
