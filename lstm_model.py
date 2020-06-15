@@ -114,7 +114,7 @@ def test(model, test_data, test_labels):
 
 def train(train_data, test_data, train_labels, test_labels, model):
     epochs = 200
-    learning_rate = 0.001
+    learning_rate = 0.007
     weight_decay = 0
     loss = nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate, weight_decay=weight_decay)
