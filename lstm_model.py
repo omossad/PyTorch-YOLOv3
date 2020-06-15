@@ -63,7 +63,7 @@ def process_data(data):
     return data
 
 def read_labels(filename):
-    targets = np.loadtxt(labels_path + filename + '_x.dat')
+    targets = np.loadtxt(labels_path + filename + '_x.dat', dtype=uint8)
     targets = np.asarray(targets)
     return targets
 
