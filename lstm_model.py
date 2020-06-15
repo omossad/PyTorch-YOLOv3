@@ -153,8 +153,8 @@ def train(train_data, test_data, train_labels, test_labels, model):
 
 def main():
     filenames = read_info()
-    train_data = []
-    train_labels = []
+    #train_data = []
+    #train_labels = []
     for f in filenames:
         print(f)
         data = read_file(f)
@@ -163,8 +163,8 @@ def main():
             test_data = process_data(data)
             test_labels = process_labels(labels)
         else:
-            train_data.append(process_data(data))
-            train_labels.append(process_labels(labels))
+            train_data = np.vstack(process_data(data))
+            train_labels = np.vstack(process_labels(labels))
             print(np.asarray(train_data).shape)
             print(np.asarray(train_labels).shape)
 
