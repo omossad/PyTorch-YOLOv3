@@ -48,7 +48,7 @@ def process_data(data):
     batch_size = 4
     num_images = len(data)
     image_indices = np.arange(0,num_images)
-    indices = np.array([ image_indices[i:i+time_steps] for i in range(len(image_indices)-time_steps+1) ])
+    indices = np.array([ image_indices[i:i+time_steps] for i in range(num_images-time_steps) ])
     data = np.asarray(data)
     data = np.reshape(data, (num_images,-1))
     img_data = []
