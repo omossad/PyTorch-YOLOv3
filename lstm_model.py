@@ -53,7 +53,6 @@ def process_data(data):
     data = np.reshape(data, (num_images,-1))
     img_data = []
     selected_indices = closestNumber(len(indices), batch_size)
-    print(selected_indices)
     for i in range(selected_indices):
         img_data.append(data[indices[i]])
     data = np.asarray(img_data)
@@ -72,7 +71,6 @@ def process_labels(targets):
     targets = targets[time_steps:]
     selected_indices = closestNumber(len(targets), batch_size)
     targets = targets[:selected_indices]
-    print(selected_indices)
     batch_size = 4
     targets = np.reshape(targets, (len(targets)//batch_size, batch_size, -1))
     #targets = np.transpose(targets, (0, 2, 1, 3))
@@ -132,7 +130,7 @@ def train(train_data, test_data, train_labels, test_labels, model):
             input_seq = Variable(torch.from_numpy(train_data[d]).float().to(device))
             output_seq, _ = model(input_seq)
             last_output = output_seq[-1]
-            print(train_labels[d])
+            #print(train_labels[d])
             #target = Variable(torch.tensor([train_labels[d]]).to(device))
             #print(target)
             target = Variable(torch.from_numpy(train_labels[d]).long().view(-1).to(device))
@@ -145,7 +143,7 @@ def train(train_data, test_data, train_labels, test_labels, model):
             optimizer.step()
             loss_val += err.item()
             score_val += score.mean().item()
-        print('Epoch ' + str(e) + ' --- tr loss: ' + str(loss_val/(len(data)-test_size)) + ' ---- tr acc: ' + str(score_val/(len(data)-test_size)))
+        print('Epoch ' + str(e) + ' --- tr loss: ' + str(loss_val/train_size) + ' ---- tr acc: ' + str(score_val/(len(data)-test_size)))
         test(model, test_data, test_labels)
 
 
