@@ -5,7 +5,7 @@ import torch.nn as nn
 from torch.autograd import Variable
 import csv
 
-max_files = 2
+max_files = 3
 data_path = '/home/omossad/scratch/Gaming-Dataset/processed/lstm_input/input_8x8/fifa/'
 labels_path = '/home/omossad/scratch/Gaming-Dataset/processed/lstm_labels/labels_8x8/fifa/'
 num_tiles = 8
@@ -153,6 +153,8 @@ def train(train_data, test_data, train_labels, test_labels, model):
 
 def main():
     filenames = read_info()
+    train_data = []
+    train_labels = []
     for f in filenames:
         print(f)
         data = read_file(f)
@@ -160,10 +162,17 @@ def main():
         if f.startswith('ha_1'):
             test_data = process_data(data)
             test_labels = process_labels(labels)
+            print(train_data.shape)
+            print(test_data.shape)
         else:
-            train_data = process_data(data)
-            train_labels = process_labels(labels)
+            train_data.append(process_data(data))
+            train_labels.append(process_labels(labels))
+
     model = lstm_model()
+    train_data = np.asarray(train_data)
+    train_labels = np.asarray(train_labels)
+    print(train_data.shape)
+    print(train_labels.shape)
     train(train_data, test_data, train_labels, test_labels, model)
     #train(model)
 
