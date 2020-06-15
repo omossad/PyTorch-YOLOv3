@@ -7,6 +7,7 @@ import csv
 
 max_files = 2
 data_path = '/home/omossad/scratch/Gaming-Dataset/processed/lstm_input/input_8x8/fifa/'
+labels_path = '/home/omossad/scratch/Gaming-Dataset/processed/lstm_labels/labels_8x8/fifa/'
 num_tiles = 8
 num_classes = 3
 time_steps = 4
@@ -61,16 +62,17 @@ def process_data(data):
 
     return data
 
+def read_labels(filename):
+    targets = np.loadtxt(labels_path + filename + '_x.dat')
+    targets = np.asarray(targets)
+    return targets
+
+
 
 def lstm_model():
     ### MODEL PARAMS ####
 
-    epochs = 200
-    learning_rate = 0.0001
-    weight_decay = 0
 
-    test_size = 104
-    adjust = 10
     in_size = num_tiles * num_classes
     classes_no = num_tiles
 
@@ -86,11 +88,10 @@ def lstm_model():
     )
     out_model.to(device)
     model.to(device)
-    loss = nn.CrossEntropyLoss()
-    optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate, weight_decay=weight_decay)
+    return model
 
 
-def test(test_data, model, test_labels):
+def test(model, test_data, test_labels):
     score_val = 0
     test_size = len(test_data)
     for d in range(test_size):
@@ -104,7 +105,15 @@ def test(test_data, model, test_labels):
         score_val += score.mean().item()
     print(' ---- test acc: ' + str(score_val/test_size) + '\n')
 
-def train():
+def train(train_data, test_data, train_labels, test_labels, model):
+    epochs = 200
+    learning_rate = 0.0001
+    weight_decay = 0
+    test_size = 104
+    adjust = 10
+    loss = nn.CrossEntropyLoss()
+    optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate, weight_decay=weight_decay)
+
     train_size = len(train_data)
     for e in range(epochs):
         loss_val = 0
@@ -124,7 +133,7 @@ def train():
             loss_val += err.item()
             score_val += score.mean().item()
         print('Epoch ' + str(e) + ' --- tr loss: ' + str(loss_val/(len(data)-test_size)) + ' ---- tr acc: ' + str(score_val/(len(data)-test_size)))
-        test(test_data, model, test_labels)
+        test(model, test_data, test_labels)
 
 
 
@@ -135,8 +144,14 @@ def main():
     filenames = read_info()
     for f in filenames:
         data = read_file(f)
-        data = process_data(data)
+        if f.startswith('ha'):
+            test_data = process_data(data)
+            test_labels = read_labels(f)
+        else:
+            train_data = process_data(data)
+            train_labels = read_labels(f)
     model = lstm_model()
+    train(train_data, test_data, train_labels, test_labels, model)
     #train(model)
 
 
