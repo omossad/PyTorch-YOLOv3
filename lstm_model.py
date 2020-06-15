@@ -54,7 +54,6 @@ def process_data(data):
     img_data = []
     selected_indices = closestNumber(len(indices), batch_size)
     print(selected_indices)
-    print(selected_indices)
     for i in range(selected_indices):
         img_data.append(data[indices[i]])
     data = np.asarray(img_data)
@@ -72,6 +71,7 @@ def process_labels(targets):
     batch_size = 4
     targets = targets[time_steps:]
     selected_indices = closestNumber(len(targets), batch_size)
+    targets = targets[:selected_indices]
     print(selected_indices)
     batch_size = 4
     targets = np.reshape(targets, (len(targets)//batch_size, batch_size, -1))
