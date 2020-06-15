@@ -153,8 +153,8 @@ def train(train_data, test_data, train_labels, test_labels, model):
 
 def main():
     filenames = read_info()
-    #train_data = []
-    #train_labels = []
+    train_data = []
+    train_labels = []
     for f in filenames:
         print(f)
         data = read_file(f)
