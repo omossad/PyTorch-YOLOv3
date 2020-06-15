@@ -71,7 +71,6 @@ def process_labels(targets):
     targets = targets[time_steps:]
     selected_indices = closestNumber(len(targets), batch_size)
     targets = targets[:selected_indices]
-    batch_size = 4
     targets = np.reshape(targets, (len(targets)//batch_size, batch_size, -1))
     #targets = np.transpose(targets, (0, 2, 1, 3))
     return targets
@@ -175,7 +174,8 @@ def main():
                 train_data = np.vstack((train_data, process_data(data)))
                 train_labels = np.vstack((train_labels , process_labels(labels)))
             train_file_count = train_file_count + 1
-
+            print(train_data.shape)
+            print(train_labels.shape)
             #print(train_data.shape)
             #print(train_labels.shape)
             #train_data = np.vstack(train_data, process_data(data))
