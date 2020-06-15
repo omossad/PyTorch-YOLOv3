@@ -153,8 +153,6 @@ def train(train_data, test_data, train_labels, test_labels, model):
 
 def main():
     filenames = read_info()
-    train_data = []
-    train_labels = []
     train_file_count = 0
     test_file_count = 0
     for f in filenames:
@@ -162,26 +160,32 @@ def main():
         data = read_file(f)
         labels = read_labels(f)
         if f.startswith('ha_1'):
-            test_data = process_data(data)
-            test_labels = process_labels(labels)
+            if test_file_count == 0:
+                test_data = np.asarray(process_data(data))
+                test_labels = np.asarray(process_labels(labels))
+            else:
+                test_data = np.vstack((test_data, process_data(data)))
+                test_labels = np.vstack((test_labels , process_labels(labels)))
+            test_file_count = test_file_count + 1
         else:
-            #if train_file_count  == 0:
-            #    train_data = np.asarray(process_data(data))
-            #    train_labels = np.asarray(process_labels(labels))
-            #else:
-            train_data = np.vstack((train_data, process_data(data)))
-            train_labels = np.vstack((train_labels , process_labels(labels)))
+            if train_file_count  == 0:
+                train_data = np.asarray(process_data(data))
+                train_labels = np.asarray(process_labels(labels))
+            else:
+                train_data = np.vstack((train_data, process_data(data)))
+                train_labels = np.vstack((train_labels , process_labels(labels)))
+            train_file_count = train_file_count + 1
+
             print(train_data.shape)
             print(train_labels.shape)
-            train_file_count = train_file_count + 1
             #train_data = np.vstack(train_data, process_data(data))
             #train_labels = np.vstack(train_data , process_labels(labels))
             #print(np.asarray(train_data).shape)
             #print(np.asarray(train_labels).shape)
 
     model = lstm_model()
-    train_data = np.asarray(train_data)
-    train_labels = np.asarray(train_labels)
+    #train_data = np.asarray(train_data)
+    #train_labels = np.asarray(train_labels)
     print(train_data.shape)
     print(train_labels.shape)
     train(train_data, test_data, train_labels, test_labels, model)
