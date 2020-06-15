@@ -43,15 +43,15 @@ def process_data(data):
     num_images = len(data)
     image_indices = np.arange(0,num_images)
     indices = np.array([ image_indices[i:i+time_steps] for i in range(len(image_indices)-time_steps+1) ])
-    print(indices)
     data = np.asarray(data)
     data = np.reshape(data, (num_images,-1))
     img_data = []
-    for i in range(len(indices)-adjust):
+    for i in range(len(indices)):
         img_data.append(data[indices[i]])
     data = np.asarray(img_data)
     data = np.reshape(data, (len(data)//batch_size, batch_size, time_steps, -1))
     data = np.transpose(data, (0, 2, 1, 3))
+    print(data.shape)
     return data
 
 
