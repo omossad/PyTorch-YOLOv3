@@ -163,8 +163,8 @@ def main():
             test_data = process_data(data)
             test_labels = process_labels(labels)
         else:
-            train_data = np.vstack(process_data(data))
-            train_labels = np.vstack(process_labels(labels))
+            train_data = np.vstack(train_data, process_data(data))
+            train_labels = np.vstack(train_data , process_labels(labels))
             print(np.asarray(train_data).shape)
             print(np.asarray(train_labels).shape)
 
