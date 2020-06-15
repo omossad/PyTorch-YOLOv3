@@ -128,6 +128,7 @@ def main():
     filenames = read_info()
     for f in filenames:
         data = read_file(f)
+        data = process_data(data)
     model = lstm_model()
     #train(model)
 
