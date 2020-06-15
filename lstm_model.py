@@ -54,6 +54,7 @@ def process_data(data):
     img_data = []
     selected_indices = closestNumber(len(indices), batch_size)
     print(selected_indices)
+    print(selected_indices)
     for i in range(selected_indices):
         img_data.append(data[indices[i]])
     data = np.asarray(img_data)
@@ -67,7 +68,14 @@ def read_labels(filename):
     targets = np.asarray(targets)
     return targets
 
-
+def process_labels(targets):
+    targets = [time_steps:]
+    selected_indices = closestNumber(len(targets), batch_size)
+    print(selected_indices)
+    batch_size = 4
+    targets = np.reshape(targets, (len(targets)//batch_size, batch_size, -1))
+    #targets = np.transpose(targets, (0, 2, 1, 3))
+    return targets
 
 def lstm_model():
     ### MODEL PARAMS ####
@@ -99,8 +107,8 @@ def test(model, test_data, test_labels):
         output_seq, _ = model(input_seq)
         last_output = output_seq[-1]
         #last_output = out_model(last_output)
-        target = Variable(torch.tensor(test_labels[d]).to(device))
-        #target = Variable(torch.from_numpy([test_labels[d]]).long().view(-1).to(device))
+        #target = Variable(torch.tensor([test_labels[d]]).to(device))
+        target = Variable(torch.from_numpy(test_labels[d]).long().view(-1).to(device))
         _, pred_x = torch.max(last_output, 1)
         score = torch.eq(pred_x, target).float()
         score_val += score.mean().item()
@@ -124,9 +132,9 @@ def train(train_data, test_data, train_labels, test_labels, model):
             output_seq, _ = model(input_seq)
             last_output = output_seq[-1]
             print(train_labels[d])
-            target = Variable(torch.tensor([train_labels[d]]).to(device))
-            print(target)
-            #target = Variable(torch.from_numpy([train_labels[d]]).long().view(-1).to(device))
+            #target = Variable(torch.tensor([train_labels[d]]).to(device))
+            #print(target)
+            target = Variable(torch.from_numpy(train_labels[d]).long().view(-1).to(device))
             _, pred_x = torch.max(last_output, 1)
             score = torch.eq(pred_x, target).float()
             factor = torch.abs(pred_x-target).float().mean()
@@ -149,12 +157,13 @@ def main():
     for f in filenames:
         print(f)
         data = read_file(f)
+        labels = read_labels(f)
         if f.startswith('ha_1'):
             test_data = process_data(data)
-            test_labels = read_labels(f)
+            test_labels = process_labels(labels)
         else:
             train_data = process_data(data)
-            train_labels = read_labels(f)
+            train_labels = process_labels(labels)
     model = lstm_model()
     train(train_data, test_data, train_labels, test_labels, model)
     #train(model)
