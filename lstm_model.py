@@ -162,11 +162,11 @@ def main():
         if f.startswith('ha_1'):
             test_data = process_data(data)
             test_labels = process_labels(labels)
-            print(np.asarray(train_data).shape)
-            print(np.asarray(test_data).shape)
         else:
             train_data.append(process_data(data))
             train_labels.append(process_labels(labels))
+            print(np.asarray(train_data).shape)
+            print(np.asarray(train_labels).shape)
 
     model = lstm_model()
     train_data = np.asarray(train_data)
