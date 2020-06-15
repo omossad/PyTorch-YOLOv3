@@ -99,7 +99,7 @@ def test(model, test_data, test_labels):
         output_seq, _ = model(input_seq)
         last_output = output_seq[-1]
         #last_output = out_model(last_output)
-        target = Variable(torch.from_numpy(test_labels[d]).long().view(-1).to(device))
+        target = Variable(torch.from_numpy([test_labels[d]]).long().view(-1).to(device))
         _, pred_x = torch.max(last_output, 1)
         score = torch.eq(pred_x, target).float()
         score_val += score.mean().item()
@@ -123,7 +123,7 @@ def train(train_data, test_data, train_labels, test_labels, model):
             output_seq, _ = model(input_seq)
             last_output = output_seq[-1]
             print(train_labels[d])
-            target = Variable(torch.from_numpy(train_labels[d]).long().view(-1).to(device))
+            target = Variable(torch.from_numpy([train_labels[d]]).long().view(-1).to(device))
             _, pred_x = torch.max(last_output, 1)
             score = torch.eq(pred_x, target).float()
             factor = torch.abs(pred_x-target).float().mean()
