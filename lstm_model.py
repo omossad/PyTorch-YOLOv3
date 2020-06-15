@@ -122,7 +122,7 @@ def train(train_data, test_data, train_labels, test_labels, model):
             input_seq = Variable(torch.from_numpy(train_data[d]).float().to(device))
             output_seq, _ = model(input_seq)
             last_output = output_seq[-1]
-            target = Variable(torch.from_numpy(train_labels[d][-1]).long().view(-1).to(device))
+            target = Variable(torch.from_numpy(train_labels[d]).long().view(-1).to(device))
             _, pred_x = torch.max(last_output, 1)
             score = torch.eq(pred_x, target).float()
             factor = torch.abs(pred_x-target).float().mean()
