@@ -15,7 +15,7 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 def read_info():
     file_names = []
     num_files = 0
-    with open('frames_info') as csv_file:
+    with open('preprocessing/frames_info') as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=',')
         for row in csv_reader:
             if num_files == 0:
