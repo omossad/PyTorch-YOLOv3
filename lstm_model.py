@@ -165,12 +165,12 @@ def main():
             test_data = process_data(data)
             test_labels = process_labels(labels)
         else:
-            if train_file_count  == 0:
-                train_data = np.asarray(process_data(data))
-                train_labels = np.asarray(process_labels(labels))
-            else:
-                train_data = np.vstack((train_data, process_data(data)))
-                train_labels = np.vstack((train_labels , process_labels(labels)))
+            #if train_file_count  == 0:
+            #    train_data = np.asarray(process_data(data))
+            #    train_labels = np.asarray(process_labels(labels))
+            #else:
+            train_data = np.vstack((train_data, process_data(data)))
+            train_labels = np.vstack((train_labels , process_labels(labels)))
             print(train_data.shape)
             print(train_labels.shape)
             train_file_count = train_file_count + 1
