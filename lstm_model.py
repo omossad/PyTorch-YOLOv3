@@ -145,7 +145,7 @@ def main():
     for f in filenames:
         print(f)
         data = read_file(f)
-        if f.startswith('ha'):
+        if f.startswith('ha_1'):
             test_data = process_data(data)
             test_labels = read_labels(f)
         else:
