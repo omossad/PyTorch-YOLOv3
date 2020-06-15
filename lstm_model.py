@@ -69,7 +69,7 @@ def read_labels(filename):
     return targets
 
 def process_labels(targets):
-    targets = [time_steps:]
+    targets = targets[time_steps:]
     selected_indices = closestNumber(len(targets), batch_size)
     print(selected_indices)
     batch_size = 4
