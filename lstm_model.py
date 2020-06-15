@@ -11,7 +11,7 @@ labels_path = '/home/omossad/scratch/Gaming-Dataset/processed/lstm_labels/labels
 num_tiles = 8
 num_classes = 3
 time_steps = 4
-batch_size = 16
+batch_size = 8
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 def closestNumber(n, m) :
@@ -114,10 +114,8 @@ def test(model, test_data, test_labels):
 
 def train(train_data, test_data, train_labels, test_labels, model):
     epochs = 200
-    learning_rate = 0.0001
+    learning_rate = 0.001
     weight_decay = 0
-    test_size = 104
-    adjust = 10
     loss = nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate, weight_decay=weight_decay)
 
