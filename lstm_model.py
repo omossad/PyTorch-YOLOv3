@@ -40,6 +40,7 @@ def read_file(filename):
 
 
 def process_data(data):
+    batch_size = 4
     num_images = len(data)
     image_indices = np.arange(0,num_images)
     indices = np.array([ image_indices[i:i+time_steps] for i in range(len(image_indices)-time_steps+1) ])
@@ -57,7 +58,7 @@ def process_data(data):
 
 def lstm_model():
     ### MODEL PARAMS ####
-    batch_size = 4
+
     epochs = 200
     learning_rate = 0.0001
     weight_decay = 0
