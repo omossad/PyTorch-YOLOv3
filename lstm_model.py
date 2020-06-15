@@ -58,7 +58,7 @@ def process_data(data):
     data = np.asarray(data)
     data = np.reshape(data, (num_images,-1))
     img_data = []
-    selected_indices = closestNumber(batch_size, len(indices))
+    selected_indices = closestNumber(len(indices), batch_size)
     print(selected_indices)
     for i in range(selected_indices):
         img_data.append(data[indices[i]])
