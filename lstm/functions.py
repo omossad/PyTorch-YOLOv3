@@ -98,14 +98,9 @@ class ResCNNEncoder(nn.Module):
             x = x.view(x.size(0), -1)
 
             # FC layers
-            x = self.fc1(x)
-            #x = self.bn1(self.fc1(x))
-
+            x = self.bn1(self.fc1(x))
             x = F.relu(x)
-
-            x = self.fc2(x)
-            #x = self.bn2(self.fc2(x))
-            
+            x = self.bn2(self.fc2(x))
             x = F.relu(x)
             x = F.dropout(x, p=self.drop_p, training=self.training)
             x = self.fc3(x)
