@@ -22,8 +22,7 @@ save_model_path = "./ResNetCRNN_ckpt/"
 
 # EncoderCNN architecture
 CNN_fc_hidden1, CNN_fc_hidden2 = 1024, 768
-CNN_embed_dim = 512   # latent dim extracted by 2D CNN
-CNN_embed_dim = 300   # latent dim extracted by 2D CNN
+CNN_embed_dim = 256   # latent dim extracted by 2D CNN
 
 res_size = 224        # ResNet image size
 dropout_p = 0.0       # dropout probability
