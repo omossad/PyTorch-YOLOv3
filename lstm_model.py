@@ -126,6 +126,8 @@ def test(model, test_data, test_labels):
         score = torch.eq(pred_x, target).float()
         score_val += score.mean().item()
     print(' ---- test acc: ' + str(score_val/test_size) + '\n')
+    print(predicted_arr)
+    print(true_arr)
 
 def train(train_data, test_data, train_labels, test_labels, model):
     epochs = 200
