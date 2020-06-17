@@ -99,7 +99,7 @@ def validation(model, device, optimizer, test_loader):
             loss = F.cross_entropy(output, y, reduction='sum')
             test_loss += loss.item()                 # sum up batch loss
             y_pred = output.max(1, keepdim=True)[1]  # (y_pred != output) get the index of the max log-probability
-
+            print(y_pred)
             # collect all y and y_pred in all batches
             all_y.extend(y)
             all_y_pred.extend(y_pred)
