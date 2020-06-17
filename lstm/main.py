@@ -287,8 +287,11 @@ for f in filenames:
         print(train_labels.shape)
 
 
-train_set = (train_data, train_labels)
-valid_set =(test_data, test_labels)
+
+
+train_set = data.TensorDataset(train_data,train_labels)
+valid_set = data.TensorDataset(test_data,test_labels)
+
 ##########################
 
 #train_set, valid_set = Dataset_CRNN(data_path, train_list, train_label, selected_frames, transform=transform), \
