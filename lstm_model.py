@@ -6,9 +6,14 @@ from torch.autograd import Variable
 import csv
 
 max_files = 99
-data_path = '/home/omossad/scratch/Gaming-Dataset/processed/lstm_input/input_8x8/fifa/'
-labels_path = '/home/omossad/scratch/Gaming-Dataset/processed/lstm_labels/labels_8x8/fifa/'
-num_tiles = 8
+num_tiles = 64
+if num_tiles == 64:
+    data_path = '/home/omossad/scratch/Gaming-Dataset/processed/lstm_input/input_64/fifa/'
+    labels_path = '/home/omossad/scratch/Gaming-Dataset/processed/lstm_labels/labels_64/fifa/'
+else:
+    data_path = '/home/omossad/scratch/Gaming-Dataset/processed/lstm_input/input_8x8/fifa/'
+    labels_path = '/home/omossad/scratch/Gaming-Dataset/processed/lstm_labels/labels_8x8/fifa/'
+
 num_classes = 3
 time_steps = 4
 batch_size = 8
@@ -38,7 +43,10 @@ def read_info():
 
 
 def read_file(filename):
-    pkl_file = open(data_path + filename + '_x.pkl', 'rb')
+    if num_tiles == 64:
+        pkl_file = open(data_path + filename + '.pkl', 'rb')
+    else:
+        pkl_file = open(data_path + filename + '_x.pkl', 'rb')
     data = pickle.load(pkl_file)
     pkl_file.close()
     return data
@@ -63,7 +71,10 @@ def process_data(data):
     return data
 
 def read_labels(filename):
-    targets = np.loadtxt(labels_path + filename + '_x.dat', dtype=np.dtype('uint8'))
+    if num_tiles == 64:
+        targets = np.loadtxt(labels_path + filename + '.dat', dtype=np.dtype('uint8'))
+    else:
+        targets = np.loadtxt(labels_path + filename + '_x.dat', dtype=np.dtype('uint8'))
     targets = np.asarray(targets)
     return targets
 
