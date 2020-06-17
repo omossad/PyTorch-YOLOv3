@@ -72,9 +72,9 @@ def train(log_interval, model, device, train_loader, optimizer, epoch):
         optimizer.step()
 
         # show information
-        if (batch_idx + 1) % log_interval == 0:
-            print('Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}, Accu: {:.2f}%'.format(
-                epoch + 1, N_count, len(train_loader.dataset), 100. * (batch_idx + 1) / len(train_loader), loss.item(), 100 * step_score))
+        #if (batch_idx + 1) % log_interval == 0:
+        #    print('Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}, Accu: {:.2f}%'.format(
+        #        epoch + 1, N_count, len(train_loader.dataset), 100. * (batch_idx + 1) / len(train_loader), loss.item(), 100 * step_score))
 
     return losses, scores
 
@@ -118,7 +118,7 @@ def validation(model, device, optimizer, test_loader):
     #torch.save(cnn_encoder.state_dict(), os.path.join(save_model_path, 'cnn_encoder_epoch{}.pth'.format(epoch + 1)))  # save spatial_encoder
     #torch.save(rnn_decoder.state_dict(), os.path.join(save_model_path, 'rnn_decoder_epoch{}.pth'.format(epoch + 1)))  # save motion_encoder
     #torch.save(optimizer.state_dict(), os.path.join(save_model_path, 'optimizer_epoch{}.pth'.format(epoch + 1)))      # save optimizer
-    print("Epoch {} model saved!".format(epoch + 1))
+    #print("Epoch {} model saved!".format(epoch + 1))
 
     return test_loss, test_score
 
