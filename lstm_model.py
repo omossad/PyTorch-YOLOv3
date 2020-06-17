@@ -6,7 +6,7 @@ from torch.autograd import Variable
 import csv
 
 max_files = 99
-num_tiles = 64
+num_tiles = 8
 if num_tiles == 64:
     data_path = '/home/omossad/scratch/Gaming-Dataset/processed/lstm_input/input_64/fifa/'
     labels_path = '/home/omossad/scratch/Gaming-Dataset/processed/lstm_labels/labels_64/fifa/'
