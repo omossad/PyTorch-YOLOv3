@@ -125,11 +125,11 @@ def validation(model, device, optimizer, test_loader):
 
 ########## INSERTED CODE ########
 max_files = 99
-data_path = '/home/omossad/scratch/Gaming-Dataset/processed/lstm_input/input_8x8/fifa/'
-labels_path = '/home/omossad/scratch/Gaming-Dataset/processed/lstm_labels/labels_8x8/fifa/'
-num_tiles = 8
+data_path = '/home/omossad/scratch/Gaming-Dataset/processed/lstm_input/input_64/fifa/'
+labels_path = '/home/omossad/scratch/Gaming-Dataset/processed/lstm_labels/labels_64/fifa/'
+num_tiles = 64
 num_classes = 3
-time_steps = 10
+time_steps = 4
 
 def closestNumber(n, m) :
     q = int(n / m)
