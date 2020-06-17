@@ -111,6 +111,8 @@ def lstm_model():
 def test(model, test_data, test_labels):
     score_val = 0
     test_size = len(test_data)
+    predicted_arr = []
+    true_arr = []
     for d in range(test_size):
         input_seq = Variable(torch.from_numpy(test_data[d]).float().to(device))
         output_seq, _ = model(input_seq)
@@ -119,6 +121,8 @@ def test(model, test_data, test_labels):
         #target = Variable(torch.tensor([test_labels[d]]).to(device))
         target = Variable(torch.from_numpy(test_labels[d]).long().view(-1).to(device))
         _, pred_x = torch.max(last_output, 1)
+        predicted_arr.append(pred_x)
+        true_arr.append(target)
         score = torch.eq(pred_x, target).float()
         score_val += score.mean().item()
     print(' ---- test acc: ' + str(score_val/test_size) + '\n')
