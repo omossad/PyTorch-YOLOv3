@@ -163,7 +163,7 @@ def read_file(filename):
     if num_tiles == 64:
         pkl_file = open(data_path + filename + '.pkl', 'rb')
     else:
-        pkl_file = open(data_path + filename + '_y.pkl', 'rb')
+        pkl_file = open(data_path + filename + '_x.pkl', 'rb')
     data = pickle.load(pkl_file)
     pkl_file.close()
     return data
@@ -191,7 +191,7 @@ def read_labels(filename):
     if num_tiles == 64:
         targets = np.loadtxt(labels_path + filename + '.dat', dtype=np.dtype('uint8'))
     else:
-        targets = np.loadtxt(labels_path + filename + '_y.dat', dtype=np.dtype('uint8'))
+        targets = np.loadtxt(labels_path + filename + '_x.dat', dtype=np.dtype('uint8'))
     targets = np.asarray(targets)
     return targets
 
