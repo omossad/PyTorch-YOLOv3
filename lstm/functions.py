@@ -93,8 +93,8 @@ class ResCNNEncoder(nn.Module):
             #    x = self.resnet(x_3d[:, t, :, :, :])  # ResNet
             #    x = x.view(x.size(0), -1)             # flatten output of conv
             print(x_3d.shape)
-            x = x3d[:,t,:]
-            x = x.view(x.size(0), -1)   
+            x = x_3d[:,t,:]
+            x = x.view(x.size(0), -1)
 
             # FC layers
             x = self.bn1(self.fc1(x))
