@@ -5,7 +5,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torchvision.models as models
 import torchvision.transforms as transforms
-import torch.utils.data as data
+from torch.utils.data import TensorDataset, DataLoader
 import torchvision
 from torch.autograd import Variable
 import matplotlib.pyplot as plt
