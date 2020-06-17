@@ -81,9 +81,9 @@ class ResCNNEncoder(nn.Module):
         self.resnet = nn.Sequential(*modules)
         self.fc1 = nn.Linear(num_tiles*3, fc_hidden1)
         #self.fc1 = nn.Linear(resnet.fc.in_features, fc_hidden1)
-        self.bn1 = nn.BatchNorm1d(fc_hidden1, momentum=0.01)
+        #self.bn1 = nn.BatchNorm1d(fc_hidden1, momentum=0.01)
         self.fc2 = nn.Linear(fc_hidden1, fc_hidden2)
-        self.bn2 = nn.BatchNorm1d(fc_hidden2, momentum=0.01)
+        #self.bn2 = nn.BatchNorm1d(fc_hidden2, momentum=0.01)
         self.fc3 = nn.Linear(fc_hidden2, CNN_embed_dim)
 
     def forward(self, x_3d):
