@@ -93,7 +93,7 @@ class ResCNNEncoder(nn.Module):
             #with torch.no_grad():
             #    x = self.resnet(x_3d[:, t, :, :, :])  # ResNet
             #    x = x.view(x.size(0), -1)             # flatten output of conv
-            print(x_3d.shape)
+            #print(x_3d.shape)
             x = x_3d[:,t,:]
             x = x.view(x.size(0), -1)
 
