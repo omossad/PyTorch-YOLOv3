@@ -287,6 +287,12 @@ for f in filenames:
         print(train_labels.shape)
 
 
+train_data = torch.Tensor(train_data)
+train_labels = torch.Tensor(train_labels)
+test_data = torch.Tensor(test_data)
+test_labels = torch.Tensor(test_labels)
+
+
 
 
 train_set = TensorDataset(train_data,train_labels)
