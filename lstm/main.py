@@ -34,7 +34,7 @@ RNN_FC_dim = 256
 # training parameters
 k = 8             # number of target category
 epochs = 120        # training epochs
-batch_size = 16
+batch_size = 20
 learning_rate = 1e-3
 log_interval = 1   # interval for displaying training info
 
@@ -129,7 +129,7 @@ data_path = '/home/omossad/scratch/Gaming-Dataset/processed/lstm_input/input_8x8
 labels_path = '/home/omossad/scratch/Gaming-Dataset/processed/lstm_labels/labels_8x8/fifa/'
 num_tiles = 8
 num_classes = 3
-time_steps = 4
+time_steps = 8
 
 def closestNumber(n, m) :
     q = int(n / m)
