@@ -69,17 +69,17 @@ class Dataset_CRNN(data.Dataset):
 
 # 2D CNN encoder using ResNet-152 pretrained
 class ResCNNEncoder(nn.Module):
-    def __init__(self, fc_hidden1=512, fc_hidden2=512, drop_p=0.3, CNN_embed_dim=300):
+    def __init__(self, num_tiles=8, fc_hidden1=512, fc_hidden2=512, drop_p=0.3, CNN_embed_dim=300):
         """Load the pretrained ResNet-152 and replace top fc layer."""
         super(ResCNNEncoder, self).__init__()
-
+        self.num_tiles = num_tiles
         self.fc_hidden1, self.fc_hidden2 = fc_hidden1, fc_hidden2
         self.drop_p = drop_p
 
         resnet = models.resnet152(pretrained=True)
         modules = list(resnet.children())[:-1]      # delete the last fc layer.
         self.resnet = nn.Sequential(*modules)
-        self.fc1 = nn.Linear(192, fc_hidden1)
+        self.fc1 = nn.Linear(num_tiles*3, fc_hidden1)
         #self.fc1 = nn.Linear(resnet.fc.in_features, fc_hidden1)
         self.bn1 = nn.BatchNorm1d(fc_hidden1, momentum=0.01)
         self.fc2 = nn.Linear(fc_hidden1, fc_hidden2)

@@ -32,7 +32,7 @@ RNN_hidden_nodes = 512
 RNN_FC_dim = 256
 
 # training parameters
-k = 64            # number of target category
+k = 8            # number of target category
 epochs = 120        # training epochs
 batch_size = 20
 learning_rate = 1e-3
@@ -163,7 +163,7 @@ def read_file(filename):
     if num_tiles == 64:
         pkl_file = open(data_path + filename + '.pkl', 'rb')
     else:
-        pkl_file = open(data_path + filename + '_x.pkl', 'rb')
+        pkl_file = open(data_path + filename + '_y.pkl', 'rb')
     data = pickle.load(pkl_file)
     pkl_file.close()
     return data
@@ -191,7 +191,7 @@ def read_labels(filename):
     if num_tiles == 64:
         targets = np.loadtxt(labels_path + filename + '.dat', dtype=np.dtype('uint8'))
     else:
-        targets = np.loadtxt(labels_path + filename + '_x.dat', dtype=np.dtype('uint8'))
+        targets = np.loadtxt(labels_path + filename + '_y.dat', dtype=np.dtype('uint8'))
     targets = np.asarray(targets)
     return targets
 
@@ -319,7 +319,7 @@ valid_loader = DataLoader(valid_set, **params)
 
 
 # Create model
-cnn_encoder = ResCNNEncoder(fc_hidden1=CNN_fc_hidden1, fc_hidden2=CNN_fc_hidden2, drop_p=dropout_p, CNN_embed_dim=CNN_embed_dim).to(device)
+cnn_encoder = ResCNNEncoder(num_tiles=k,fc_hidden1=CNN_fc_hidden1, fc_hidden2=CNN_fc_hidden2, drop_p=dropout_p, CNN_embed_dim=CNN_embed_dim).to(device)
 rnn_decoder = DecoderRNN(CNN_embed_dim=CNN_embed_dim, h_RNN_layers=RNN_hidden_layers, h_RNN=RNN_hidden_nodes,
                          h_FC_dim=RNN_FC_dim, drop_p=dropout_p, num_classes=k).to(device)
 
