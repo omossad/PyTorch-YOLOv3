@@ -124,7 +124,7 @@ def validation(model, device, optimizer, test_loader):
 
 
 ########## INSERTED CODE ########
-max_files = 3
+max_files = 99
 data_path = '/home/omossad/scratch/Gaming-Dataset/processed/lstm_input/input_8x8/fifa/'
 labels_path = '/home/omossad/scratch/Gaming-Dataset/processed/lstm_labels/labels_8x8/fifa/'
 num_tiles = 8
@@ -267,7 +267,7 @@ for f in filenames:
     print(f)
     data = read_file(f)
     labels = read_labels(f)
-    if f.startswith('ha_0'):
+    if f.startswith('se_'):
         if test_file_count == 0:
             test_data = np.asarray(process_data(data))
             test_labels = np.asarray(process_labels(labels))
@@ -283,8 +283,8 @@ for f in filenames:
             train_data = np.vstack((train_data, process_data(data)))
             train_labels = np.vstack((train_labels , process_labels(labels)))
         train_file_count = train_file_count + 1
-        print(train_data.shape)
-        print(train_labels.shape)
+        #print(train_data.shape)
+        #print(train_labels.shape)
 
 
 train_data = torch.Tensor(train_data)
