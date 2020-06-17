@@ -15,8 +15,8 @@ else:
     labels_path = '/home/omossad/scratch/Gaming-Dataset/processed/lstm_labels/labels_8x8/fifa/'
 
 num_classes = 3
-time_steps = 8
-batch_size = 16
+time_steps = 4
+batch_size = 8
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 def closestNumber(n, m) :
