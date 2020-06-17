@@ -129,7 +129,7 @@ data_path = '/home/omossad/scratch/Gaming-Dataset/processed/lstm_input/input_8x8
 labels_path = '/home/omossad/scratch/Gaming-Dataset/processed/lstm_labels/labels_8x8/fifa/'
 num_tiles = 8
 num_classes = 3
-time_steps = 16
+time_steps = 10
 
 def closestNumber(n, m) :
     q = int(n / m)
