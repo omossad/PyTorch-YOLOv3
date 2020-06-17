@@ -32,7 +32,7 @@ RNN_hidden_nodes = 512
 RNN_FC_dim = 256
 
 # training parameters
-k = 8             # number of target category
+k = 64            # number of target category
 epochs = 120        # training epochs
 batch_size = 20
 learning_rate = 1e-3
@@ -127,7 +127,7 @@ def validation(model, device, optimizer, test_loader):
 max_files = 99
 data_path = '/home/omossad/scratch/Gaming-Dataset/processed/lstm_input/input_64/fifa/'
 labels_path = '/home/omossad/scratch/Gaming-Dataset/processed/lstm_labels/labels_64/fifa/'
-num_tiles = 64
+num_tiles = k
 num_classes = 3
 time_steps = 4
 
@@ -155,7 +155,10 @@ def read_info():
 
 
 def read_file(filename):
-    pkl_file = open(data_path + filename + '_x.pkl', 'rb')
+    if num_tiles == 64:
+        pkl_file = open(data_path + filename + '.pkl', 'rb')
+    else:
+        pkl_file = open(data_path + filename + '_x.pkl', 'rb')
     data = pickle.load(pkl_file)
     pkl_file.close()
     return data
@@ -180,7 +183,10 @@ def process_data(data):
     return data
 
 def read_labels(filename):
-    targets = np.loadtxt(labels_path + filename + '_x.dat', dtype=np.dtype('uint8'))
+    if num_tiles == 64:
+        targets = np.loadtxt(labels_path + filename + '.dat', dtype=np.dtype('uint8'))
+    else:
+        targets = np.loadtxt(labels_path + filename + '_x.dat', dtype=np.dtype('uint8'))
     targets = np.asarray(targets)
     return targets
 
