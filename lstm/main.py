@@ -288,9 +288,9 @@ for f in filenames:
 
 
 train_data = torch.Tensor(train_data)
-train_labels = torch.Tensor(train_labels)
+train_labels = torch.Tensor(train_labels).long()
 test_data = torch.Tensor(test_data)
-test_labels = torch.Tensor(test_labels)
+test_labels = torch.Tensor(test_labels).long()
 
 
 
