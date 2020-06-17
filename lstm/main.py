@@ -123,6 +123,87 @@ def validation(model, device, optimizer, test_loader):
     return test_loss, test_score
 
 
+########## INSERTED CODE ########
+max_files = 3
+data_path = '/home/omossad/scratch/Gaming-Dataset/processed/lstm_input/input_8x8/fifa/'
+labels_path = '/home/omossad/scratch/Gaming-Dataset/processed/lstm_labels/labels_8x8/fifa/'
+num_tiles = 8
+num_classes = 3
+time_steps = 4
+
+def closestNumber(n, m) :
+    q = int(n / m)
+    return int(q*m)
+
+
+def read_info():
+    file_names = []
+    num_files = 0
+    with open('../preprocessing/frames_info') as csv_file:
+        csv_reader = csv.reader(csv_file, delimiter=',')
+        for row in csv_reader:
+            if num_files == 0:
+                num_files += 1
+            elif num_files < max_files+1:
+                file_names.append(row[0])
+                num_files += 1
+            else:
+                break
+    print("Total number of files is:", num_files)
+    return file_names
+
+
+
+def read_file(filename):
+    pkl_file = open(data_path + filename + '_x.pkl', 'rb')
+    data = pickle.load(pkl_file)
+    pkl_file.close()
+    return data
+
+
+
+def process_data(data):
+    num_images = len(data)
+    image_indices = np.arange(0,num_images)
+    indices = np.array([ image_indices[i:i+time_steps] for i in range(num_images-time_steps) ])
+    data = np.asarray(data)
+    data = np.reshape(data, (num_images,-1))
+    img_data = []
+    selected_indices = closestNumber(len(indices), batch_size)
+    for i in range(selected_indices):
+        img_data.append(data[indices[i]])
+    data = np.asarray(img_data)
+    print(data.shape)
+    data = np.reshape(data, (len(data), time_steps, -1))
+    print(data.shape)
+    #data = np.transpose(data, (0, 2, 1, 3))
+    return data
+
+def read_labels(filename):
+    targets = np.loadtxt(labels_path + filename + '_x.dat', dtype=np.dtype('uint8'))
+    targets = np.asarray(targets)
+    return targets
+
+def process_labels(targets):
+    targets = targets[time_steps:]
+    selected_indices = closestNumber(len(targets), batch_size)
+    targets = targets[:selected_indices]
+    targets = np.reshape(targets, (len(targets), -1))
+    #targets = np.transpose(targets, (0, 2, 1, 3))
+    return targets
+
+
+
+
+
+
+
+#################################
+
+
+
+
+
 # Detect devices
 use_cuda = torch.cuda.is_available()                   # check if GPU exists
 device = torch.device("cuda" if use_cuda else "cpu")   # use CPU or GPU
@@ -176,6 +257,39 @@ params = {'batch_size': batch_size, 'shuffle': True, 'num_workers': 4, 'pin_memo
 #                                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])])
 
 #selected_frames = np.arange(begin_frame, end_frame, skip_frame).tolist()
+
+
+### INSERTED CODE ####
+filenames = read_info()
+train_file_count = 0
+test_file_count = 0
+for f in filenames:
+    print(f)
+    data = read_file(f)
+    labels = read_labels(f)
+    if f.startswith('ha_0'):
+        if test_file_count == 0:
+            test_data = np.asarray(process_data(data))
+            test_labels = np.asarray(process_labels(labels))
+        else:
+            test_data = np.vstack((test_data, process_data(data)))
+            test_labels = np.vstack((test_labels , process_labels(labels)))
+        test_file_count = test_file_count + 1
+    else:
+        if train_file_count  == 0:
+            train_data = np.asarray(process_data(data))
+            train_labels = np.asarray(process_labels(labels))
+        else:
+            train_data = np.vstack((train_data, process_data(data)))
+            train_labels = np.vstack((train_labels , process_labels(labels)))
+        train_file_count = train_file_count + 1
+        print(train_data.shape)
+        print(train_labels.shape)
+
+
+train_set = (train_data, train_labels)
+valid_set =(test_data, test_labels)
+##########################
 
 train_set, valid_set = Dataset_CRNN(data_path, train_list, train_label, selected_frames, transform=transform), \
                        Dataset_CRNN(data_path, test_list, test_label, selected_frames, transform=transform)
