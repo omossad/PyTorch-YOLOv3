@@ -289,16 +289,16 @@ for f in filenames:
 
 
 
-train_set = data.TensorDataset(train_data,train_labels)
-valid_set = data.TensorDataset(test_data,test_labels)
+train_set = TensorDataset(train_data,train_labels)
+valid_set = TensorDataset(test_data,test_labels)
 
 ##########################
 
 #train_set, valid_set = Dataset_CRNN(data_path, train_list, train_label, selected_frames, transform=transform), \
 #                       Dataset_CRNN(data_path, test_list, test_label, selected_frames, transform=transform)
 
-train_loader = data.DataLoader(train_set, **params)
-valid_loader = data.DataLoader(valid_set, **params)
+train_loader = DataLoader(train_set, **params)
+valid_loader = DataLoader(valid_set, **params)
 
 
 # Create model
