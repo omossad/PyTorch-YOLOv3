@@ -264,9 +264,9 @@ params = {'batch_size': batch_size, 'shuffle': True, 'num_workers': 4, 'pin_memo
 # train, test split
 #train_list, test_list, train_label, test_label = train_test_split(all_X_list, all_y_list, test_size=0.25, random_state=42)
 
-#transform = transforms.Compose([transforms.Resize([res_size, res_size]),
-#                                transforms.ToTensor(),
-#                                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])])
+transform = transforms.Compose([transforms.Resize([res_size, res_size]),
+                                transforms.ToTensor(),
+                                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])])
 
 #selected_frames = np.arange(begin_frame, end_frame, skip_frame).tolist()
 
