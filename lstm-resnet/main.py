@@ -13,12 +13,12 @@ from functions import *
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import OneHotEncoder, LabelEncoder
 from sklearn.metrics import accuracy_score
-import pickle
-import csv
+import glob
+
 # set path
-data_path = "./jpegs_256/"    # define UCF-101 RGB data path
-action_name_path = './UCF101actions.pkl'
-save_model_path = "./ResNetCRNN_ckpt/"
+#data_path = "./jpegs_256/"    # define UCF-101 RGB data path
+#action_name_path = './UCF101actions.pkl'
+#save_model_path = "./ResNetCRNN_ckpt/"
 
 # EncoderCNN architecture
 CNN_fc_hidden1, CNN_fc_hidden2 = 1024, 768
@@ -125,84 +125,32 @@ def validation(model, device, optimizer, test_loader):
 
 
 ########## INSERTED CODE ########
-max_files = 99
-num_tiles = k
-if num_tiles == 64:
-    data_path = '/home/omossad/scratch/Gaming-Dataset/processed/lstm_input/input_64/fifa/'
-    labels_path = '/home/omossad/scratch/Gaming-Dataset/processed/lstm_labels/labels_64/fifa/'
-else:
-    data_path = '/home/omossad/scratch/Gaming-Dataset/processed/lstm_input/input_8x8/fifa/'
-    labels_path = '/home/omossad/scratch/Gaming-Dataset/processed/lstm_labels/labels_8x8/fifa/'
+ha_0_images = sorted(glob.glob("/home/omossad/scratch/temp/roi/images/ha_0_*"))
+ha_0_labels = sorted(glob.glob("/home/omossad/scratch/temp/roi/labels/ha_0_*"))
+print(len(ha_0_images))
+print(len(ha_0_labels))
 
-num_classes = 3
+
 time_steps = 4
 
-def closestNumber(n, m) :
-    q = int(n / m)
-    return int(q*m)
 
-
-def read_info():
-    file_names = []
-    num_files = 0
-    with open('../preprocessing/frames_info') as csv_file:
-        csv_reader = csv.reader(csv_file, delimiter=',')
-        for row in csv_reader:
-            if num_files == 0:
-                num_files += 1
-            elif num_files < max_files+1:
-                file_names.append(row[0])
-                num_files += 1
-            else:
-                break
-    print("Total number of files is:", num_files)
-    return file_names
-
-
-
-def read_file(filename):
-    if num_tiles == 64:
-        pkl_file = open(data_path + filename + '.pkl', 'rb')
-    else:
-        pkl_file = open(data_path + filename + '_x.pkl', 'rb')
-    data = pickle.load(pkl_file)
-    pkl_file.close()
-    return data
-
-
-
-def process_data(data):
-    num_images = len(data)
+def process_data(images):
+    num_images = len(images)
     image_indices = np.arange(0,num_images)
     indices = np.array([ image_indices[i:i+time_steps] for i in range(num_images-time_steps) ])
-    data = np.asarray(data)
-    data = np.reshape(data, (num_images,-1))
-    img_data = []
-    selected_indices = closestNumber(len(indices), batch_size)
-    for i in range(selected_indices):
-        img_data.append(data[indices[i]])
-    data = np.asarray(img_data)
-    print(data.shape)
-    data = np.reshape(data, (len(data), time_steps, -1))
-    print(data.shape)
-    #data = np.transpose(data, (0, 2, 1, 3))
-    return data
+    images=np.asarray(images)
+    return images[indices]
 
-def read_labels(filename):
-    if num_tiles == 64:
-        targets = np.loadtxt(labels_path + filename + '.dat', dtype=np.dtype('uint8'))
-    else:
-        targets = np.loadtxt(labels_path + filename + '_x.dat', dtype=np.dtype('uint8'))
-    targets = np.asarray(targets)
-    return targets
+def process_labels(labels):
+    num_labels = len(labels)
+    indices = np.arange(time_steps-1,num_labels-1)
+    labels=np.asarray(labels)
+    return labels[indices]
 
-def process_labels(targets):
-    targets = targets[time_steps:]
-    selected_indices = closestNumber(len(targets), batch_size)
-    targets = targets[:selected_indices]
-    targets = np.reshape(targets, (len(targets), -1))
-    #targets = np.transpose(targets, (0, 2, 1, 3))
-    return targets
+
+a = process_data(ha_0_images)
+b = process_labels(ha_0_labels)
+train_list, test_list, train_label, test_label = train_test_split(a, b, test_size=0.25, random_state=42)
 
 
 
@@ -272,48 +220,15 @@ transform = transforms.Compose([transforms.Resize([res_size, res_size]),
 
 
 ### INSERTED CODE ####
-filenames = read_info()
-train_file_count = 0
-test_file_count = 0
-for f in filenames:
-    print(f)
-    data = read_file(f)
-    labels = read_labels(f)
-    if f.startswith('se_'):
-        if test_file_count == 0:
-            test_data = np.asarray(process_data(data))
-            test_labels = np.asarray(process_labels(labels))
-        else:
-            test_data = np.vstack((test_data, process_data(data)))
-            test_labels = np.vstack((test_labels , process_labels(labels)))
-        test_file_count = test_file_count + 1
-    else:
-        if train_file_count  == 0:
-            train_data = np.asarray(process_data(data))
-            train_labels = np.asarray(process_labels(labels))
-        else:
-            train_data = np.vstack((train_data, process_data(data)))
-            train_labels = np.vstack((train_labels , process_labels(labels)))
-        train_file_count = train_file_count + 1
-        #print(train_data.shape)
-        #print(train_labels.shape)
 
 
-train_data = torch.Tensor(train_data)
-train_labels = torch.Tensor(train_labels).long()
-test_data = torch.Tensor(test_data)
-test_labels = torch.Tensor(test_labels).long()
-
-
-
-
-train_set = TensorDataset(train_data,train_labels)
-valid_set = TensorDataset(test_data,test_labels)
-
+train_set, valid_set = Dataset_CRNN(train_list, train_label, transform=transform), \
+                       Dataset_CRNN(test_list, test_label, transform=transform)
 ##########################
 
 #train_set, valid_set = Dataset_CRNN(data_path, train_list, train_label, selected_frames, transform=transform), \
 #                       Dataset_CRNN(data_path, test_list, test_label, selected_frames, transform=transform)
+
 
 train_loader = DataLoader(train_set, **params)
 valid_loader = DataLoader(valid_set, **params)

@@ -28,6 +28,51 @@ def cat2labels(label_encoder, y_cat):
 # for CRNN
 class Dataset_CRNN(data.Dataset):
     "Characterizes a dataset for PyTorch"
+    def __init__(self, frames, labels, transform=None):
+        "Initialization"
+        self.frames = frames
+        self.labels = labels
+        self.transform = transform
+
+    def __len__(self):
+        "Denotes the total number of samples"
+        return len(self.frames)
+
+    def read_images(self, selected_frames, use_transform):
+        X = []
+        for i in selected_frames:
+            print(i)
+            image = Image.open(i)
+
+            if use_transform is not None:
+                image = use_transform(image)
+
+            X.append(image)
+        X = torch.stack(X, dim=0)
+
+        return X
+
+    def read_labels(self, selected_labels):
+        f = open(selected_labels, "r")
+        target = f.read(1)
+        return torch.LongTensor([target])
+
+    def __getitem__(self, index):
+        "Generates one sample of data"
+        # Select sample
+        folder = self.folders[index]
+
+        # Load data
+        X = self.read_images(self.frames[index], self.transform)     # (input) spatial images
+        y = self.read_labels(self.labels[index])                     # (labels) LongTensor are for int64 instead of FloatTensor
+
+        # print(X.shape)
+        return X, y
+
+
+'''
+class Dataset_CRNN(data.Dataset):
+    "Characterizes a dataset for PyTorch"
     def __init__(self, data_path, folders, labels, frames, transform=None):
         "Initialization"
         self.data_path = data_path
@@ -64,7 +109,7 @@ class Dataset_CRNN(data.Dataset):
 
         # print(X.shape)
         return X, y
-
+'''
 ## ---------------------- end of Dataloaders ---------------------- ##
 
 # 2D CNN encoder using ResNet-152 pretrained
@@ -79,8 +124,7 @@ class ResCNNEncoder(nn.Module):
         resnet = models.resnet152(pretrained=True)
         modules = list(resnet.children())[:-1]      # delete the last fc layer.
         self.resnet = nn.Sequential(*modules)
-        self.fc1 = nn.Linear(num_tiles*3, fc_hidden1)
-        #self.fc1 = nn.Linear(resnet.fc.in_features, fc_hidden1)
+        self.fc1 = nn.Linear(resnet.fc.in_features, fc_hidden1)
         self.bn1 = nn.BatchNorm1d(fc_hidden1, momentum=0.01)
         self.fc2 = nn.Linear(fc_hidden1, fc_hidden2)
         self.bn2 = nn.BatchNorm1d(fc_hidden2, momentum=0.01)
@@ -90,11 +134,9 @@ class ResCNNEncoder(nn.Module):
         cnn_embed_seq = []
         for t in range(x_3d.size(1)):
             # ResNet CNN
-            #with torch.no_grad():
-            #    x = self.resnet(x_3d[:, t, :, :, :])  # ResNet
-            #    x = x.view(x.size(0), -1)             # flatten output of conv
-            #print(x_3d.shape)
-            x = x_3d[:,t,:]
+            with torch.no_grad():
+                x = self.resnet(x_3d[:, t, :, :, :])  # ResNet
+                x = x.view(x.size(0), -1)             # flatten output of conv
             x = x.view(x.size(0), -1)
 
             # FC layers
