@@ -1,5 +1,7 @@
 import glob
 import numpy as np
+from sklearn.model_selection import train_test_split
+
 ha_0_images = sorted(glob.glob("/home/omossad/scratch/temp/roi/images/ha_0_*"))
 ha_0_labels = sorted(glob.glob("/home/omossad/scratch/temp/roi/labels/ha_0_*"))
 print(len(ha_0_images))
@@ -27,7 +29,11 @@ def process_labels(labels):
 
 a = process_data(ha_0_images)
 b = process_labels(ha_0_labels)
-print(a[0])
-print(b[0])
-print(a[-1])
-print(b[-1])
+train_list, test_list, train_label, test_label = train_test_split(a, b, test_size=0.25, random_state=42)
+
+print(len(train_list))
+print(len(test_list))
+print(train_list[10])
+print(test_list[5])
+print(train_label[10])
+print(test_label[5])
