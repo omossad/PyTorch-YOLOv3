@@ -41,7 +41,6 @@ class Dataset_CRNN(data.Dataset):
     def read_images(self, selected_frames, use_transform):
         X = []
         for i in selected_frames:
-            print(i)
             image = Image.open(i)
 
             if use_transform is not None:
@@ -53,10 +52,8 @@ class Dataset_CRNN(data.Dataset):
         return X
 
     def read_labels(self, selected_labels):
-        print(selected_labels)
         f = open(selected_labels, "r")
         target = f.read(1)
-        print(target)
         return torch.LongTensor([int(target)])
 
     def __getitem__(self, index):
