@@ -19,7 +19,7 @@ def process_data(images):
 
 def process_labels(labels):
     num_labels = len(labels)
-    indices = np.arange(time_steps-1,num_labels)
+    indices = np.arange(time_steps-1,num_labels-1)
     labels=np.asarray(labels)
     print(labels[indices].shape)
     return labels[indices]
@@ -29,3 +29,5 @@ a = process_data(ha_0_images)
 b = process_labels(ha_0_labels)
 print(a[0])
 print(b[0])
+print(a[-1])
+print(b[-1])
