@@ -19,6 +19,6 @@ def process_data(images):
     num_images = len(images)
     image_indices = np.arange(0,num_images)
     indices = np.array([ image_indices[i:i+time_steps] for i in range(num_images-time_steps) ])
-    print(indices)
+    print(images[indices])
 
 process_data(ha_0_images)
