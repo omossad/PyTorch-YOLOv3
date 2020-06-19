@@ -14,14 +14,15 @@ def process_data(images):
     image_indices = np.arange(0,num_images)
     indices = np.array([ image_indices[i:i+time_steps] for i in range(num_images-time_steps) ])
     images=np.asarray(images)
+    print(images.shape)
     return images[indices]
 
 def process_labels(labels):
     num_labels = len(labels)
-    image_indices = np.arange(0,num_images)
-    indices = np.array([ image_indices[i:i+time_steps] for i in range(num_images-time_steps) ])
-    images=np.asarray(images)
-    return images[indices]
+    indices = np.arange(time_steps-1,num_images)
+    labels=np.asarray(labels)
+    print(labels.shape)
+    return labels[indices]
 
 
 process_data(ha_0_images)
