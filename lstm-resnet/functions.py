@@ -57,7 +57,7 @@ class Dataset_CRNN(data.Dataset):
         f = open(selected_labels, "r")
         target = f.read(1)
         print(target)
-        return torch.LongTensor(target)
+        return torch.LongTensor([int(target)])
 
     def __getitem__(self, index):
         "Generates one sample of data"
