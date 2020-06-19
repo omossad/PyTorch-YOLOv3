@@ -8,18 +8,21 @@ print(len(ha_0_labels))
 
 time_steps = 4
 
-def closestNumber(n, m) :
-    q = int(n / m)
-    return int(q*m)
-
-
-
 
 def process_data(images):
     num_images = len(images)
     image_indices = np.arange(0,num_images)
     indices = np.array([ image_indices[i:i+time_steps] for i in range(num_images-time_steps) ])
     images=np.asarray(images)
-    print(images[indices])
+    return images[indices]
+
+def process_labels(labels):
+    num_labels = len(labels)
+    image_indices = np.arange(0,num_images)
+    indices = np.array([ image_indices[i:i+time_steps] for i in range(num_images-time_steps) ])
+    images=np.asarray(images)
+    return images[indices]
+
 
 process_data(ha_0_images)
+process_labels(ha_0_labels)
