@@ -25,5 +25,7 @@ def process_labels(labels):
     return labels[indices]
 
 
-process_data(ha_0_images)
-process_labels(ha_0_labels)
+a = process_data(ha_0_images)
+b = process_labels(ha_0_labels)
+print(a[0])
+print(b[0])
