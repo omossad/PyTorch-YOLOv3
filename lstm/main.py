@@ -197,7 +197,7 @@ def read_labels(filename):
     return targets
 
 def process_labels(targets):
-    targets = targets[time_steps-1:]
+    targets = targets[time_steps:]
     selected_indices = closestNumber(len(targets), batch_size)
     targets = targets[:selected_indices]
     targets = np.reshape(targets, (len(targets), -1))
