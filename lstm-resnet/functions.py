@@ -60,7 +60,7 @@ class Dataset_CRNN(data.Dataset):
     def __getitem__(self, index):
         "Generates one sample of data"
         # Select sample
-        folder = self.folders[index]
+        #folder = self.folders[index]
 
         # Load data
         X = self.read_images(self.frames[index], self.transform)     # (input) spatial images
