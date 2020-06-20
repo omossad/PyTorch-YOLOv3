@@ -60,7 +60,7 @@ class Dataset_CRNN(data.Dataset):
         #folder = self.folders[index]
 
         # Load data
-        X = self.read_images(self.frames[index], self.transform)     # (input) spatial images
+        X = self.read_images(self.frames[index])     # (input) spatial images
         y = self.read_labels(self.labels[index])                     # (labels) LongTensor are for int64 instead of FloatTensor
 
         # print(X.shape)
