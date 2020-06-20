@@ -38,12 +38,12 @@ class Dataset_CRNN(data.Dataset):
         "Denotes the total number of samples"
         return len(self.frames)
 
-    
+
     def read_images(self, selected_frames, use_transform):
         X = []
         for i in selected_frames:
             print(i)
-            image = Image.open(i)
+            #image = Image.open(i)
             pkl_file = open(i, 'rb')
             image = pickle.load(pkl_file)
             pkl_file.close()
