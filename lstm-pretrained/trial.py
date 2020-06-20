@@ -7,6 +7,10 @@ ha_0_labels = sorted(glob.glob("/home/omossad/scratch/temp/roi/labels/ha_0_*"))
 print(len(ha_0_images))
 print(len(ha_0_labels))
 
+filename = '/home/omossad/projects/def-hefeeda/omossad/roi_detection/temporary_data/ha_0_labels/frame_00647.txt'
+f = open(filename, "r")
+target = f.read(-1)
+print(target)
 
 time_steps = 4
 
