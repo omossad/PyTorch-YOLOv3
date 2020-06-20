@@ -12,6 +12,7 @@ import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 import glob
 from torch.utils import data
+from PIL import Image
 
 
 # set path
