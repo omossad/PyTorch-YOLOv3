@@ -65,6 +65,7 @@ class ResNet(nn.Module):
         self.resnet = nn.Sequential(*modules)
 
     def forward(self, x_3d):
+        print('x3d')
         print(x_3d.shape)
         for t in range(x_3d.size(1)):
             with torch.no_grad():
