@@ -185,15 +185,14 @@ test_list = []
 train_label = []
 test_label = []
 for f in all_filenames:
-    path = 'data_dir' + f + '/*'
-    print(path)
     images = sorted(glob.glob(data_dir + f + '/*'))
     labels = sorted(glob.glob(label_dir + f + '/*'))
     if f.startswith('se_'):
-        train_list.append(images)
+        train_list.append(process_data(images))
         print(len(train_list))
-        train_label.append(labels)
+        train_label.append(process_labels(labels))
 train_list = np.asarray(train_list)
+print(train_list.shape)
 
 
 
