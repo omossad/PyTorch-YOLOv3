@@ -7,12 +7,10 @@ import torchvision.models as models
 import torchvision.transforms as transforms
 from torch.utils.data import TensorDataset, DataLoader
 import torchvision
-from torch.autograd import Variable
-import matplotlib.pyplot as plt
-from sklearn.model_selection import train_test_split
 import glob
 from torch.utils import data
 from PIL import Image
+import pickle
 
 
 # set path
@@ -75,6 +73,7 @@ class ResNet(nn.Module):
 
 
 ########## INSERTED CODE ########
+output_dir = "/home/omossad/projects/def-hefeeda/omossad/roi_detection/temporary_data/ha_0_resnet/"
 ha_0_images = sorted(glob.glob("/home/omossad/projects/def-hefeeda/omossad/roi_detection/temporary_data/ha_0_images/frame_0006*"))
 ha_0_labels = sorted(glob.glob("/home/omossad/projects/def-hefeeda/omossad/roi_detection/temporary_data/ha_0_images/frame_0006*"))
 print(len(ha_0_images))
@@ -187,6 +186,11 @@ elif torch.cuda.device_count() == 1:
 # start training
 for batch_idx, (X, img_name) in enumerate(train_loader):
     # distribute data to device
+    dump_name = img_name.split("/")[-1]
+    print(dump_name)
+    output_file = open(output_dir + dump_name + '.pkl', 'wb')
     X = X.to(device)
     output = resnet_model(X)
+    pickle.dump(output, output_file)
+    output.close()
     print(output.view(-1).shape)
