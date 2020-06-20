@@ -43,7 +43,6 @@ class Dataset_CRNN(data.Dataset):
             image = use_transform(image)
         X.append(image)
         X = torch.stack(X, dim=0)
-        print(X.shape)
         return X, selected_image
 
 
@@ -65,8 +64,6 @@ class ResNet(nn.Module):
         self.resnet = nn.Sequential(*modules)
 
     def forward(self, x_3d):
-        print('x3d')
-        print(x_3d.shape)
         for t in range(x_3d.size(1)):
             with torch.no_grad():
                 x = self.resnet(x_3d[:, t, :, :, :])  # ResNet
@@ -76,9 +73,7 @@ class ResNet(nn.Module):
 
 ########## INSERTED CODE ########
 input_directory = opt.input_dir
-print(input_directory)
 list_images = sorted(glob.glob(input_directory))
-print(list_images)
 output_dir = input_directory.replace('frames', 'resnet')
 output_dir = output_dir.replace('*', '')
 #ha_0_labels = sorted(glob.glob("/home/omossad/projects/def-hefeeda/omossad/roi_detection/temporary_data/ha_0_images/f*"))
@@ -194,7 +189,6 @@ for batch_idx, (X, img_name) in enumerate(train_loader):
     # distribute data to device
     dump_name = img_name[0].split("/")[-1]
     dump_name = dump_name.split(".")[0]
-    print(dump_name)
     output_file = open(output_dir + dump_name + '.pkl', 'wb')
     X = X.to(device)
     output = resnet_model(X)
