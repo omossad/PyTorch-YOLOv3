@@ -16,7 +16,12 @@ from sklearn.metrics import accuracy_score
 import glob
 import pickle
 
-
+from multiprocessing import set_start_method
+try:
+    set_start_method('spawn')
+except RuntimeError:
+    pass
+    
 # set path
 #data_path = "./jpegs_256/"    # define UCF-101 RGB data path
 #action_name_path = './UCF101actions.pkl'
