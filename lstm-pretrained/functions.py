@@ -38,13 +38,17 @@ class Dataset_CRNN(data.Dataset):
         "Denotes the total number of samples"
         return len(self.frames)
 
+    
     def read_images(self, selected_frames, use_transform):
         X = []
         for i in selected_frames:
+            print(i)
             image = Image.open(i)
-
-            if use_transform is not None:
-                image = use_transform(image)
+            pkl_file = open(i, 'rb')
+            image = pickle.load(pkl_file)
+            pkl_file.close()
+            #if use_transform is not None:
+            #    image = use_transform(image)
 
             X.append(image)
         X = torch.stack(X, dim=0)
@@ -120,10 +124,11 @@ class ResCNNEncoder(nn.Module):
         self.fc_hidden1, self.fc_hidden2 = fc_hidden1, fc_hidden2
         self.drop_p = drop_p
 
-        resnet = models.resnet152(pretrained=True)
-        modules = list(resnet.children())[:-1]      # delete the last fc layer.
-        self.resnet = nn.Sequential(*modules)
-        self.fc1 = nn.Linear(resnet.fc.in_features, fc_hidden1)
+        #resnet = models.resnet152(pretrained=True)
+        #modules = list(resnet.children())[:-1]      # delete the last fc layer.
+        #self.resnet = nn.Sequential(*modules)
+        #self.fc1 = nn.Linear(resnet.fc.in_features, fc_hidden1)
+        self.fc1 = nn.Linear(2048, fc_hidden1)
         self.bn1 = nn.BatchNorm1d(fc_hidden1, momentum=0.01)
         self.fc2 = nn.Linear(fc_hidden1, fc_hidden2)
         self.bn2 = nn.BatchNorm1d(fc_hidden2, momentum=0.01)
@@ -132,10 +137,12 @@ class ResCNNEncoder(nn.Module):
     def forward(self, x_3d):
         cnn_embed_seq = []
         for t in range(x_3d.size(1)):
+            print(x_3d.shape)
+            x = x3d[:,t,:]
             # ResNet CNN
-            with torch.no_grad():
-                x = self.resnet(x_3d[:, t, :, :, :])  # ResNet
-                x = x.view(x.size(0), -1)             # flatten output of conv
+            #with torch.no_grad():
+                #x = self.resnet(x_3d[:, t, :, :, :])  # ResNet
+                #x = x.view(x.size(0), -1)             # flatten output of conv
             x = x.view(x.size(0), -1)
 
             # FC layers
