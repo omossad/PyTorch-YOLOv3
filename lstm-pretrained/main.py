@@ -14,6 +14,8 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import OneHotEncoder, LabelEncoder
 from sklearn.metrics import accuracy_score
 import glob
+import pickle
+
 
 # set path
 #data_path = "./jpegs_256/"    # define UCF-101 RGB data path
