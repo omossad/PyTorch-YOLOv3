@@ -11,7 +11,7 @@ filename = '/home/omossad/projects/def-hefeeda/omossad/roi_detection/temporary_d
 with open(filename, 'rb+') as f:
     a = f.read()
     print(f.seek(2))
-    print(a.split(' '))
+    print(f.read(1))
     #f.seek(f.tell()-1,2)    # f.seek(0,2) is legal for last char in both python 2 and 3 though
     #print(f.read())
 
