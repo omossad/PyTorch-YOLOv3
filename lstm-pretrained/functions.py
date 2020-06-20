@@ -57,7 +57,7 @@ class Dataset_CRNN(data.Dataset):
     def read_y_labels(self, selected_labels):
         f = open(selected_labels, "r")
         f.seek(2)
-        target = f.read(1)
+        target = f.read(2)
         return torch.LongTensor([int(target)])
 
     def __getitem__(self, index):
