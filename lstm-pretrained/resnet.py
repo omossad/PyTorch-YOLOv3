@@ -44,7 +44,7 @@ class Dataset_CRNN(data.Dataset):
         X.append(image)
         X = torch.stack(X, dim=0)
         print(X.shape)
-        return X
+        return X, selected_image
 
 
     def __getitem__(self, index):
@@ -185,8 +185,9 @@ elif torch.cuda.device_count() == 1:
 
 
 # start training
-for batch_idx, (X) in enumerate(train_loader):
+for batch_idx, (X, img_name) in enumerate(train_loader):
     # distribute data to device
+    print(img_name)
     print(X.shape)
     X = X.to(device)
     output = resnet_model(X)
