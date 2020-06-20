@@ -237,9 +237,16 @@ for epoch in range(epochs):
     epoch_test_loss, true_x, pred_x = validation([cnn_encoder_x, rnn_decoder_x], device, optimizer_x, valid_loader, 'x')
     train_losses, train_scores = train(log_interval, [cnn_encoder_y, rnn_decoder_y], device, train_loader, optimizer_y, epoch, 'y')
     epoch_test_loss, true_y, pred_y = validation([cnn_encoder_y, rnn_decoder_y], device, optimizer_y, valid_loader, 'y')
-    true_tile = true_y * k + true_x
-    pred_tile = pred_y * k + pred_x
-    test_score = accuracy_score(true_tile, pred_tile)
+    x_score = (true_x == pred_x)
+    print(true_x)
+    print(pred_x)
+    print(x_score)
+    y_score = (true_y == pred_y)
+    print(true_y)
+    print(pred_y)
+    print(y_score)
+    test_score = np.average(x_score*y_score)
+    print(test_score)
 
     # show information
     print('\nEpoch ({:d}): Accuracy: {:.2f}%\n'.format(epoch, 100* test_score))
