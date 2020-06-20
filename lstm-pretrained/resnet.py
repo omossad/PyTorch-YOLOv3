@@ -187,8 +187,6 @@ elif torch.cuda.device_count() == 1:
 # start training
 for batch_idx, (X, img_name) in enumerate(train_loader):
     # distribute data to device
-    print(img_name)
-    print(X.shape)
     X = X.to(device)
     output = resnet_model(X)
-    print(output.shape)
+    print(output.view(-1).shape)
