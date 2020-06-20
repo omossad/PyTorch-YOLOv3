@@ -36,7 +36,7 @@ learning_rate = 1e-3
 log_interval = 1   # interval for displaying training info
 
 
-def train(log_interval, model, device, train_loader, optimizer, epoch):
+def train(log_interval, model, device, train_loader, optimizer, epoch, coordinate):
     # set model as training mode
     cnn_encoder, rnn_decoder = model
     cnn_encoder.train()
@@ -45,9 +45,14 @@ def train(log_interval, model, device, train_loader, optimizer, epoch):
     losses = []
     scores = []
     N_count = 0   # counting total trained sample in one epoch
-    for batch_idx, (X, y) in enumerate(train_loader):
+    for batch_idx, (X, y_x, y_y) in enumerate(train_loader):
+        if coordinate == 'x':
+            y = y_x.to(device).view(-1, )
+        else:
+            y = y_y.to(device).view(-1, )
         # distribute data to device
-        X, y = X.to(device), y.to(device).view(-1, )
+        X = X.to(device)
+        #X, y = X.to(device), y.to(device).view(-1, )
 
         N_count += X.size(0)
 
@@ -73,7 +78,7 @@ def train(log_interval, model, device, train_loader, optimizer, epoch):
     return losses, scores
 
 
-def validation(model, device, optimizer, test_loader):
+def validation(model, device, optimizer, test_loader, coordinate):
     # set model as testing mode
     cnn_encoder, rnn_decoder = model
     cnn_encoder.eval()
@@ -83,9 +88,15 @@ def validation(model, device, optimizer, test_loader):
     all_y = []
     all_y_pred = []
     with torch.no_grad():
-        for X, y in test_loader:
+        for X, y_x, y_y in test_loader:
             # distribute data to device
-            X, y = X.to(device), y.to(device).view(-1, )
+            if coordinate == 'x':
+                y = y_x.to(device).view(-1, )
+            else:
+                y = y_y.to(device).view(-1, )
+            # distribute data to device
+            X = X.to(device)
+            #X, y = X.to(device), y.to(device).view(-1, )
 
             output = rnn_decoder(cnn_encoder(X))
 
@@ -222,8 +233,8 @@ optimizer_y = torch.optim.Adam(crnn_params_y, lr=learning_rate)
 # start training
 for epoch in range(epochs):
     # train, test model
-    train_losses, train_scores = train(log_interval, [cnn_encoder_x, rnn_decoder_x], device, train_loader, optimizer_x, epoch)
-    epoch_test_loss, epoch_test_score = validation([cnn_encoder_x, rnn_decoder_x], device, optimizer_x, valid_loader)
+    train_losses, train_scores = train(log_interval, [cnn_encoder_x, rnn_decoder_x], device, train_loader, optimizer_x, epoch, 'x')
+    epoch_test_loss, epoch_test_score = validation([cnn_encoder_x, rnn_decoder_x], device, optimizer_x, valid_loader, 'x')
 
-    train_losses, train_scores = train(log_interval, [cnn_encoder_y, rnn_decoder_y], device, train_loader, optimizer_y, epoch)
-    epoch_test_loss, epoch_test_score = validation([cnn_encoder_y, rnn_decoder_y], device, optimizer_y, valid_loader)
+    train_losses, train_scores = train(log_interval, [cnn_encoder_y, rnn_decoder_y], device, train_loader, optimizer_y, epoch, 'y')
+    epoch_test_loss, epoch_test_score = validation([cnn_encoder_y, rnn_decoder_y], device, optimizer_y, valid_loader, 'y')

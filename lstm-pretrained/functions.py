@@ -49,9 +49,15 @@ class Dataset_CRNN(data.Dataset):
 
         return X
 
-    def read_labels(self, selected_labels):
+    def read_x_labels(self, selected_labels):
         f = open(selected_labels, "r")
         target = f.read(1)
+        return torch.LongTensor([int(target)])
+
+    def read_y_labels(self, selected_labels):
+        f = open(selected_labels, "r")
+        target = f.read(3)
+        print(target)
         return torch.LongTensor([int(target)])
 
     def __getitem__(self, index):
@@ -61,10 +67,10 @@ class Dataset_CRNN(data.Dataset):
 
         # Load data
         X = self.read_images(self.frames[index])     # (input) spatial images
-        y = self.read_labels(self.labels[index])                     # (labels) LongTensor are for int64 instead of FloatTensor
-
+        y_x = self.read_x_labels(self.labels[index])   # (labels) LongTensor are for int64 instead of FloatTensor
+        y_y = self.read_y_labels(self.labels[index])
         # print(X.shape)
-        return X, y
+        return X, y_x, y_y
 
 
 '''
