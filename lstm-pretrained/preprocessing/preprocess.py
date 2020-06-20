@@ -1,5 +1,6 @@
 import numpy as np
 import csv
+import os
 ##### CONVERT LABEL DATA TO ROI DATA FOR EVALUATION ######
 
 W_ref = 1920.0
@@ -10,9 +11,9 @@ tile_width = W_ref / W_tiles
 tile_height = H_ref / H_tiles
 num_tiles = int(W_tiles * H_tiles)
 
-input_folder = '/home/omossad/projects/def-hefeeda/omossad/roi_detection/temporary_data/'
-output_folder_64 = '/home/omossad/projects/def-hefeeda/omossad/roi_detection/temporary_data/ha_0_labels_64/'
-output_folder_8x8 = '/home/omossad/projects/def-hefeeda/omossad/roi_detection/temporary_data/ha_0_labels/'
+input_folder = '/home/omossad/projects/def-hefeeda/omossad/roi_detection/temporary_data/data/fixations_txt/'
+#output_folder_64 = '/home/omossad/projects/def-hefeeda/omossad/roi_detection/temporary_data/ha_0_labels_64/'
+output_folder = '/home/omossad/projects/def-hefeeda/omossad/roi_detection/temporary_data/data/labels/'
 
 #base_dir  = '/home/omossad/scratch/temp/labels/ha_labels/'
 #out_dir   = '/home/omossad/scratch/temp/roi/'
@@ -49,7 +50,8 @@ with open('frames_info', 'r') as f:
 # number of files is the number of files to be processed #
 num_files = num_files - 1
 print("Total number of files is:", num_files)
-num_files = 1
+
+num_files = 2
 
 frame_info = np.zeros((num_files,2))
 file_names = []
@@ -62,6 +64,7 @@ with open('frames_info') as csv_file:
             line_count += 1
         elif line_count < num_files+1:
             file_names.append(row[0])
+            os.mkdir(output_folder+row[0])
             frame_info[line_count-1] = [int(row[2]), int(row[3])]
             line_count += 1
         else:
@@ -90,7 +93,7 @@ for i in range(num_files):
         #    counters.append(counter)
         #    counter = 0
         sx_tile, sy_tile = get_tileXY(lbl[0],lbl[1])
-        filename = 'frame_' + str(current_frame).zfill(5)
+        filename = file_names[i] + '/frame_' + str(current_frame).zfill(5)
         #command = 'cp ' + frame_dir + 'ha_' + str(i) + '/frame_' + str(current_frame).zfill(5) + '.jpg ' + out_dir + 'images/'
         #filelist = "echo '" + out_dir + 'images/' + filename + ".jpg' >> " + out_dir
         #if i < num_files - 2:
@@ -99,9 +102,10 @@ for i in range(num_files):
         #    filelist = filelist + 'valid.txt \n'
         #command = command + filename + '.jpg \n'
         #command = command + "echo '"+ str(s_tile) +" 0.1 0.1 0.1 0.1' > " + out_dir + 'labels/'
-        command = "echo '"+ str(s_tile) + "' > " + output_folder_64
-        command = command + filename + '.txt \n'
-        command = command + "echo '"+ str(sx_tile) +' '+ str(sy_tile) + "' > " + output_folder_8x8
+
+        #command = "echo '"+ str(s_tile) + "' > " + output_folder_64
+        #command = command + filename + '.txt \n'
+        command = command + "echo '"+ str(sx_tile) +' '+ str(sy_tile) + "' > " + output_folder
         command = command + filename + '.txt \n'
         #command = command + filelist
         f.write(command)
