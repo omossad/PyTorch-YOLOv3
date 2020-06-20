@@ -50,7 +50,7 @@ class Dataset_CRNN(data.Dataset):
     def __getitem__(self, index):
         "Generates one sample of data"
 
-        X = self.read_images(self.images, self.transform)     # (input) spatial images
+        X = self.read_images(self.images[0], self.transform)     # (input) spatial images
 
         # print(X.shape)
         return X
