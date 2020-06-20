@@ -13,7 +13,7 @@ from PIL import Image
 import pickle
 import argparse
 parser = argparse.ArgumentParser()
-parser.add_argument("--input_dir", type=str, default='/home/omossad/projects/def-hefeeda/omossad/roi_detection/temporary_data/data/frames/ha_0/', help="input directory")
+parser.add_argument("--input_dir", type=str, default='/home/omossad/projects/def-hefeeda/omossad/roi_detection/temporary_data/data/frames/ha_0/*', help="input directory")
 opt = parser.parse_args()
 # set path
 #data_path = "./jpegs_256/"    # define UCF-101 RGB data path
@@ -78,7 +78,7 @@ class ResNet(nn.Module):
 input_directory = opt.input_dir
 list_images = sorted(glob.glob(input_directory))
 output_dir = input_directory.replace('frames', 'resnet')
-
+output_dir = output_dir.replace('*', '')
 #ha_0_labels = sorted(glob.glob("/home/omossad/projects/def-hefeeda/omossad/roi_detection/temporary_data/ha_0_images/f*"))
 print(len(list_images))
 #print(len(ha_0_labels))
