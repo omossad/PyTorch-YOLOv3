@@ -187,8 +187,8 @@ test_label = []
 for f in all_filenames:
     path = 'data_dir' + f + '/*'
     print(path)
-    images = sorted(glob.glob('data_dir' + f + '/*'))
-    labels = sorted(glob.glob('label_dir' + f + '/*'))
+    images = sorted(glob.glob(data_dir + f + '/*'))
+    labels = sorted(glob.glob(label_dir + f + '/*'))
     print(images)
     print(labels)
     if i.startswith('se_'):
