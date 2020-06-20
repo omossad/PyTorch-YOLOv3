@@ -246,4 +246,4 @@ for epoch in range(epochs):
     test_score = accuracy_score(true_tile, pred_tile)
 
     # show information
-    print('\nEpoch ({:d}): Accuracy: {:.2f}%\n'.format(epoch, test_loss, 100* test_score))
+    print('\nEpoch ({:d}): Accuracy: {:.2f}%\n'.format(epoch, 100* test_score))
