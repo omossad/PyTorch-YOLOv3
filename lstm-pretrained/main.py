@@ -215,6 +215,7 @@ elif torch.cuda.device_count() == 1:
                   list(cnn_encoder_y.fc3.parameters()) + list(rnn_decoder_y.parameters())
 
 
+optimizer_x = torch.optim.Adam(crnn_params_x, lr=learning_rate)
 optimizer_y = torch.optim.Adam(crnn_params_y, lr=learning_rate)
 
 
