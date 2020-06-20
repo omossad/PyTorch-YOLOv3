@@ -177,13 +177,14 @@ def read_info():
 all_filenames = read_info()
 print(all_filenames)
 
-data_dir = '/home/omossad/projects/def-hefeeda/omossad/roi_detection/temporary_data/data/resnet/'
+data_dir  = '/home/omossad/projects/def-hefeeda/omossad/roi_detection/temporary_data/data/resnet/'
 label_dir = '/home/omossad/projects/def-hefeeda/omossad/roi_detection/temporary_data/data/labels/'
 
 train_list = []
 test_list = []
 train_label = []
 test_label = []
+
 for f in all_filenames:
     images = sorted(glob.glob(data_dir + f + '/*'))
     labels = sorted(glob.glob(label_dir + f + '/*'))
@@ -196,7 +197,7 @@ for f in all_filenames:
 
 train_list = np.asarray(train_list)
 test_list  = np.asarray(test_list)
-train_list = np.asarray(train_list)
+train_label = np.asarray(train_label)
 test_label = np.asarray(test_label)
 
 print(train_list.shape)
