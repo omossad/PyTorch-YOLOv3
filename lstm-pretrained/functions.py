@@ -51,7 +51,6 @@ class Dataset_CRNN(data.Dataset):
     def read_images(self, selected_frames, use_transform):
         X = []
         for i in selected_frames:
-            print(i)
             #image = Image.open(i)
             pkl_file = open(i, 'rb')
             image = CPU_Unpickler(pkl_file).load()
@@ -150,7 +149,7 @@ class ResCNNEncoder(nn.Module):
         cnn_embed_seq = []
         for t in range(x_3d.size(1)):
             print(x_3d.shape)
-            x = x3d[:,t,:]
+            x = x_3d[:,t,:]
             # ResNet CNN
             #with torch.no_grad():
                 #x = self.resnet(x_3d[:, t, :, :, :])  # ResNet
