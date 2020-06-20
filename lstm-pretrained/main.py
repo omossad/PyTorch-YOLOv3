@@ -113,10 +113,10 @@ def validation(model, device, optimizer, test_loader, coordinate):
     # compute accuracy
     all_y = torch.stack(all_y, dim=0)
     all_y_pred = torch.stack(all_y_pred, dim=0)
-    test_score = accuracy_score(all_y.cpu().data.squeeze().numpy(), all_y_pred.cpu().data.squeeze().numpy())
+    #test_score = accuracy_score(all_y.cpu().data.squeeze().numpy(), all_y_pred.cpu().data.squeeze().numpy())
 
     # show information
-    print('\nTest set ({:d} samples): Average loss: {:.4f}, Accuracy: {:.2f}%\n'.format(len(all_y), test_loss, 100* test_score))
+    #print('\nTest set ({:d} samples): Average loss: {:.4f}, Accuracy: {:.2f}%\n'.format(len(all_y), test_loss, 100* test_score))
 
     # save Pytorch models of best record
 
@@ -125,7 +125,7 @@ def validation(model, device, optimizer, test_loader, coordinate):
     #torch.save(optimizer.state_dict(), os.path.join(save_model_path, 'optimizer_epoch{}.pth'.format(epoch + 1)))      # save optimizer
     #print("Epoch {} model saved!".format(epoch + 1))
 
-    return test_loss, test_score
+    return test_loss, test_score, all_y.cpu().data.squeeze().numpy(), all_y_pred.cpu().data.squeeze().numpy()
 
 
 ########## INSERTED CODE ########
@@ -234,7 +234,10 @@ optimizer_y = torch.optim.Adam(crnn_params_y, lr=learning_rate)
 for epoch in range(epochs):
     # train, test model
     train_losses, train_scores = train(log_interval, [cnn_encoder_x, rnn_decoder_x], device, train_loader, optimizer_x, epoch, 'x')
-    epoch_test_loss, epoch_test_score = validation([cnn_encoder_x, rnn_decoder_x], device, optimizer_x, valid_loader, 'x')
-
+    epoch_test_loss, true_x, pred_x = validation([cnn_encoder_x, rnn_decoder_x], device, optimizer_x, valid_loader, 'x')
+    print(true_x)
+    print(pred_x)
     train_losses, train_scores = train(log_interval, [cnn_encoder_y, rnn_decoder_y], device, train_loader, optimizer_y, epoch, 'y')
-    epoch_test_loss, epoch_test_score = validation([cnn_encoder_y, rnn_decoder_y], device, optimizer_y, valid_loader, 'y')
+    epoch_test_loss, true_y, pred_y = validation([cnn_encoder_y, rnn_decoder_y], device, optimizer_y, valid_loader, 'y')
+    print(true_y)
+    print(pred_y)
