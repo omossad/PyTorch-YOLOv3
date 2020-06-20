@@ -129,10 +129,7 @@ def validation(model, device, optimizer, test_loader, coordinate):
 
 
 ########## INSERTED CODE ########
-ha_0_images = sorted(glob.glob("/home/omossad/projects/def-hefeeda/omossad/roi_detection/temporary_data/ha_0_resnet/f*"))
-ha_0_labels = sorted(glob.glob("/home/omossad/projects/def-hefeeda/omossad/roi_detection/temporary_data/ha_0_labels/f*"))
-print(len(ha_0_images))
-print(len(ha_0_labels))
+
 
 
 time_steps = 4
@@ -151,13 +148,51 @@ def process_labels(labels):
     labels=np.asarray(labels)
     return labels[indices]
 
+#ha_0_images = sorted(glob.glob("/home/omossad/projects/def-hefeeda/omossad/roi_detection/temporary_data/ha_0_resnet/f*"))
+#ha_0_labels = sorted(glob.glob("/home/omossad/projects/def-hefeeda/omossad/roi_detection/temporary_data/ha_0_labels/f*"))
+#print(len(ha_0_images))
+#print(len(ha_0_labels))
+#a = process_data(ha_0_images)
+#b = process_labels(ha_0_labels)
+#train_list, test_list, train_label, test_label = train_test_split(a, b, test_size=0.25, random_state=42)
+#print(train_list)
+#print(train_label)
 
-a = process_data(ha_0_images)
-b = process_labels(ha_0_labels)
-train_list, test_list, train_label, test_label = train_test_split(a, b, test_size=0.25, random_state=42)
-print(train_list)
-print(train_label)
+def read_info():
+    file_names = []
+    num_files = 0
+    with open('../preprocessing/frames_info') as csv_file:
+        csv_reader = csv.reader(csv_file, delimiter=',')
+        for row in csv_reader:
+            if num_files == 0:
+                num_files += 1
+            elif num_files < max_files+1:
+                file_names.append(row[0])
+                num_files += 1
+            else:
+                break
+    print("Total number of files is:", num_files)
+    return file_names
 
+all_filenames = read_info()
+print(all_filenames)
+
+data_dir = '/home/omossad/projects/def-hefeeda/omossad/roi_detection/temporary_data/data/resnet/'
+label_dir = '/home/omossad/projects/def-hefeeda/omossad/roi_detection/temporary_data/data/labels/'
+
+train_list = []
+test_list = []
+train_label = []
+test_label = []
+for i in all_filenames:
+    if i.startswith('se_'):
+        images = sorted(glob.glob('data_dir' + i + '/*'))
+        labels = sorted(glob.glob('label_dir' + i + '/*'))
+        print(images)
+        print(labels)
+        train_list.append(images)
+        train_label.append(labels)
+train_list = np.asarray(train_list)
 
 
 
