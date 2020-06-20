@@ -189,10 +189,9 @@ for f in all_filenames:
     print(path)
     images = sorted(glob.glob(data_dir + f + '/*'))
     labels = sorted(glob.glob(label_dir + f + '/*'))
-    print(images)
-    print(labels)
-    if i.startswith('se_'):
+    if f.startswith('se_'):
         train_list.append(images)
+        print(len(train_list))
         train_label.append(labels)
 train_list = np.asarray(train_list)
 
