@@ -142,9 +142,10 @@ def process_data(images):
     images=np.asarray(images)
     return images[indices]
 
-def process_labels(labels):
+def process_labels(labels,req_size):
     num_labels = len(labels)
-    indices = np.arange(time_steps-1,num_labels-1)
+    #indices = np.arange(time_steps-1,num_labels-1)
+    indices = np.arange(time_steps-1,req_size + time_steps)
     labels=np.asarray(labels)
     return labels[indices]
 
@@ -188,14 +189,19 @@ test_label = []
 for f in all_filenames:
     images = sorted(glob.glob(data_dir + f + '/*'))
     labels = sorted(glob.glob(label_dir + f + '/*'))
+    processed_images = process_data(images)
+    processed_labels = process_labels(labels, len(processed_images))
     if f.startswith('se_'):
-        test_list.extend(process_data(images))
-        test_label.extend(process_labels(labels))
+        test_list.extend(processed_images)
+        print(f)
+        print(len(test_list))
+        test_label.extend(processed_labels)
+        print(len(test_label))
     else:
-        train_list.extend(process_data(images))
+        train_list.extend(processed_images)
         print(f)
         print(len(train_list))
-        train_label.extend(process_labels(labels))
+        train_label.extend(processed_labels)
         print(len(train_label))
 
 train_list = np.asarray(train_list)
