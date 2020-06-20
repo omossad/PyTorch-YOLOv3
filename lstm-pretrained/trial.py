@@ -10,7 +10,7 @@ print(len(ha_0_labels))
 filename = '/home/omossad/projects/def-hefeeda/omossad/roi_detection/temporary_data/ha_0_labels/frame_00647.txt'
 with open(filename, 'rb+') as f:
     f.seek(f.tell()-1,2)    # f.seek(0,2) is legal for last char in both python 2 and 3 though
-    print f.read()
+    print(f.read())
 
 time_steps = 4
 
