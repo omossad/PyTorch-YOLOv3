@@ -28,6 +28,13 @@ def cat2labels(label_encoder, y_cat):
 
 ## ---------------------- Dataloaders ---------------------- ##
 # for CRNN
+class CPU_Unpickler(pickle.Unpickler):
+    def find_class(self, module, name):
+        if module == 'torch.storage' and name == '_load_from_bytes':
+            return lambda b: torch.load(io.BytesIO(b), map_location='cpu')
+        else: return super().find_class(module, name)
+
+
 class Dataset_CRNN(data.Dataset):
     "Characterizes a dataset for PyTorch"
     def __init__(self, frames, labels, transform=None):
@@ -47,8 +54,7 @@ class Dataset_CRNN(data.Dataset):
             print(i)
             #image = Image.open(i)
             #pkl_file = open(i, 'rb')
-            with torch.loading_context(map_location='cpu'):
-                image = pickle.load(i)  # In my case this call is buried deeper in torch-agnostic code
+            image = CPU_Unpickler(i).load()
             #image = torch.load(i,map_location=torch.device('cuda'))
             #image = torch.load(pkl_file)
             #image = pickle.load(pkl_file)
