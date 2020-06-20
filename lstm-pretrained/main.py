@@ -155,7 +155,8 @@ def process_labels(labels):
 a = process_data(ha_0_images)
 b = process_labels(ha_0_labels)
 train_list, test_list, train_label, test_label = train_test_split(a, b, test_size=0.25, random_state=42)
-
+print(train_list)
+print(train_label)
 
 
 
@@ -238,15 +239,8 @@ for epoch in range(epochs):
     train_losses, train_scores = train(log_interval, [cnn_encoder_y, rnn_decoder_y], device, train_loader, optimizer_y, epoch, 'y')
     epoch_test_loss, true_y, pred_y = validation([cnn_encoder_y, rnn_decoder_y], device, optimizer_y, valid_loader, 'y')
     x_score = (true_x == pred_x)
-    print(true_x)
-    print(pred_x)
-    print(x_score)
     y_score = (true_y == pred_y)
-    print(true_y)
-    print(pred_y)
-    print(y_score)
     test_score = np.average(x_score*y_score)
-    print(test_score)
 
     # show information
     print('\nEpoch ({:d}): Accuracy: {:.2f}%\n'.format(epoch, 100* test_score))
