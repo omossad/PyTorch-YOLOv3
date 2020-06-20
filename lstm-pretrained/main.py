@@ -193,16 +193,10 @@ for f in all_filenames:
     processed_labels = process_labels(labels, len(processed_images))
     if f.startswith('se_'):
         test_list.extend(processed_images)
-        print(f)
-        print(len(test_list))
         test_label.extend(processed_labels)
-        print(len(test_label))
     else:
         train_list.extend(processed_images)
-        print(f)
-        print(len(train_list))
         train_label.extend(processed_labels)
-        print(len(train_label))
 
 train_list = np.asarray(train_list)
 test_list  = np.asarray(test_list)
