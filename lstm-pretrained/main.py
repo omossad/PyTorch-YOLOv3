@@ -4,7 +4,6 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import torchvision.models as models
-import torchvision.transforms as transforms
 from torch.utils.data import TensorDataset, DataLoader
 import torchvision
 from torch.autograd import Variable
@@ -169,8 +168,8 @@ params = {'batch_size': batch_size, 'shuffle': True, 'num_workers': 4, 'pin_memo
 ### INSERTED CODE ####
 
 
-train_set, valid_set = Dataset_CRNN(train_list, train_label, transform=transform), \
-                       Dataset_CRNN(test_list, test_label, transform=transform)
+train_set, valid_set = Dataset_CRNN(train_list, train_label), \
+                       Dataset_CRNN(test_list, test_label)
 ##########################
 
 train_loader = DataLoader(train_set, **params)
