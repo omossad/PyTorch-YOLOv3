@@ -188,9 +188,9 @@ for f in all_filenames:
     images = sorted(glob.glob(data_dir + f + '/*'))
     labels = sorted(glob.glob(label_dir + f + '/*'))
     if f.startswith('se_'):
-        train_list.append(process_data(images))
+        train_list.extend(process_data(images))
         print(len(train_list))
-        train_label.append(process_labels(labels))
+        train_label.extend(process_labels(labels))
 train_list = np.asarray(train_list)
 print(train_list.shape)
 
