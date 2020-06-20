@@ -125,7 +125,7 @@ def validation(model, device, optimizer, test_loader):
 
 
 ########## INSERTED CODE ########
-ha_0_images = sorted(glob.glob("/home/omossad/projects/def-hefeeda/omossad/roi_detection/temporary_data/ha_0_images/f*"))
+ha_0_images = sorted(glob.glob("/home/omossad/scratch/Gaming-Dataset/selected_frames/fifa/ha_0/f*"))
 ha_0_labels = sorted(glob.glob("/home/omossad/projects/def-hefeeda/omossad/roi_detection/temporary_data/ha_0_labels/f*"))
 print(len(ha_0_images))
 print(len(ha_0_labels))
