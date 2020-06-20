@@ -191,6 +191,6 @@ for batch_idx, (X, img_name) in enumerate(train_loader):
     output_file = open(output_dir + dump_name + '.pkl', 'wb')
     X = X.to(device)
     output = resnet_model(X)
+    output = output.view(-1)
     pickle.dump(output, output_file)
-    output.close()
-    print(output.view(-1).shape)
+    output_file.close()
