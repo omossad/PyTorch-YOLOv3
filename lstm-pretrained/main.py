@@ -145,7 +145,7 @@ def process_data(images):
 def process_labels(labels,req_size):
     num_labels = len(labels)
     #indices = np.arange(time_steps-1,num_labels-1)
-    indices = np.arange(time_steps-1,req_size + time_steps)
+    indices = np.arange(time_steps-1, req_size + time_steps -1)
     labels=np.asarray(labels)
     return labels[indices]
 
