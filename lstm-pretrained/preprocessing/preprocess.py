@@ -51,7 +51,6 @@ with open('frames_info', 'r') as f:
 num_files = num_files - 1
 print("Total number of files is:", num_files)
 
-num_files = 2
 
 frame_info = np.zeros((num_files,2))
 file_names = []
