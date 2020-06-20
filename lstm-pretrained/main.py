@@ -161,7 +161,7 @@ max_files = 99
 def read_info():
     file_names = []
     num_files = 0
-    with open('../preprocessing/frames_info') as csv_file:
+    with open('frames_info') as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=',')
         for row in csv_reader:
             if num_files == 0:
