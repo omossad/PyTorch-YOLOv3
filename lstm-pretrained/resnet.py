@@ -11,6 +11,8 @@ from torch.autograd import Variable
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 import glob
+from torch.utils import data
+
 
 # set path
 #data_path = "./jpegs_256/"    # define UCF-101 RGB data path
