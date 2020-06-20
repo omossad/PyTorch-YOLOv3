@@ -148,7 +148,7 @@ class ResCNNEncoder(nn.Module):
     def forward(self, x_3d):
         cnn_embed_seq = []
         for t in range(x_3d.size(1)):
-            print(x_3d.shape)
+            #print(x_3d.shape)
             x = x_3d[:,t,:]
             # ResNet CNN
             #with torch.no_grad():
