@@ -47,8 +47,8 @@ class Dataset_CRNN(data.Dataset):
             print(i)
             #image = Image.open(i)
             pkl_file = open(i, 'rb')
-            #image = torch.load(pkl_file,map_location=torch.device('cpu'))
-            image = torch.load(pkl_file)
+            image = torch.load(pkl_file,map_location=torch.device('cpu'))
+            #image = torch.load(pkl_file)
             #image = pickle.load(pkl_file)
             pkl_file.close()
             #if use_transform is not None:
