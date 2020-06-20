@@ -186,7 +186,7 @@ elif torch.cuda.device_count() == 1:
 # start training
 for batch_idx, (X, img_name) in enumerate(train_loader):
     # distribute data to device
-    dump_name = img_name.split("/")[-1]
+    dump_name = img_name[0].split("/")[-1]
     print(dump_name)
     output_file = open(output_dir + dump_name + '.pkl', 'wb')
     X = X.to(device)
