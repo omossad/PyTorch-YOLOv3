@@ -27,7 +27,6 @@ class Dataset_CRNN(data.Dataset):
         "Initialization"
         self.frames = frames
         self.labels = labels
-        self.transform = transform
 
     def __len__(self):
         "Denotes the total number of samples"
