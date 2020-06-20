@@ -144,7 +144,7 @@ def process_data(images):
 
 def process_labels(labels):
     num_labels = len(labels)
-    indices = np.arange(time_steps-1,num_labels)
+    indices = np.arange(time_steps-1,num_labels-1)
     labels=np.asarray(labels)
     return labels[indices]
 
@@ -193,7 +193,10 @@ for f in all_filenames:
         test_label.extend(process_labels(labels))
     else:
         train_list.extend(process_data(images))
+        print(f)
+        print(len(train_list))
         train_label.extend(process_labels(labels))
+        print(len(train_label))
 
 train_list = np.asarray(train_list)
 test_list  = np.asarray(test_list)
