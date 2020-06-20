@@ -17,11 +17,6 @@ import glob
 import pickle
 
 
-# set path
-#data_path = "./jpegs_256/"    # define UCF-101 RGB data path
-#action_name_path = './UCF101actions.pkl'
-#save_model_path = "./ResNetCRNN_ckpt/"
-
 # EncoderCNN architecture
 CNN_fc_hidden1, CNN_fc_hidden2 = 1024, 768
 CNN_embed_dim = 256   # latent dim extracted by 2D CNN
@@ -40,9 +35,6 @@ epochs = 120        # training epochs
 batch_size = 20
 learning_rate = 1e-3
 log_interval = 1   # interval for displaying training info
-
-# Select which frame to begin & end in videos
-#begin_frame, end_frame, skip_frame = 1, 29, 1
 
 
 def train(log_interval, model, device, train_loader, optimizer, epoch):
@@ -174,53 +166,6 @@ device = torch.device("cuda" if use_cuda else "cpu")   # use CPU or GPU
 params = {'batch_size': batch_size, 'shuffle': True, 'num_workers': 4, 'pin_memory': True} if use_cuda else {}
 
 
-# load UCF101 actions names
-#with open(action_name_path, 'rb') as f:
-#    action_names = pickle.load(f)
-
-# convert labels -> category
-#le = LabelEncoder()
-#le.fit(action_names)
-
-# show how many classes there are
-#list(le.classes_)
-
-# convert category -> 1-hot
-#action_category = le.transform(action_names).reshape(-1, 1)
-#enc = OneHotEncoder()
-#enc.fit(action_category)
-
-# # example
-# y = ['HorseRace', 'YoYo', 'WalkingWithDog']
-# y_onehot = labels2onehot(enc, le, y)
-# y2 = onehot2labels(le, y_onehot)
-
-#actions = []
-#fnames = os.listdir(data_path)
-
-#all_names = []
-#for f in fnames:
-#    loc1 = f.find('v_')
-#    loc2 = f.find('_g')
-#    actions.append(f[(loc1 + 2): loc2])
-
-#    all_names.append(f)
-
-
-# list all data files
-#all_X_list = all_names                  # all video file names
-#all_y_list = labels2cat(le, actions)    # all video labels
-
-# train, test split
-#train_list, test_list, train_label, test_label = train_test_split(all_X_list, all_y_list, test_size=0.25, random_state=42)
-
-transform = transforms.Compose([transforms.Resize([res_size, res_size]),
-                                transforms.ToTensor(),
-                                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])])
-
-#selected_frames = np.arange(begin_frame, end_frame, skip_frame).tolist()
-
-
 ### INSERTED CODE ####
 
 
@@ -228,88 +173,57 @@ train_set, valid_set = Dataset_CRNN(train_list, train_label, transform=transform
                        Dataset_CRNN(test_list, test_label, transform=transform)
 ##########################
 
-#train_set, valid_set = Dataset_CRNN(data_path, train_list, train_label, selected_frames, transform=transform), \
-#                       Dataset_CRNN(data_path, test_list, test_label, selected_frames, transform=transform)
-
-
 train_loader = DataLoader(train_set, **params)
 valid_loader = DataLoader(valid_set, **params)
 
 
 # Create model
-cnn_encoder = ResCNNEncoder(num_tiles=k,fc_hidden1=CNN_fc_hidden1, fc_hidden2=CNN_fc_hidden2, drop_p=dropout_p, CNN_embed_dim=CNN_embed_dim).to(device)
-rnn_decoder = DecoderRNN(CNN_embed_dim=CNN_embed_dim, h_RNN_layers=RNN_hidden_layers, h_RNN=RNN_hidden_nodes,
+cnn_encoder_x = ResCNNEncoder(num_tiles=k,fc_hidden1=CNN_fc_hidden1, fc_hidden2=CNN_fc_hidden2, drop_p=dropout_p, CNN_embed_dim=CNN_embed_dim).to(device)
+rnn_decoder_x = DecoderRNN(CNN_embed_dim=CNN_embed_dim, h_RNN_layers=RNN_hidden_layers, h_RNN=RNN_hidden_nodes,
+                         h_FC_dim=RNN_FC_dim, drop_p=dropout_p, num_classes=k).to(device)
+
+cnn_encoder_y = ResCNNEncoder(num_tiles=k,fc_hidden1=CNN_fc_hidden1, fc_hidden2=CNN_fc_hidden2, drop_p=dropout_p, CNN_embed_dim=CNN_embed_dim).to(device)
+rnn_decoder_y = DecoderRNN(CNN_embed_dim=CNN_embed_dim, h_RNN_layers=RNN_hidden_layers, h_RNN=RNN_hidden_nodes,
                          h_FC_dim=RNN_FC_dim, drop_p=dropout_p, num_classes=k).to(device)
 
 # Parallelize model to multiple GPUs
 if torch.cuda.device_count() > 1:
     print("Using", torch.cuda.device_count(), "GPUs!")
-    cnn_encoder = nn.DataParallel(cnn_encoder)
-    rnn_decoder = nn.DataParallel(rnn_decoder)
+    cnn_encoder_x = nn.DataParallel(cnn_encoder_x)
+    rnn_decoder_x = nn.DataParallel(rnn_decoder_x)
+
+    cnn_encoder_y = nn.DataParallel(cnn_encoder_y)
+    rnn_decoder_y = nn.DataParallel(rnn_decoder_y)
 
     # Combine all EncoderCNN + DecoderRNN parameters
-    crnn_params = list(cnn_encoder.module.fc1.parameters()) + list(cnn_encoder.module.bn1.parameters()) + \
-                  list(cnn_encoder.module.fc2.parameters()) + list(cnn_encoder.module.bn2.parameters()) + \
-                  list(cnn_encoder.module.fc3.parameters()) + list(rnn_decoder.parameters())
+    crnn_params_x = list(cnn_encoder_x.module.fc1.parameters()) + list(cnn_encoder_x.module.bn1.parameters()) + \
+                  list(cnn_encoder_x.module.fc2.parameters()) + list(cnn_encoder_x.module.bn2.parameters()) + \
+                  list(cnn_encoder_x.module.fc3.parameters()) + list(rnn_decoder_x.parameters())
+
+    crnn_params_y = list(cnn_encoder_y.module.fc1.parameters()) + list(cnn_encoder_y.module.bn1.parameters()) + \
+                  list(cnn_encoder_y.module.fc2.parameters()) + list(cnn_encoder_y.module.bn2.parameters()) + \
+                  list(cnn_encoder_y.module.fc3.parameters()) + list(rnn_decoder_y.parameters())
 
 elif torch.cuda.device_count() == 1:
     print("Using", torch.cuda.device_count(), "GPU!")
     # Combine all EncoderCNN + DecoderRNN parameters
-    crnn_params = list(cnn_encoder.fc1.parameters()) + list(cnn_encoder.bn1.parameters()) + \
-                  list(cnn_encoder.fc2.parameters()) + list(cnn_encoder.bn2.parameters()) + \
-                  list(cnn_encoder.fc3.parameters()) + list(rnn_decoder.parameters())
+    crnn_params_x = list(cnn_encoder_x.fc1.parameters()) + list(cnn_encoder_x.bn1.parameters()) + \
+                  list(cnn_encoder_x.fc2.parameters()) + list(cnn_encoder_x.bn2.parameters()) + \
+                  list(cnn_encoder_x.fc3.parameters()) + list(rnn_decoder_x.parameters())
 
-optimizer = torch.optim.Adam(crnn_params, lr=learning_rate)
+    crnn_params_y = list(cnn_encoder_y.fc1.parameters()) + list(cnn_encoder_y.bn1.parameters()) + \
+                  list(cnn_encoder_y.fc2.parameters()) + list(cnn_encoder_y.bn2.parameters()) + \
+                  list(cnn_encoder_y.fc3.parameters()) + list(rnn_decoder_y.parameters())
 
 
-# record training process
-epoch_train_losses = []
-epoch_train_scores = []
-epoch_test_losses = []
-epoch_test_scores = []
+optimizer_y = torch.optim.Adam(crnn_params_y, lr=learning_rate)
+
 
 # start training
 for epoch in range(epochs):
     # train, test model
-    train_losses, train_scores = train(log_interval, [cnn_encoder, rnn_decoder], device, train_loader, optimizer, epoch)
-    epoch_test_loss, epoch_test_score = validation([cnn_encoder, rnn_decoder], device, optimizer, valid_loader)
+    train_losses, train_scores = train(log_interval, [cnn_encoder_x, rnn_decoder_x], device, train_loader, optimizer_x, epoch)
+    epoch_test_loss, epoch_test_score = validation([cnn_encoder_x, rnn_decoder_x], device, optimizer_x, valid_loader)
 
-    # save results
-    epoch_train_losses.append(train_losses)
-    epoch_train_scores.append(train_scores)
-    epoch_test_losses.append(epoch_test_loss)
-    epoch_test_scores.append(epoch_test_score)
-
-    # save all train test results
-    #A = np.array(epoch_train_losses)
-    #B = np.array(epoch_train_scores)
-    #C = np.array(epoch_test_losses)
-    #D = np.array(epoch_test_scores)
-    #np.save('./CRNN_epoch_training_losses.npy', A)
-    #np.save('./CRNN_epoch_training_scores.npy', B)
-    #np.save('./CRNN_epoch_test_loss.npy', C)
-    #np.save('./CRNN_epoch_test_score.npy', D)
-
-# plot
-'''
-fig = plt.figure(figsize=(10, 4))
-plt.subplot(121)
-plt.plot(np.arange(1, epochs + 1), A[:, -1])  # train loss (on epoch end)
-plt.plot(np.arange(1, epochs + 1), C)         #  test loss (on epoch end)
-plt.title("model loss")
-plt.xlabel('epochs')
-plt.ylabel('loss')
-plt.legend(['train', 'test'], loc="upper left")
-# 2nd figure
-plt.subplot(122)
-plt.plot(np.arange(1, epochs + 1), B[:, -1])  # train accuracy (on epoch end)
-plt.plot(np.arange(1, epochs + 1), D)         #  test accuracy (on epoch end)
-plt.title("training scores")
-plt.xlabel('epochs')
-plt.ylabel('accuracy')
-plt.legend(['train', 'test'], loc="upper left")
-title = "./fig_UCF101_ResNetCRNN.png"
-plt.savefig(title, dpi=600)
-# plt.close(fig)
-plt.show()
-'''
+    train_losses, train_scores = train(log_interval, [cnn_encoder_y, rnn_decoder_y], device, train_loader, optimizer_y, epoch)
+    epoch_test_loss, epoch_test_score = validation([cnn_encoder_y, rnn_decoder_y], device, optimizer_y, valid_loader)
