@@ -137,7 +137,7 @@ time_steps = 4
 
 def process_data(images):
     num_images = len(images)
-    image_indices = np.arange(0,num_images)
+    image_indices = np.arange(0,num_images-1)
     indices = np.array([ image_indices[i:i+time_steps] for i in range(num_images-time_steps) ])
     images=np.asarray(images)
     return images[indices]
