@@ -76,7 +76,9 @@ class ResNet(nn.Module):
 
 ########## INSERTED CODE ########
 input_directory = opt.input_dir
+print(input_directory)
 list_images = sorted(glob.glob(input_directory))
+print(list_images)
 output_dir = input_directory.replace('frames', 'resnet')
 output_dir = output_dir.replace('*', '')
 #ha_0_labels = sorted(glob.glob("/home/omossad/projects/def-hefeeda/omossad/roi_detection/temporary_data/ha_0_images/f*"))
