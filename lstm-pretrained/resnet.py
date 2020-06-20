@@ -56,13 +56,12 @@ class Dataset_CRNN(data.Dataset):
 
 
 class ResNet(nn.Module):
-    def __init__(self, CNN_embed_dim=300):
+    def __init__(self):
         """Load the pretrained ResNet-152 and replace top fc layer."""
         super(ResNet, self).__init__()
         resnet = models.resnet152(pretrained=True)
         modules = list(resnet.children())[:-1]      # delete the last fc layer.
         self.resnet = nn.Sequential(*modules)
-        self.fc1 = nn.Linear(resnet.fc.in_features, fc_hidden1)
 
     def forward(self, x_3d):
         print(x_3d.shape)
@@ -162,7 +161,7 @@ train_loader = DataLoader(train_set, **params)
 
 
 # Create model
-resnet_model = ResNet(CNN_embed_dim=CNN_embed_dim).to(device)
+resnet_model = ResNet().to(device)
 
 # Parallelize model to multiple GPUs
 if torch.cuda.device_count() > 1:
