@@ -235,12 +235,8 @@ for epoch in range(epochs):
     # train, test model
     train_losses, train_scores = train(log_interval, [cnn_encoder_x, rnn_decoder_x], device, train_loader, optimizer_x, epoch, 'x')
     epoch_test_loss, true_x, pred_x = validation([cnn_encoder_x, rnn_decoder_x], device, optimizer_x, valid_loader, 'x')
-    print(true_x)
-    print(pred_x)
     train_losses, train_scores = train(log_interval, [cnn_encoder_y, rnn_decoder_y], device, train_loader, optimizer_y, epoch, 'y')
     epoch_test_loss, true_y, pred_y = validation([cnn_encoder_y, rnn_decoder_y], device, optimizer_y, valid_loader, 'y')
-    print(true_y)
-    print(pred_y)
     true_tile = true_y * k + true_x
     pred_tile = pred_y * k + pred_x
     test_score = accuracy_score(true_tile, pred_tile)
