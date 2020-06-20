@@ -105,7 +105,7 @@ for i in range(num_files):
 
         #command = "echo '"+ str(s_tile) + "' > " + output_folder_64
         #command = command + filename + '.txt \n'
-        command = command + "echo '"+ str(sx_tile) +' '+ str(sy_tile) + "' > " + output_folder
+        command = "echo '"+ str(sx_tile) +' '+ str(sy_tile) + "' > " + output_folder
         command = command + filename + '.txt \n'
         #command = command + filelist
         f.write(command)
