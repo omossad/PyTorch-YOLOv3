@@ -125,7 +125,7 @@ def validation(model, device, optimizer, test_loader, coordinate):
     #torch.save(optimizer.state_dict(), os.path.join(save_model_path, 'optimizer_epoch{}.pth'.format(epoch + 1)))      # save optimizer
     #print("Epoch {} model saved!".format(epoch + 1))
 
-    return test_loss, test_score, all_y.cpu().data.squeeze().numpy(), all_y_pred.cpu().data.squeeze().numpy()
+    return test_loss, all_y.cpu().data.squeeze().numpy(), all_y_pred.cpu().data.squeeze().numpy()
 
 
 ########## INSERTED CODE ########
@@ -241,3 +241,9 @@ for epoch in range(epochs):
     epoch_test_loss, true_y, pred_y = validation([cnn_encoder_y, rnn_decoder_y], device, optimizer_y, valid_loader, 'y')
     print(true_y)
     print(pred_y)
+    true_tile = true_y * k + true_x
+    pred_tile = pred_y * k + pred_x
+    test_score = accuracy_score(true_tile, pred_tile)
+
+    # show information
+    print('\nEpoch ({:d}): Accuracy: {:.2f}%\n'.format(epoch, test_loss, 100* test_score))
