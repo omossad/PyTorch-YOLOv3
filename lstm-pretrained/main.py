@@ -171,7 +171,7 @@ use_cuda = torch.cuda.is_available()                   # check if GPU exists
 device = torch.device("cuda" if use_cuda else "cpu")   # use CPU or GPU
 
 # Data loading parameters
-params = {'batch_size': batch_size, 'shuffle': True, 'num_workers': 1, 'pin_memory': True} if use_cuda else {}
+params = {'batch_size': batch_size, 'shuffle': True, 'num_workers': 4, 'pin_memory': False} if use_cuda else {}
 
 
 # load UCF101 actions names
