@@ -76,7 +76,7 @@ class ResNet(nn.Module):
 
 ########## INSERTED CODE ########
 output_dir = "/home/omossad/projects/def-hefeeda/omossad/roi_detection/temporary_data/ha_0_resnet/"
-ha_0_images = sorted(glob.glob("/home/omossad/projects/def-hefeeda/omossad/roi_detection/temporary_data/ha_0_images/f*"))
+list_images = sorted(glob.glob("/home/omossad/projects/def-hefeeda/omossad/roi_detection/temporary_data/ha_0_images/f*"))
 #ha_0_labels = sorted(glob.glob("/home/omossad/projects/def-hefeeda/omossad/roi_detection/temporary_data/ha_0_images/f*"))
 print(len(ha_0_images))
 #print(len(ha_0_labels))
@@ -89,7 +89,7 @@ def process_data(images):
     images=np.asarray(images)
     return images[image_indices]
 
-train_list = process_data(ha_0_images)
+train_list = process_data(list_images)
 print(train_list)
 
 
