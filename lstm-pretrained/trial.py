@@ -4,7 +4,7 @@ from sklearn.model_selection import train_test_split
 
 foldername = "/home/omossad/scratch/temp/roi/images/"
 print(foldername)
-print(foldername.split("/")[0:-1])
+print(foldername.replace('roi','tico'))
 
 ha_0_images = sorted(glob.glob("/home/omossad/scratch/temp/roi/images/ha_0_*"))
 ha_0_labels = sorted(glob.glob("/home/omossad/scratch/temp/roi/labels/ha_0_*"))
