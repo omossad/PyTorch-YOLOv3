@@ -11,9 +11,9 @@ import math
 ########################################
 ## VARIABLES ###
 # input folder is where the fixation points are located #
-input_folder = '/home/omossad/projects/def-hefeeda/omossad/roi_detection/temporary_data/'
+input_folder = '/home/omossad/projects/def-hefeeda/omossad/roi_detection/temporary_data/data/fixations_csv/'
 # output folder is where the frame fixations will be stored#
-output_folder = '/home/omossad/projects/def-hefeeda/omossad/roi_detection/temporary_data/'
+output_folder = '/home/omossad/projects/def-hefeeda/omossad/roi_detection/temporary_data/data/fixations_txt/'
 
 
 
@@ -47,7 +47,6 @@ print("Total number of files is:", num_files)
 frame_time = np.zeros((num_files,1))
 frame_info = np.zeros((num_files,2))
 file_names = []
-num_files = 1
 with open('frames_info') as csv_file:
 	csv_reader = csv.reader(csv_file, delimiter=',')
 	line_count = 0

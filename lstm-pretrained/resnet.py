@@ -11,8 +11,10 @@ import glob
 from torch.utils import data
 from PIL import Image
 import pickle
-
-
+import argparse
+parser = argparse.ArgumentParser()
+parser.add_argument("--input_dir", type=str, default='/home/omossad/projects/def-hefeeda/omossad/roi_detection/temporary_data/ha_0_images/', help="input directory")
+opt = parser.parse_args()
 # set path
 #data_path = "./jpegs_256/"    # define UCF-101 RGB data path
 #action_name_path = './UCF101actions.pkl'
@@ -75,9 +77,9 @@ class ResNet(nn.Module):
 ########## INSERTED CODE ########
 output_dir = "/home/omossad/projects/def-hefeeda/omossad/roi_detection/temporary_data/ha_0_resnet/"
 ha_0_images = sorted(glob.glob("/home/omossad/projects/def-hefeeda/omossad/roi_detection/temporary_data/ha_0_images/f*"))
-ha_0_labels = sorted(glob.glob("/home/omossad/projects/def-hefeeda/omossad/roi_detection/temporary_data/ha_0_images/f*"))
+#ha_0_labels = sorted(glob.glob("/home/omossad/projects/def-hefeeda/omossad/roi_detection/temporary_data/ha_0_images/f*"))
 print(len(ha_0_images))
-print(len(ha_0_labels))
+#print(len(ha_0_labels))
 
 
 
