@@ -174,41 +174,41 @@ print(all_filenames)
 data_dir  = '/home/omossad/projects/def-hefeeda/omossad/roi_detection/temporary_data/data/frames/'
 label_dir = '/home/omossad/projects/def-hefeeda/omossad/roi_detection/temporary_data/data/labels/'
 
-#train_list = []
-#test_list = []
-#train_label = []
-#test_label = []
-a = []
-b = []
+train_list = []
+test_list = []
+train_label = []
+test_label = []
+
 for f in all_filenames:
     images = sorted(glob.glob(data_dir + f + '/*'))
     labels = sorted(glob.glob(label_dir + f + '/*'))
     processed_images = process_data(images)
     processed_labels = process_labels(labels)
-    a.extend(processed_images)
-    b.extend(processed_labels)
-    print(a)
-    print(b)
-    #if f.startswith('ha_8'):
-    #    test_list.extend(processed_images)
-    #    test_label.extend(processed_labels)
-    #elif f.startswith('ha_9'):
-    #    test_list.extend(processed_images)
-    #    test_label.extend(processed_labels)
-    #else:
-    #    train_list.extend(processed_images)
-    #    train_label.extend(processed_labels)
+    if f.startswith('ha_7'):
+        test_list.extend(processed_images)
+        test_label.extend(processed_labels)
+    elif f.startswith('ha_8'):
+        test_list.extend(processed_images)
+        test_label.extend(processed_labels)
+    elif f.startswith('ha_9'):
+        test_list.extend(processed_images)
+        test_label.extend(processed_labels)
+    else:
+        train_list.extend(processed_images)
+        train_label.extend(processed_labels)
     #print(len(train_list))
     #print(len(train_label))
 
-a = np.asarray(a)
-b = np.asarray(b)
-train_list, test_list, train_label, test_label = train_test_split(a, b, test_size=0.25, random_state=42)
 
-#train_list = np.asarray(train_list)
-#test_list  = np.asarray(test_list)
-#train_label = np.asarray(train_label)
-#test_label = np.asarray(test_label)
+
+train_list_t = np.asarray(train_list)
+test_list_t  = np.asarray(test_list)
+train_label_t = np.asarray(train_label)
+test_label_t = np.asarray(test_label)
+
+train_list, test_list_, train_label, test_label_ = train_test_split(train_list_t, train_label_t, test_size=0.01, random_state=42)
+train_list_, test_list, train_label_, test_label = train_test_split(test_list_t, test_label_t, test_size=0.99, random_state=42)
+
 
 print(train_list.shape)
 print(test_list.shape)
