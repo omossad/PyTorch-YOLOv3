@@ -180,7 +180,7 @@ for f in all_filenames:
     images = sorted(glob.glob(data_dir + f + '/*'))
     labels = sorted(glob.glob(label_dir + f + '/*'))
     processed_images = process_data(images)
-    processed_labels = process_labels(labels, len(processed_images))
+    processed_labels = process_labels(labels)
     if f.startswith('se_'):
         test_list.extend(processed_images)
         test_label.extend(processed_labels)
