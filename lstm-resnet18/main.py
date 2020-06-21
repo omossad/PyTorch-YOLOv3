@@ -151,7 +151,7 @@ def process_labels(labels):
 #a = process_data(ha_0_images)
 #b = process_labels(ha_0_labels)
 #train_list, test_list, train_label, test_label = train_test_split(a, b, test_size=0.25, random_state=42)
-max_files = 2
+max_files = 99
 def read_info():
     file_names = []
     num_files = 0
