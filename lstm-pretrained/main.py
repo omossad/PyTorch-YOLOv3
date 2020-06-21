@@ -113,7 +113,7 @@ def validation(model, device, optimizer, test_loader, coordinate):
     # compute accuracy
     all_y = torch.stack(all_y, dim=0)
     all_y_pred = torch.stack(all_y_pred, dim=0)
-    #test_score = accuracy_score(all_y.cpu().data.squeeze().numpy(), all_y_pred.cpu().data.squeeze().numpy())
+    test_score = accuracy_score(all_y.cpu().data.squeeze().numpy(), all_y_pred.cpu().data.squeeze().numpy())
 
     # show information
     #print('\nTest set ({:d} samples): Average loss: {:.4f}, Accuracy: {:.2f}%\n'.format(len(all_y), test_loss, 100* test_score))
@@ -125,7 +125,7 @@ def validation(model, device, optimizer, test_loader, coordinate):
     #torch.save(optimizer.state_dict(), os.path.join(save_model_path, 'optimizer_epoch{}.pth'.format(epoch + 1)))      # save optimizer
     #print("Epoch {} model saved!".format(epoch + 1))
 
-    return test_loss, all_y.cpu().data.squeeze().numpy(), all_y_pred.cpu().data.squeeze().numpy()
+    return test_loss, test_score, all_y.cpu().data.squeeze().numpy(), all_y_pred.cpu().data.squeeze().numpy()
 
 
 ########## INSERTED CODE ########
@@ -138,27 +138,17 @@ time_steps = 4
 def process_data(images):
     num_images = len(images)
     image_indices = np.arange(0,num_images)
-    indices = np.array([ image_indices[i:i+time_steps] for i in range(num_images-time_steps) ])
+    indices = np.array([ image_indices[i:i+time_steps] for i in range(num_images-time_steps+1) ])
     images=np.asarray(images)
     return images[indices]
 
-def process_labels(labels,req_size):
+def process_labels(labels):
     num_labels = len(labels)
-    #indices = np.arange(time_steps-1,num_labels-1)
-    indices = np.arange(time_steps-1, req_size + time_steps -1)
+    indices = np.arange(time_steps-1,num_labels)
     labels=np.asarray(labels)
     return labels[indices]
 
-#ha_0_images = sorted(glob.glob("/home/omossad/projects/def-hefeeda/omossad/roi_detection/temporary_data/ha_0_resnet/f*"))
-#ha_0_labels = sorted(glob.glob("/home/omossad/projects/def-hefeeda/omossad/roi_detection/temporary_data/ha_0_labels/f*"))
-#print(len(ha_0_images))
-#print(len(ha_0_labels))
-#a = process_data(ha_0_images)
-#b = process_labels(ha_0_labels)
-#train_list, test_list, train_label, test_label = train_test_split(a, b, test_size=0.25, random_state=42)
-#print(train_list)
-#print(train_label)
-max_files = 99
+max_files = 10
 def read_info():
     file_names = []
     num_files = 0
@@ -284,9 +274,13 @@ optimizer_y = torch.optim.Adam(crnn_params_y, lr=learning_rate)
 for epoch in range(epochs):
     # train, test model
     train_losses, train_scores = train(log_interval, [cnn_encoder_x, rnn_decoder_x], device, train_loader, optimizer_x, epoch, 'x')
-    epoch_test_loss, true_x, pred_x = validation([cnn_encoder_x, rnn_decoder_x], device, optimizer_x, valid_loader, 'x')
+    epoch_test_loss, epoch_test_score, true_x, pred_x = validation([cnn_encoder_x, rnn_decoder_x], device, optimizer_x, valid_loader, 'x')
+    print('\nEpoch ({:d}): Train X Accuracy: {:.2f}%\n'.format(epoch, 100* np.average(np.asarray(train_scores))))
+    print('\nEpoch ({:d}): Test  X Accuracy: {:.2f}%\n'.format(epoch, 100* epoch_test_score))
     train_losses, train_scores = train(log_interval, [cnn_encoder_y, rnn_decoder_y], device, train_loader, optimizer_y, epoch, 'y')
-    epoch_test_loss, true_y, pred_y = validation([cnn_encoder_y, rnn_decoder_y], device, optimizer_y, valid_loader, 'y')
+    epoch_test_loss, epoch_test_score, true_y, pred_y = validation([cnn_encoder_y, rnn_decoder_y], device, optimizer_y, valid_loader, 'y')
+    print('\nEpoch ({:d}): Train Y Accuracy: {:.2f}%\n'.format(epoch, 100* np.average(np.asarray(train_scores))))
+    print('\nEpoch ({:d}): Test  Y Accuracy: {:.2f}%\n'.format(epoch, 100* epoch_test_score))
     x_score = (true_x == pred_x)
     y_score = (true_y == pred_y)
     test_score = np.average(x_score*y_score)
