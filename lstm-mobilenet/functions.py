@@ -121,10 +121,8 @@ class ResCNNEncoder(nn.Module):
         self.drop_p = drop_p
 
         resnet = models.mobilenet_v2(pretrained=True)
-        #modules = list(resnet.children())[:-1]      # delete the last fc layer.
-        modules = list(resnet.children())      # delete the last fc layer.
+        modules = list(resnet.children())[:-1]      # delete the last fc layer.
         self.resnet = nn.Sequential(*modules)
-        print(self.resnet)
         self.fc1 = nn.Linear(1280, fc_hidden1)
         #self.fc1 = nn.Linear(resnet.fc.in_features, fc_hidden1)
         self.bn1 = nn.BatchNorm1d(fc_hidden1, momentum=0.01)
@@ -138,7 +136,9 @@ class ResCNNEncoder(nn.Module):
             # ResNet CNN
             with torch.no_grad():
                 x = self.resnet(x_3d[:, t, :, :, :])  # ResNet
+                print(x.shape)
                 x = x.view(x.size(0), -1)             # flatten output of conv
+                print(x.shape)
 
             # FC layers
             x = self.bn1(self.fc1(x))
