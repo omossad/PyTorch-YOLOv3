@@ -181,7 +181,13 @@ for f in all_filenames:
     labels = sorted(glob.glob(label_dir + f + '/*'))
     processed_images = process_data(images)
     processed_labels = process_labels(labels)
-    if f.startswith('se_'):
+    if f.startswith('ha_7'):
+        test_list.extend(processed_images)
+        test_label.extend(processed_labels)
+    if f.startswith('ha_8'):
+        test_list.extend(processed_images)
+        test_label.extend(processed_labels)
+    if f.startswith('ha_9'):
         test_list.extend(processed_images)
         test_label.extend(processed_labels)
     else:
