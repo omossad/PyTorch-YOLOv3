@@ -199,6 +199,8 @@ for f in all_filenames:
     #print(len(train_list))
     #print(len(train_label))
 
+a = np.asarray(a)
+b = np.asarray(b)
 train_list, test_list, train_label, test_label = train_test_split(a, b, test_size=0.25, random_state=42)
 
 #train_list = np.asarray(train_list)
