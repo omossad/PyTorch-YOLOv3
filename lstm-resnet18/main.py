@@ -165,7 +165,7 @@ def read_info():
                 num_files += 1
             else:
                 break
-    print("Total number of files is:", num_files)
+    print("Total number of files is:", num_files-1)
     return file_names
 
 all_filenames = read_info()
@@ -339,7 +339,8 @@ for epoch in range(epochs):
     epoch_train_scores.append(train_scores)
     epoch_test_losses.append(epoch_test_loss)
     epoch_test_scores.append(epoch_test_score)
-
+    print(epoch_train_losses)
+    print(epoch_train_scores)
     # save all train test results
     #A = np.array(epoch_train_losses)
     #B = np.array(epoch_train_scores)
