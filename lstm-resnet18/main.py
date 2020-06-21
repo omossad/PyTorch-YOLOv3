@@ -339,8 +339,8 @@ for epoch in range(epochs):
     epoch_train_scores.append(train_scores)
     epoch_test_losses.append(epoch_test_loss)
     epoch_test_scores.append(epoch_test_score)
-    print(epoch_train_losses)
-    print(epoch_train_scores)
+    print(np.average(np.asarray(epoch_train_losses)))
+    print(np.average(np.asarray(epoch_train_scores)))
     # save all train test results
     #A = np.array(epoch_train_losses)
     #B = np.array(epoch_train_scores)
