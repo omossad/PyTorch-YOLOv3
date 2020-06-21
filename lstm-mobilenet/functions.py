@@ -121,7 +121,8 @@ class ResCNNEncoder(nn.Module):
         self.drop_p = drop_p
 
         resnet = models.mobilenet_v2(pretrained=True)
-        modules = list(resnet.children())[:-1]      # delete the last fc layer.
+        #modules = list(resnet.children())[:-1]      # delete the last fc layer.
+        modules = list(resnet.children())
         self.resnet = nn.Sequential(*modules)
         self.fc1 = nn.Linear(1280, fc_hidden1)
         #self.fc1 = nn.Linear(resnet.fc.in_features, fc_hidden1)
