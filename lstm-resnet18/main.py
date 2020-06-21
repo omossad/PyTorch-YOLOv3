@@ -137,13 +137,13 @@ time_steps = 4
 def process_data(images):
     num_images = len(images)
     image_indices = np.arange(0,num_images)
-    indices = np.array([ image_indices[i:i+time_steps] for i in range(num_images-time_steps) ])
+    indices = np.array([ image_indices[i:i+time_steps] for i in range(num_images-time_steps+1) ])
     images=np.asarray(images)
     return images[indices]
 
 def process_labels(labels):
     num_labels = len(labels)
-    indices = np.arange(time_steps-1,num_labels-1)
+    indices = np.arange(time_steps-1,num_labels)
     labels=np.asarray(labels)
     return labels[indices]
 
