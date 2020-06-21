@@ -151,7 +151,7 @@ def process_labels(labels):
 #a = process_data(ha_0_images)
 #b = process_labels(ha_0_labels)
 #train_list, test_list, train_label, test_label = train_test_split(a, b, test_size=0.25, random_state=42)
-max_files = 99
+max_files = 2
 def read_info():
     file_names = []
     num_files = 0
@@ -187,6 +187,8 @@ for f in all_filenames:
     processed_labels = process_labels(labels)
     a.extend(processed_images)
     b.extend(processed_labels)
+    print(a)
+    print(b)
     #if f.startswith('ha_8'):
     #    test_list.extend(processed_images)
     #    test_label.extend(processed_labels)
