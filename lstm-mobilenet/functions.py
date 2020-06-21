@@ -135,9 +135,7 @@ class ResCNNEncoder(nn.Module):
             # ResNet CNN
             with torch.no_grad():
                 x = self.resnet(x_3d[:, t, :, :, :])  # ResNet
-                print(x.shape)
                 x = x.view(x.size(0), -1)             # flatten output of conv
-                print(x.shape)
 
             # FC layers
             x = self.bn1(self.fc1(x))
