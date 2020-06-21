@@ -14,7 +14,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import OneHotEncoder, LabelEncoder
 from sklearn.metrics import accuracy_score
 import glob
-
+import csv
 # set path
 #data_path = "./jpegs_256/"    # define UCF-101 RGB data path
 #action_name_path = './UCF101actions.pkl'
@@ -195,7 +195,7 @@ for f in all_filenames:
         train_label.extend(processed_labels)
     print(len(train_list))
     print(len(train_label))
-    
+
 train_list = np.asarray(train_list)
 test_list  = np.asarray(test_list)
 train_label = np.asarray(train_label)
