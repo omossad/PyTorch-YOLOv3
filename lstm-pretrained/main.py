@@ -31,7 +31,7 @@ RNN_FC_dim = 256
 # training parameters
 k = 8            # number of target category
 epochs = 120        # training epochs
-batch_size = 20
+batch_size = 30
 learning_rate = 1e-3
 wd = 1e-4
 log_interval = 1   # interval for displaying training info
