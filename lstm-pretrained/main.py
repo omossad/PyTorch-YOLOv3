@@ -33,7 +33,7 @@ k = 8            # number of target category
 epochs = 120        # training epochs
 batch_size = 30
 learning_rate = 1e-3
-wd = 1e-4
+wd = 1e-3
 log_interval = 1   # interval for displaying training info
 
 
