@@ -33,6 +33,7 @@ k = 8            # number of target category
 epochs = 120        # training epochs
 batch_size = 20
 learning_rate = 1e-3
+wd = 1e-4
 log_interval = 1   # interval for displaying training info
 
 
@@ -272,8 +273,8 @@ elif torch.cuda.device_count() == 1:
                   list(cnn_encoder_y.fc3.parameters()) + list(rnn_decoder_y.parameters())
 
 
-optimizer_x = torch.optim.Adam(crnn_params_x, lr=learning_rate)
-optimizer_y = torch.optim.Adam(crnn_params_y, lr=learning_rate)
+optimizer_x = torch.optim.Adam(crnn_params_x, lr=learning_rate, weight_decay=wd)
+optimizer_y = torch.optim.Adam(crnn_params_y, lr=learning_rate, weight_decay=wd)
 
 
 # start training
