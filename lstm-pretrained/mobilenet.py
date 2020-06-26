@@ -63,7 +63,8 @@ class ResNet(nn.Module):
         super(ResNet, self).__init__()
         resnet = models.mobilenet_v2(pretrained=True)
         print(list(resnet.children()))
-
+        print('----------')
+        print(list(resnet.children())[1])
         #print(resnet)
         modules = list(resnet.children())[:-1]      # delete the last fc layer.
         self.resnet = nn.Sequential(*modules)
