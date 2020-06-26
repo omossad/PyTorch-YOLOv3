@@ -63,6 +63,7 @@ class ResNet(nn.Module):
         super(ResNet, self).__init__()
         resnet = models.mobilenet_v2(pretrained=True)
         print(resnet.children())
+
         #print(resnet)
         modules = list(resnet.children())[:-1]      # delete the last fc layer.
         self.resnet = nn.Sequential(*modules)
@@ -198,6 +199,7 @@ for batch_idx, (X, img_name) in enumerate(train_loader):
     #output_file = open(output_dir + dump_name + '.pkl', 'wb')
     X = X.to(device)
     output = resnet_model(X)
+    print(output.shape)
     output = output.view(-1)
     #pickle.dump(output, output_file)
     #output_file.close()
