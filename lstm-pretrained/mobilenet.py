@@ -69,16 +69,18 @@ class ResNet(nn.Module):
         #modules = list(resnet.children())[:-1]      # delete the last fc layer.
         #self.resnet = nn.Sequential(*modules)
         print(resnet.features)
+        resnet.classifier = nn.functional.adaptive_avg_pool2d(x, 1).reshape(x.shape[0], -1)
         print('------')
-        modules = list(resnet.children())[0]
+        #modules = list(resnet.children())[0]
         #modules.append(list(resnet.children())[1][0])
         #print(modules)
         #print('------')
         #print(list(modules.children())[0])
         #print('******')
         #self.resnet = nn.Sequential(*list(resnet.children())[0])
-        self.resnet = nn.Sequential(*modules)
-        self.resnet = self.resnet.to(device)
+        #self.resnet = nn.Sequential(*modules)
+        self.resnet = resnet.to(device)
+        print(self.resnet)
         #print(list(self.resnet.children())[18])
         summary(self.resnet, (3, 244, 224))
 
