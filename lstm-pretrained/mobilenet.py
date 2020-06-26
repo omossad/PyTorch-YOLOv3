@@ -70,7 +70,7 @@ class ResNet(nn.Module):
         #self.resnet = nn.Sequential(*modules)
         self.resnet = nn.Sequential(*list(resnet.children())[0])
         self.resnet = self.resnet.to(device)
-
+        print(list(self.resnet.children())[18])
         summary(self.resnet, (3, 244, 224))
 
     def forward(self, x_3d):
