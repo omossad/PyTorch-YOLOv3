@@ -68,6 +68,7 @@ class ResNet(nn.Module):
         #print(resnet)
         #modules = list(resnet.children())[:-1]      # delete the last fc layer.
         #self.resnet = nn.Sequential(*modules)
+        print(resnet.features)
         print('------')
         modules = list(resnet.children())[0]
         modules.append(list(resnet.children())[1][0])
