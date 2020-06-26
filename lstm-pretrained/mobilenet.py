@@ -82,7 +82,7 @@ class ResNet(nn.Module):
         self.resnet = self.resnet.to(device)
         #print(self.resnet)
         #print(list(self.resnet.children())[18])
-        summary(self.resnet, (3, 244, 224))
+        #summary(self.resnet, (3, 244, 224))
 
     def forward(self, x_3d):
         print(x_3d.shape)
