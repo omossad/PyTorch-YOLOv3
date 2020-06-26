@@ -12,7 +12,7 @@ from torch.utils import data
 from PIL import Image
 import pickle
 import argparse
-from summary import summary
+from torchsummary import summary
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--input_dir", type=str, default='/home/omossad/projects/def-hefeeda/omossad/roi_detection/codes/ROI-PyTorch/data/samples/ha*', help="input directory")
