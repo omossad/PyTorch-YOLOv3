@@ -68,6 +68,12 @@ class ResNet(nn.Module):
         #print(resnet)
         #modules = list(resnet.children())[:-1]      # delete the last fc layer.
         #self.resnet = nn.Sequential(*modules)
+        print('------')
+        modules = list(resnet.children())[1]
+        print(modules)
+        print('------')
+        print(list(modules.children())[0])
+        print('******')
         self.resnet = nn.Sequential(*list(resnet.children())[0])
         self.resnet = self.resnet.to(device)
         print(list(self.resnet.children())[18])
