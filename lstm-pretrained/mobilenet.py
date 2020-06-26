@@ -62,6 +62,7 @@ class ResNet(nn.Module):
         """Load the pretrained ResNet-152 and replace top fc layer."""
         super(ResNet, self).__init__()
         resnet = models.mobilenet_v2(pretrained=True)
+        resnet = resnet.to(device)
         summary(resnet, (3, 244, 224))
         #print(resnet)
         modules = list(resnet.children())[:-1]      # delete the last fc layer.
