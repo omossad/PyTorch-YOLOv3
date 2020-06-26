@@ -66,9 +66,10 @@ class ResNet(nn.Module):
         print('----------')
         print(list(resnet.children())[0])
         #print(resnet)
-        modules = list(resnet.children())[:-1]      # delete the last fc layer.
-        self.resnet = nn.Sequential(*modules)
-        self.resnet = self.resnet.to(device)
+        #modules = list(resnet.children())[:-1]      # delete the last fc layer.
+        #self.resnet = nn.Sequential(*modules)
+        #self.resnet = self.resnet.to(device)
+        self.resnet = nn.Sequential(*list(resnet.children())[0])
         summary(self.resnet, (3, 244, 224))
 
     def forward(self, x_3d):
