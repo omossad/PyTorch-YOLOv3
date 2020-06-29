@@ -170,7 +170,7 @@ all_filenames = read_info()
 print(all_filenames)
 
 data_dir  = '/home/omossad/projects/def-hefeeda/omossad/roi_detection/temporary_data/data/resnet/'
-data_dir  = '/home/omossad/scratch/Gaming-Dataset/selected_frames/fifa/'
+data_dir  = '/home/omossad/scratch/Gaming-Dataset/features/fifa/resnet152/'
 label_dir = '/home/omossad/projects/def-hefeeda/omossad/roi_detection/temporary_data/data/labels/'
 
 train_list = []
