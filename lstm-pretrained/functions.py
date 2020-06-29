@@ -37,12 +37,16 @@ class Dataset_CRNN(data.Dataset):
         X = []
         for i in selected_frames:
             #image = Image.open(i)
+            '''
             pkl_file = open(i, 'rb')
             image = CPU_Unpickler(pkl_file).load()
+            pkl_file.close()
+            '''
+            image = torch.load(i)
             #image = torch.load(i,map_location=torch.device('cuda'))
             #image = torch.load(pkl_file)
             #image = pickle.load(pkl_file)
-            pkl_file.close()
+
 
             X.append(image)
         X = torch.stack(X, dim=0)
