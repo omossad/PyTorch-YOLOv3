@@ -187,6 +187,7 @@ elif torch.cuda.device_count() == 1:
 
 # start training
 for batch_idx, (X, img_name) in enumerate(train_loader):
+    print(batch_idx)
     # distribute data to device
     dump_name = img_name[0].split("/")[-1]
     dump_name = dump_name.split(".")[0]
