@@ -42,7 +42,7 @@ class Dataset_CRNN(data.Dataset):
             image = CPU_Unpickler(pkl_file).load()
             pkl_file.close()
             '''
-            image = torch.load(i)
+            image = torch.load(i,map_location=lambda storage, loc: storage)
             #image = torch.load(i,map_location=torch.device('cuda'))
             #image = torch.load(pkl_file)
             #image = pickle.load(pkl_file)
