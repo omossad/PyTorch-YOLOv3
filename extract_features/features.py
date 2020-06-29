@@ -70,8 +70,8 @@ class ResNet(nn.Module):
 
 class MobileNet(nn.Module):
     def __init__(self):
-        """Load the pretrained ResNet-152 and replace top fc layer."""
-        super(ResNet, self).__init__()
+        """Load the pretrained MobileNet_V2 and replace top fc layer."""
+        super(MobileNet, self).__init__()
         mobilenet = models.mobilenet_v2(pretrained=True)
         modules = list(mobilenet.children())[:-1]      # delete the last fc layer.
         self.mobilenet = nn.Sequential(*modules)
@@ -93,9 +93,9 @@ if opt.base_model == 'resnet152':
     output_dir = output_dir.replace('fifa', 'fifa/resnet152')
 elif opt.base_model == 'resnet18':
     output_dir = output_dir.replace('fifa', 'fifa/resnet18')
-elif opt.base_model == 'mobilenet'
+elif opt.base_model == 'mobilenet':
     output_dir = output_dir.replace('fifa', 'fifa/mobilenetV2')
-    
+
 output_dir = output_dir.replace('*', '')
 print(output_dir)
 
@@ -138,12 +138,18 @@ train_loader = DataLoader(train_set, **params)
 
 
 # Create model
-resnet_model = ResNet().to(device)
+if opt.base_model == 'resnet152':
+    pretrained_model = ResNet().to(device)
+elif opt.base_model == 'resnet18':
+    pretrained_model = ResNet().to(device)
+elif opt.base_model == 'mobilenet':
+    pretrained_model = MobileNet().to(device)
+
 
 # Parallelize model to multiple GPUs
 if torch.cuda.device_count() > 1:
     print("Using", torch.cuda.device_count(), "GPUs!")
-    resnet_model = nn.DataParallel(resnet_model)
+    pretrained_model = nn.DataParallel(pretrained_model)
 
 elif torch.cuda.device_count() == 1:
     print("Using", torch.cuda.device_count(), "GPU!")
@@ -157,6 +163,6 @@ for batch_idx, (X, img_name) in enumerate(train_loader):
     dump_name = dump_name.split(".")[0]
     dump_name = output_dir + dump_name + '.pt'
     X = X.to(device)
-    output = resnet_model(X)
+    output = pretrained_model(X)
     output = output.view(-1)
     torch.save(output, dump_name)
