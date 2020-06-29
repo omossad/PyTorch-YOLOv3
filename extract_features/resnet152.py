@@ -176,7 +176,7 @@ if torch.cuda.device_count() > 1:
 elif torch.cuda.device_count() == 1:
     print("Using", torch.cuda.device_count(), "GPU!")
 
-'''
+
 # start training
 for batch_idx, (X, img_name) in enumerate(train_loader):
     # distribute data to device
@@ -188,3 +188,4 @@ for batch_idx, (X, img_name) in enumerate(train_loader):
     output = output.view(-1)
     pickle.dump(output, output_file)
     output_file.close()
+'''
