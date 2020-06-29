@@ -14,6 +14,8 @@ import pickle
 import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument("--input_dir", type=str, default='/home/omossad/scratch/Gaming-Dataset/selected_frames/fifa/ha_0/*', help="input directory")
+parser.add_argument("--base_model", type=str, default='resnet152', help="base network")
+
 opt = parser.parse_args()
 # set path
 #data_path = "./jpegs_256/"    # define UCF-101 RGB data path
@@ -59,7 +61,10 @@ class ResNet(nn.Module):
     def __init__(self):
         """Load the pretrained ResNet-152 and replace top fc layer."""
         super(ResNet, self).__init__()
-        resnet = models.resnet152(pretrained=True)
+        if opt.base_model == 'resnet152':
+            resnet = models.resnet152(pretrained=True)
+        elif opt.base_model == 'resnet18':
+            resnet = models.resnet18(pretrained=True)
         modules = list(resnet.children())[:-1]      # delete the last fc layer.
         self.resnet = nn.Sequential(*modules)
 
@@ -75,7 +80,10 @@ class ResNet(nn.Module):
 input_directory = opt.input_dir
 list_images = sorted(glob.glob(input_directory))
 output_dir = input_directory.replace('selected_frames', 'features')
-output_dir = output_dir.replace('fifa', 'fifa/resnet152')
+if opt.base_model == 'resnet152':
+    output_dir = output_dir.replace('fifa', 'fifa/resnet152')
+elif opt.base_model == 'resnet18':
+    output_dir = output_dir.replace('fifa', 'fifa/resnet18')
 
 output_dir = output_dir.replace('*', '')
 print(output_dir)
@@ -158,7 +166,7 @@ transform = transforms.Compose([transforms.Resize([res_size, res_size]),
 
 ### INSERTED CODE ####
 
-'''
+
 train_set = Dataset_CRNN(train_list, transform=transform)
 ##########################
 
@@ -182,10 +190,11 @@ for batch_idx, (X, img_name) in enumerate(train_loader):
     # distribute data to device
     dump_name = img_name[0].split("/")[-1]
     dump_name = dump_name.split(".")[0]
-    output_file = open(output_dir + dump_name + '.pkl', 'wb')
+    dump_name = output_dir + dump_name + '.pt'
+    #output_file = open(output_dir + dump_name + '.pkl', 'wb')
     X = X.to(device)
     output = resnet_model(X)
     output = output.view(-1)
-    pickle.dump(output, output_file)
-    output_file.close()
-'''
+    torch.save(output, dump_name)
+    #pickle.dump(output, output_file)
+    #output_file.close()
