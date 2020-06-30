@@ -17,22 +17,22 @@ import pickle
 import csv
 
 # EncoderCNN architecture
-CNN_fc_hidden1, CNN_fc_hidden2 = 512, 256
-CNN_embed_dim = 128   # latent dim extracted by 2D CNN
+CNN_fc_hidden1, CNN_fc_hidden2 = 1024, 768
+CNN_embed_dim = 256   # latent dim extracted by 2D CNN
 
 res_size = 224        # ResNet image size
-dropout_p = 0.5       # dropout probability
+dropout_p = 0.0       # dropout probability
 
 # DecoderRNN architecture
-RNN_hidden_layers = 2
-RNN_hidden_nodes = 128
-RNN_FC_dim = 64
+RNN_hidden_layers = 3
+RNN_hidden_nodes = 512
+RNN_FC_dim = 256
 
 # training parameters
 k = 8            # number of target category
 epochs = 120        # training epochs
-batch_size = 24
-learning_rate = 1e-4
+batch_size = 20
+learning_rate = 1e-3
 wd = 0
 log_interval = 1   # interval for displaying training info
 
