@@ -21,7 +21,7 @@ CNN_fc_hidden1, CNN_fc_hidden2 = 512, 256
 CNN_embed_dim = 128   # latent dim extracted by 2D CNN
 
 res_size = 224        # ResNet image size
-dropout_p = 0.0       # dropout probability
+dropout_p = 0.5       # dropout probability
 
 # DecoderRNN architecture
 RNN_hidden_layers = 2
