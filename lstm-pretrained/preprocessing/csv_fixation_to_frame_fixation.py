@@ -11,7 +11,7 @@ import math
 ########################################
 ## VARIABLES ###
 # input folder is where the fixation points are located #
-input_folder = '/home/omossad/projects/def-hefeeda/omossad/roi_detection/temporary_data/data/fixations_csv/'
+input_folder = '/home/omossad/scratch/Gaming-Dataset/labels/fifa/'
 # output folder is where the frame fixations will be stored#
 output_folder = '/home/omossad/projects/def-hefeeda/omossad/roi_detection/temporary_data/data/fixations_txt/'
 
