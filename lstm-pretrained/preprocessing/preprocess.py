@@ -11,9 +11,9 @@ tile_width = W_ref / W_tiles
 tile_height = H_ref / H_tiles
 num_tiles = int(W_tiles * H_tiles)
 
-input_folder = '/home/omossad/projects/def-hefeeda/omossad/roi_detection/temporary_data/data/fixations_txt/'
+input_folder = '/home/omossad/scratch/Gaming-Dataset/labels_txt/fifa/'
 #output_folder_64 = '/home/omossad/projects/def-hefeeda/omossad/roi_detection/temporary_data/ha_0_labels_64/'
-output_folder = '/home/omossad/projects/def-hefeeda/omossad/roi_detection/temporary_data/data/labels/'
+output_folder = '/home/omossad/scratch/Gaming-Dataset/frame_labels/fifa/'
 
 #base_dir  = '/home/omossad/scratch/temp/labels/ha_labels/'
 #out_dir   = '/home/omossad/scratch/temp/roi/'
