@@ -149,7 +149,7 @@ def process_labels(labels):
     labels=np.asarray(labels)
     return labels[indices]
 
-max_files = 10
+max_files = 99
 def read_info():
     file_names = []
     num_files = 0
@@ -183,15 +183,15 @@ for f in all_filenames:
     labels = sorted(glob.glob(label_dir + f + '/*'))
     processed_images = process_data(images)
     processed_labels = process_labels(labels)
-    if f.startswith('ha_7'):
+    if f.startswith('pu_'):
         test_list.extend(processed_images)
         test_label.extend(processed_labels)
-    if f.startswith('ha_8'):
-        test_list.extend(processed_images)
-        test_label.extend(processed_labels)
-    if f.startswith('ha_9'):
-        test_list.extend(processed_images)
-        test_label.extend(processed_labels)
+    #if f.startswith('ha_8'):
+    #    test_list.extend(processed_images)
+    #    test_label.extend(processed_labels)
+    #if f.startswith('ha_9'):
+    #    test_list.extend(processed_images)
+    #    test_label.extend(processed_labels)
     else:
         train_list.extend(processed_images)
         train_label.extend(processed_labels)
