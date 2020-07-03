@@ -169,9 +169,9 @@ def read_info():
 all_filenames = read_info()
 print(all_filenames)
 
-data_dir  = '/home/omossad/projects/def-hefeeda/omossad/roi_detection/temporary_data/data/resnet/'
+#data_dir  = '/home/omossad/projects/def-hefeeda/omossad/roi_detection/temporary_data/data/resnet/'
 data_dir  = '/home/omossad/scratch/Gaming-Dataset/features/fifa/mobilenetV2/'
-label_dir = '/home/omossad/scratch/Gaming-Dataset/temporary_data/data/labels/'
+label_dir = '/home/omossad/scratch/Gaming-Dataset/frame_labels/fifa/'
 
 train_list = []
 test_list = []
