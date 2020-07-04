@@ -149,7 +149,7 @@ def process_labels(labels):
     labels=np.asarray(labels)
     return labels[indices]
 
-max_files = 99
+max_files = 11
 def read_info():
     file_names = []
     num_files = 0
