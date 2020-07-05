@@ -149,7 +149,7 @@ def process_labels(labels):
     labels=np.asarray(labels)
     return labels[indices]
 
-max_files = 99
+max_files = 7
 def read_info():
     file_names = []
     num_files = 0
@@ -170,7 +170,8 @@ all_filenames = read_info()
 print(all_filenames)
 
 #data_dir  = '/home/omossad/projects/def-hefeeda/omossad/roi_detection/temporary_data/data/resnet/'
-data_dir  = '/home/omossad/scratch/Gaming-Dataset/features/fifa/mobilenetV2/'
+#data_dir  = '/home/omossad/scratch/Gaming-Dataset/features/fifa/mobilenetV2/'
+data_dir  = '/home/omossad/scratch/Gaming-Dataset/features/fifa/resnet18/'
 label_dir = '/home/omossad/scratch/Gaming-Dataset/frame_labels/fifa/'
 
 train_list = []
@@ -183,7 +184,7 @@ for f in all_filenames:
     labels = sorted(glob.glob(label_dir + f + '/*'))
     processed_images = process_data(images)
     processed_labels = process_labels(labels)
-    if f.startswith('pu_'):
+    if f.startswith('ha_5'):
         test_list.extend(processed_images)
         test_label.extend(processed_labels)
     #if f.startswith('ha_8'):
