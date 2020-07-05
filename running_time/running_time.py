@@ -166,7 +166,7 @@ for batch_idx, (X, img_name) in enumerate(train_loader):
     timings=np.zeros((repetitions,1))
     for _ in range(10):
 
-    with torch.no_grad():
+    #with torch.no_grad():
         for rep in range(repetitions):
             starter.record()
             _ = pretrained_model(X)
