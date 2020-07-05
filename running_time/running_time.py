@@ -165,18 +165,20 @@ for batch_idx, (X, img_name) in enumerate(train_loader):
     repetitions = 300
     timings=np.zeros((repetitions,1))
     for _ in range(10):
-
+        _ = pretrained_model(X)
     #with torch.no_grad():
-        for rep in range(repetitions):
-            starter.record()
-            _ = pretrained_model(X)
-            ender.record()
-            # WAIT FOR GPU SYNC
-            torch.cuda.synchronize()
-            curr_time = starter.elapsed_time(ender)
-            timings[rep] = curr_timemean_syn = np.sum(timings) / repetitions
-        std_syn = np.std(timings)
-        print(curr_timemean_syn)
+    for rep in range(repetitions):
+        starter.record()
+        _ = pretrained_model(X)
+        ender.record()
+        # WAIT FOR GPU SYNC
+        torch.cuda.synchronize()
+        curr_time = starter.elapsed_time(ender)
+        timings[rep] = curr_timemean_syn = np.sum(timings) / repetitions
+    std_syn = np.std(timings)
+    print(curr_timemean_syn)
+    print('--------------')
+    print(timings)
 
     #print(batch_idx)
     # distribute data to device
