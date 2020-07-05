@@ -176,11 +176,11 @@ for batch_idx, (X, img_name) in enumerate(train_loader):
         curr_time = starter.elapsed_time(ender)
         print(curr_time)
         print(curr_time*1000)
-        timings[rep] = curr_timemean_syn = np.sum(timings) / repetitions
+        timings[rep] = curr_time
+        mean_syn = np.sum(timings) / repetitions
     std_syn = np.std(timings)
-    print(curr_timemean_syn)
-    print('--------------')
-    print(timings)
+    print(mean_syn)
+    print(std_syn)
 
     #print(batch_idx)
     # distribute data to device
