@@ -174,6 +174,8 @@ for batch_idx, (X, img_name) in enumerate(train_loader):
         # WAIT FOR GPU SYNC
         torch.cuda.synchronize()
         curr_time = starter.elapsed_time(ender)
+        print(curr_time)
+        print(curr_time*1000)
         timings[rep] = curr_timemean_syn = np.sum(timings) / repetitions
     std_syn = np.std(timings)
     print(curr_timemean_syn)
