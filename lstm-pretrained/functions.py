@@ -132,7 +132,8 @@ class ResCNNEncoder(nn.Module):
         #modules = list(resnet.children())[:-1]      # delete the last fc layer.
         #self.resnet = nn.Sequential(*modules)
         #self.fc1 = nn.Linear(resnet.fc.in_features, fc_hidden1)
-        self.fc1 = nn.Linear(1280, fc_hidden1)
+        #self.fc1 = nn.Linear(1280, fc_hidden1)
+        self.fc1 = nn.Linear(512, fc_hidden1)
         #self.fc1 = nn.Linear(2048, fc_hidden1)
         self.bn1 = nn.BatchNorm1d(fc_hidden1, momentum=0.5)
         self.fc2 = nn.Linear(fc_hidden1, fc_hidden2)
