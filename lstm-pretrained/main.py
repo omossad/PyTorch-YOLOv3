@@ -254,21 +254,22 @@ if torch.cuda.device_count() > 1:
     crnn_params_x = list(cnn_encoder_x.module.fc1.parameters()) + list(cnn_encoder_x.module.bn1.parameters()) + \
                   list(cnn_encoder_x.module.fc2.parameters()) + list(cnn_encoder_x.module.bn2.parameters()) + \
                   list(cnn_encoder_x.module.fc3.parameters()) + list(rnn_decoder_x.parameters())
-'''
-    cnn_encoder_y = nn.DataParallel(cnn_encoder_y)
-    rnn_decoder_y = nn.DataParallel(rnn_decoder_y)
-    # Combine all EncoderCNN + DecoderRNN parameters
-    crnn_params_y = list(cnn_encoder_y.module.fc1.parameters()) + list(cnn_encoder_y.module.bn1.parameters()) + \
-                  list(cnn_encoder_y.module.fc2.parameters()) + list(cnn_encoder_y.module.bn2.parameters()) + \
-                  list(cnn_encoder_y.module.fc3.parameters()) + list(rnn_decoder_y.parameters())
-'''
 elif torch.cuda.device_count() == 1:
     print("Using", torch.cuda.device_count(), "GPU!")
     # Combine all EncoderCNN + DecoderRNN parameters
     crnn_params_x = list(cnn_encoder_x.fc1.parameters()) + list(cnn_encoder_x.bn1.parameters()) + \
                   list(cnn_encoder_x.fc2.parameters()) + list(cnn_encoder_x.bn2.parameters()) + \
                   list(cnn_encoder_x.fc3.parameters()) + list(rnn_decoder_x.parameters())
+
 '''
+if torch.cuda.device_count() > 1:
+    cnn_encoder_y = nn.DataParallel(cnn_encoder_y)
+    rnn_decoder_y = nn.DataParallel(rnn_decoder_y)
+    # Combine all EncoderCNN + DecoderRNN parameters
+    crnn_params_y = list(cnn_encoder_y.module.fc1.parameters()) + list(cnn_encoder_y.module.bn1.parameters()) + \
+                  list(cnn_encoder_y.module.fc2.parameters()) + list(cnn_encoder_y.module.bn2.parameters()) + \
+                  list(cnn_encoder_y.module.fc3.parameters()) + list(rnn_decoder_y.parameters())
+elif torch.cuda.device_count() == 1:
     crnn_params_y = list(cnn_encoder_y.fc1.parameters()) + list(cnn_encoder_y.bn1.parameters()) + \
                   list(cnn_encoder_y.fc2.parameters()) + list(cnn_encoder_y.bn2.parameters()) + \
                   list(cnn_encoder_y.fc3.parameters()) + list(rnn_decoder_y.parameters())
