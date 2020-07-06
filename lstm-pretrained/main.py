@@ -241,44 +241,45 @@ valid_loader = DataLoader(valid_set, **params)
 cnn_encoder_x = ResCNNEncoder(num_tiles=k,fc_hidden1=CNN_fc_hidden1, fc_hidden2=CNN_fc_hidden2, drop_p=dropout_p, CNN_embed_dim=CNN_embed_dim).to(device)
 rnn_decoder_x = DecoderRNN(CNN_embed_dim=CNN_embed_dim, h_RNN_layers=RNN_hidden_layers, h_RNN=RNN_hidden_nodes,
                          h_FC_dim=RNN_FC_dim, drop_p=dropout_p, num_classes=k).to(device)
-
+'''
 cnn_encoder_y = ResCNNEncoder(num_tiles=k,fc_hidden1=CNN_fc_hidden1, fc_hidden2=CNN_fc_hidden2, drop_p=dropout_p, CNN_embed_dim=CNN_embed_dim).to(device)
 rnn_decoder_y = DecoderRNN(CNN_embed_dim=CNN_embed_dim, h_RNN_layers=RNN_hidden_layers, h_RNN=RNN_hidden_nodes,
                          h_FC_dim=RNN_FC_dim, drop_p=dropout_p, num_classes=k).to(device)
-
+'''
 # Parallelize model to multiple GPUs
 if torch.cuda.device_count() > 1:
     print("Using", torch.cuda.device_count(), "GPUs!")
     cnn_encoder_x = nn.DataParallel(cnn_encoder_x)
     rnn_decoder_x = nn.DataParallel(rnn_decoder_x)
-
+'''
     cnn_encoder_y = nn.DataParallel(cnn_encoder_y)
     rnn_decoder_y = nn.DataParallel(rnn_decoder_y)
-
+'''
     # Combine all EncoderCNN + DecoderRNN parameters
     crnn_params_x = list(cnn_encoder_x.module.fc1.parameters()) + list(cnn_encoder_x.module.bn1.parameters()) + \
                   list(cnn_encoder_x.module.fc2.parameters()) + list(cnn_encoder_x.module.bn2.parameters()) + \
                   list(cnn_encoder_x.module.fc3.parameters()) + list(rnn_decoder_x.parameters())
-
+'''
     crnn_params_y = list(cnn_encoder_y.module.fc1.parameters()) + list(cnn_encoder_y.module.bn1.parameters()) + \
                   list(cnn_encoder_y.module.fc2.parameters()) + list(cnn_encoder_y.module.bn2.parameters()) + \
                   list(cnn_encoder_y.module.fc3.parameters()) + list(rnn_decoder_y.parameters())
-
+'''
 elif torch.cuda.device_count() == 1:
     print("Using", torch.cuda.device_count(), "GPU!")
     # Combine all EncoderCNN + DecoderRNN parameters
     crnn_params_x = list(cnn_encoder_x.fc1.parameters()) + list(cnn_encoder_x.bn1.parameters()) + \
                   list(cnn_encoder_x.fc2.parameters()) + list(cnn_encoder_x.bn2.parameters()) + \
                   list(cnn_encoder_x.fc3.parameters()) + list(rnn_decoder_x.parameters())
-
+'''
     crnn_params_y = list(cnn_encoder_y.fc1.parameters()) + list(cnn_encoder_y.bn1.parameters()) + \
                   list(cnn_encoder_y.fc2.parameters()) + list(cnn_encoder_y.bn2.parameters()) + \
                   list(cnn_encoder_y.fc3.parameters()) + list(rnn_decoder_y.parameters())
-
+'''
 
 optimizer_x = torch.optim.Adam(crnn_params_x, lr=learning_rate, weight_decay=wd)
+'''
 optimizer_y = torch.optim.Adam(crnn_params_y, lr=learning_rate, weight_decay=wd)
-
+'''
 
 # start training
 for epoch in range(epochs):
@@ -287,6 +288,7 @@ for epoch in range(epochs):
     epoch_test_loss, epoch_test_score, true_x, pred_x = validation([cnn_encoder_x, rnn_decoder_x], device, optimizer_x, valid_loader, 'x')
     print('\nEpoch ({:d}): Train X Accuracy: {:.2f}%\n'.format(epoch, 100* np.average(np.asarray(train_scores))))
     print('\nEpoch ({:d}): Test  X Accuracy: {:.2f}%\n'.format(epoch, 100* epoch_test_score))
+    '''
     train_losses, train_scores = train(log_interval, [cnn_encoder_y, rnn_decoder_y], device, train_loader, optimizer_y, epoch, 'y')
     epoch_test_loss, epoch_test_score, true_y, pred_y = validation([cnn_encoder_y, rnn_decoder_y], device, optimizer_y, valid_loader, 'y')
     print('\nEpoch ({:d}): Train Y Accuracy: {:.2f}%\n'.format(epoch, 100* np.average(np.asarray(train_scores))))
@@ -297,3 +299,4 @@ for epoch in range(epochs):
 
     # show information
     print('\nEpoch ({:d}): Accuracy: {:.2f}%\n'.format(epoch, 100* test_score))
+    '''
