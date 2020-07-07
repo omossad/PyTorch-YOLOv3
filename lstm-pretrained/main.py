@@ -24,7 +24,7 @@ res_size = 224        # ResNet image size
 dropout_p = 0.5       # dropout probability
 
 # DecoderRNN architecture
-RNN_hidden_layers = 2
+RNN_hidden_layers = 3
 RNN_hidden_nodes = 64
 RNN_FC_dim = 32
 
@@ -33,7 +33,7 @@ k = 8            # number of target category
 epochs = 120        # training epochs
 batch_size = 24
 learning_rate = 1e-3
-wd = 0
+wd = 0.1
 log_interval = 1   # interval for displaying training info
 
 
@@ -171,8 +171,8 @@ print(all_filenames)
 
 #data_dir  = '/home/omossad/projects/def-hefeeda/omossad/roi_detection/temporary_data/data/resnet/'
 #data_dir  = '/home/omossad/scratch/Gaming-Dataset/features/fifa/mobilenetV2/'
-data_dir  = '/home/omossad/scratch/Gaming-Dataset/features/fifa/resnet18/'
-#data_dir  = '/home/omossad/scratch/Gaming-Dataset/features/fifa/resnet152/'
+#data_dir  = '/home/omossad/scratch/Gaming-Dataset/features/fifa/resnet18/'
+data_dir  = '/home/omossad/scratch/Gaming-Dataset/features/fifa/resnet152/'
 label_dir = '/home/omossad/scratch/Gaming-Dataset/frame_labels/fifa/'
 
 train_list = []
@@ -185,10 +185,7 @@ for f in all_filenames:
     labels = sorted(glob.glob(label_dir + f + '/*'))
     processed_images = process_data(images)
     processed_labels = process_labels(labels)
-    if f.startswith('ha_7'):
-        test_list.extend(processed_images)
-        test_label.extend(processed_labels)
-    elif f.startswith('ha_8'):
+    if f.startswith('ha_8'):
         test_list.extend(processed_images)
         test_label.extend(processed_labels)
     elif f.startswith('ha_9'):
