@@ -17,21 +17,21 @@ import pickle
 import csv
 
 # EncoderCNN architecture
-CNN_fc_hidden1, CNN_fc_hidden2 = 1024, 256
-CNN_embed_dim = 128   # latent dim extracted by 2D CNN
+CNN_fc_hidden1, CNN_fc_hidden2 = 256, 128
+CNN_embed_dim = 64   # latent dim extracted by 2D CNN
 
 res_size = 224        # ResNet image size
 dropout_p = 0.5       # dropout probability
 
 # DecoderRNN architecture
 RNN_hidden_layers = 2
-RNN_hidden_nodes = 128
-RNN_FC_dim = 128
+RNN_hidden_nodes = 64
+RNN_FC_dim = 32
 
 # training parameters
 k = 8            # number of target category
 epochs = 120        # training epochs
-batch_size = 20
+batch_size = 24
 learning_rate = 1e-3
 wd = 0
 log_interval = 1   # interval for displaying training info
@@ -171,8 +171,8 @@ print(all_filenames)
 
 #data_dir  = '/home/omossad/projects/def-hefeeda/omossad/roi_detection/temporary_data/data/resnet/'
 #data_dir  = '/home/omossad/scratch/Gaming-Dataset/features/fifa/mobilenetV2/'
-#data_dir  = '/home/omossad/scratch/Gaming-Dataset/features/fifa/resnet18/'
-data_dir  = '/home/omossad/scratch/Gaming-Dataset/features/fifa/resnet152/'
+data_dir  = '/home/omossad/scratch/Gaming-Dataset/features/fifa/resnet18/'
+#data_dir  = '/home/omossad/scratch/Gaming-Dataset/features/fifa/resnet152/'
 label_dir = '/home/omossad/scratch/Gaming-Dataset/frame_labels/fifa/'
 
 train_list = []
