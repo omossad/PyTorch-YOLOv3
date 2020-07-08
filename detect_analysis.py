@@ -33,6 +33,8 @@ if __name__ == "__main__":
     parser.add_argument("--n_cpu", type=int, default=0, help="number of cpu threads to use during batch generation")
     parser.add_argument("--img_size", type=int, default=416, help="size of each image dimension")
     parser.add_argument("--checkpoint_model", type=str, help="path to checkpoint model")
+    parser.add_argument("--out_folder", type=str, default="/home/omossad/scratch/Gaming-Dataset/features/fifa/yolov3-tiny/ha_0/", help="path to dataset")
+
     opt = parser.parse_args()
     print(opt)
 
@@ -96,12 +98,14 @@ if __name__ == "__main__":
     for img_i, (path, detections) in enumerate(zip(imgs, img_detections)):
 
         print("(%d) Image: '%s'" % (img_i, path))
-
+        img_name = path.split("/")[-1].split(".")[0]
+        img_name = detections_folder + filename + '.pt'
+        print(img_name)
         # Create plot
         img = np.array(Image.open(path))
-        plt.figure()
-        fig, ax = plt.subplots(1)
-        ax.imshow(img)
+        #plt.figure()
+        #fig, ax = plt.subplots(1)
+        #ax.imshow(img)
 
         # Draw bounding boxes and labels of detections
         if detections is not None:
@@ -110,13 +114,16 @@ if __name__ == "__main__":
             unique_labels = detections[:, -1].cpu().unique()
             n_cls_preds = len(unique_labels)
             bbox_colors = random.sample(colors, n_cls_preds)
+            print(detections)
+            '''
             for x1, y1, x2, y2, conf, cls_conf, cls_pred in detections:
+
                 if classes[int(cls_pred)] == 'cursor' or classes[int(cls_pred)] == 'ball':
                     print(img.shape[:2])
                     print((x1+x2)/480)
                     print((y1+y2)/270)
                     print("\t+ Label: %s, Conf: %.5f" % (classes[int(cls_pred)], cls_conf.item()))
-'''
+
                     box_w = x2 - x1
                     box_h = y2 - y1
 
