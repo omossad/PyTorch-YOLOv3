@@ -99,7 +99,7 @@ if __name__ == "__main__":
 
         print("(%d) Image: '%s'" % (img_i, path))
         img_name = path.split("/")[-1].split(".")[0]
-        img_name = detections_folder + filename + '.pt'
+        img_name = opt.out_folder + filename + '.pt'
         print(img_name)
         # Create plot
         img = np.array(Image.open(path))
@@ -115,6 +115,7 @@ if __name__ == "__main__":
             n_cls_preds = len(unique_labels)
             bbox_colors = random.sample(colors, n_cls_preds)
             print(detections)
+            torch.save(detections, img_name)
             '''
             for x1, y1, x2, y2, conf, cls_conf, cls_pred in detections:
 
