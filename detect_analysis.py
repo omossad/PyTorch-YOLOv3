@@ -111,9 +111,9 @@ if __name__ == "__main__":
         if detections is not None:
             # Rescale boxes to original image
             detections = rescale_boxes(detections, opt.img_size, img.shape[:2])
-            unique_labels = detections[:, -1].cpu().unique()
-            n_cls_preds = len(unique_labels)
-            bbox_colors = random.sample(colors, n_cls_preds)
+            #unique_labels = detections[:, -1].cpu().unique()
+            #n_cls_preds = len(unique_labels)
+            #bbox_colors = random.sample(colors, n_cls_preds)
             #print(detections)
             torch.save(detections, img_name)
             '''
