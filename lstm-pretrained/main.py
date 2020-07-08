@@ -17,23 +17,23 @@ import pickle
 import csv
 
 # EncoderCNN architecture
-CNN_fc_hidden1, CNN_fc_hidden2 = 64, 64
-CNN_embed_dim = 32   # latent dim extracted by 2D CNN
+CNN_fc_hidden1, CNN_fc_hidden2 = 1024, 768
+CNN_embed_dim = 256   # latent dim extracted by 2D CNN
 
 res_size = 224        # ResNet image size
-dropout_p = 0.3       # dropout probability
+dropout_p = 0.0       # dropout probability
 
 # DecoderRNN architecture
-RNN_hidden_layers = 2
-RNN_hidden_nodes = 24
-RNN_FC_dim = 24
+RNN_hidden_layers = 3
+RNN_hidden_nodes = 512
+RNN_FC_dim = 256
 
 # training parameters
-k = 8            # number of target category
+k = 64            # number of target category
 epochs = 120        # training epochs
-batch_size = 8
+batch_size = 20
 learning_rate = 1e-3
-wd = 0.001
+wd = 0
 log_interval = 1   # interval for displaying training info
 
 
@@ -48,7 +48,9 @@ def train(log_interval, model, device, train_loader, optimizer, epoch, coordinat
     N_count = 0   # counting total trained sample in one epoch
     for batch_idx, (X, y_x, y_y) in enumerate(train_loader):
         if coordinate == 'x':
-            y = y_x.to(device).view(-1, )
+            #y = y_x.to(device).view(-1, )
+            y = y_y * 8 + y_x
+            y = y.to(device).view(-1, )
         else:
             y = y_y.to(device).view(-1, )
         # distribute data to device
@@ -171,8 +173,8 @@ print(all_filenames)
 
 #data_dir  = '/home/omossad/projects/def-hefeeda/omossad/roi_detection/temporary_data/data/resnet/'
 #data_dir  = '/home/omossad/scratch/Gaming-Dataset/features/fifa/mobilenetV2/'
-#data_dir  = '/home/omossad/scratch/Gaming-Dataset/features/fifa/resnet18/'
-data_dir  = '/home/omossad/scratch/Gaming-Dataset/features/fifa/resnet152/'
+data_dir  = '/home/omossad/scratch/Gaming-Dataset/features/fifa/resnet18/'
+#data_dir  = '/home/omossad/scratch/Gaming-Dataset/features/fifa/resnet152/'
 label_dir = '/home/omossad/scratch/Gaming-Dataset/frame_labels/fifa/'
 
 train_list = []
