@@ -23,7 +23,7 @@ from matplotlib.ticker import NullLocator
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--image_folder", type=str, default="data/samples", help="path to dataset")
+    parser.add_argument("--image_folder", type=str, default="/home/omossad/scratch/Gaming-Dataset/selected_frames/fifa/ha_0/", help="path to dataset")
     parser.add_argument("--model_def", type=str, default="config/base_model.cfg", help="path to model definition file")
     parser.add_argument("--weights_path", type=str, default="checkpoints/tiny_yolo.pth", help="path to weights file")
     parser.add_argument("--class_path", type=str, default="data/custom/annotations/classes.names", help="path to class label file")
@@ -90,8 +90,8 @@ if __name__ == "__main__":
         img_detections.extend(detections)
 
     # Bounding-box colors
-    cmap = plt.get_cmap("tab20b")
-    colors = [cmap(i) for i in np.linspace(0, 1, 20)]
+    #cmap = plt.get_cmap("tab20b")
+    #colors = [cmap(i) for i in np.linspace(0, 1, 20)]
 
     print("\nSaving images:")
     # Iterate through images and save plot of detections
@@ -100,7 +100,7 @@ if __name__ == "__main__":
         print("(%d) Image: '%s'" % (img_i, path))
         img_name = path.split("/")[-1].split(".")[0]
         img_name = opt.out_folder + img_name + '.pt'
-        print(img_name)
+        #print(img_name)
         # Create plot
         img = np.array(Image.open(path))
         #plt.figure()
@@ -114,7 +114,7 @@ if __name__ == "__main__":
             unique_labels = detections[:, -1].cpu().unique()
             n_cls_preds = len(unique_labels)
             bbox_colors = random.sample(colors, n_cls_preds)
-            print(detections)
+            #print(detections)
             torch.save(detections, img_name)
             '''
             for x1, y1, x2, y2, conf, cls_conf, cls_pred in detections:
