@@ -99,7 +99,7 @@ if __name__ == "__main__":
 
         print("(%d) Image: '%s'" % (img_i, path))
         img_name = path.split("/")[-1].split(".")[0]
-        img_name = opt.out_folder + filename + '.pt'
+        img_name = opt.out_folder + img_name + '.pt'
         print(img_name)
         # Create plot
         img = np.array(Image.open(path))
