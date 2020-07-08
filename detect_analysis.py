@@ -113,8 +113,8 @@ if __name__ == "__main__":
             for x1, y1, x2, y2, conf, cls_conf, cls_pred in detections:
                 if classes[int(cls_pred)] == 'cursor' or classes[int(cls_pred)] == 'ball':
                     print(img.shape[:2])
-                    print((x1+x2)/2)
-                    print((y1+y2)/2)
+                    print((x1+x2)/480)
+                    print((y1+y2)/270)
                     print("\t+ Label: %s, Conf: %.5f" % (classes[int(cls_pred)], cls_conf.item()))
 '''
                     box_w = x2 - x1
