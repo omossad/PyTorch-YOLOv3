@@ -101,8 +101,8 @@ for i in range(train_list.shape[0]):
     label_file = train_list[i].replace('features', 'frame_labels')
     label_file = label_file.replace('yolov3-tiny/','')
     label_file = label_file.replace('.pt','.txt')
-    print(label_file)
-    train_labels[i] = process_label(train_label[i])
+    #print(label_file)
+    train_labels[i] = process_label(label_file)
 
 for i in range(test_list.shape[0]):
     test_images[i] = process_frame(test_list[i])
