@@ -1,8 +1,8 @@
-from numpy import loadtxt
-from keras.models import Sequential
-from keras.layers import Dense
+#from numpy import loadtxt
+#from keras.models import Sequential
+#from keras.layers import Dense
 import torch
-
+import numpy as np
 #data = torch.load('/home/omossad/scratch/Gaming-Dataset/features/fifa/yolov3-tiny/ha_0/frame_00251.pt',map_location=lambda storage, loc: storage)
 #print(data)
 W = 1920
