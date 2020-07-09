@@ -2,8 +2,8 @@
 #from keras.models import Sequential
 #from keras.layers import Dense
 import torch
-#import tensorflow as tf
-#from tensorflow import keras
+import tensorflow as tf
+from tensorflow import keras
 
 import numpy as np
 import csv
@@ -26,9 +26,6 @@ def process_frame(frame_name):
         x1 = int(i[0]/tile_w)
         x2 = int(i[2]/tile_w)
         obj = int(i[6])
-        print(x1)
-        print(x2)
-        print(obj)
         frame_features[x1][obj] += 1
         if x1 != x2:
             frame_features[x2][obj] += 1
