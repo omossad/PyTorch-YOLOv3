@@ -24,7 +24,7 @@ def process_frame(frame_name):
         print(x1)
         print(x2)
         print(obj)
-        frame_features[x1:x2][obj] += 1
+        frame_features[x1][obj] += 1
     print(frame_features)
 
 process_frame('/home/omossad/scratch/Gaming-Dataset/features/fifa/yolov3-tiny/ha_0/frame_00251.pt')
