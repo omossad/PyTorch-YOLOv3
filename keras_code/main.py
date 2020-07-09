@@ -1,6 +1,10 @@
 from numpy import loadtxt
 from keras.models import Sequential
 from keras.layers import Dense
+import torch
+
+data = torch.load('/home/omossad/scratch/Gaming-Dataset/features/fifa/yolov3-tiny/ha_0/frame_00251.pt',map_location=lambda storage, loc: storage)
+print(data)
 # load the dataset
 dataset = loadtxt('pima-indians-diabetes.csv', delimiter=',')
 # split into input (X) and output (y) variables
