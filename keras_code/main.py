@@ -92,9 +92,9 @@ print(test_list.shape)
 print(test_label.shape)
 
 train_images = np.zeros((train_list.shape[0], h_tiles, num_obj))
-train_labels = np.zeros((train_label.shape[0]))
+train_labels = np.zeros((train_list.shape[0]))
 test_images = np.zeros((test_list.shape[0], h_tiles, num_obj))
-test_labels = np.zeros((test_label.shape[0]))
+test_labels = np.zeros((test_list.shape[0]))
 
 for i in range(train_list.shape[0]):
     train_images[i] = process_frame(train_list[i])
