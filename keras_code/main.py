@@ -34,7 +34,10 @@ def process_frame(frame_name):
             frame_features[x2][obj] += 1
     return frame_features
 
-
+def process_label(label_name):
+    f = open(label_name, "r")
+    target = f.read(1)
+    return target
 
 
 max_files = 10
@@ -90,17 +93,22 @@ print(train_list.shape)
 print(train_label.shape)
 print(test_list.shape)
 print(test_label.shape)
-'''
-train_images = []
-train_labels = []
-test_images = []
-test_labels = []
 
-for i in train_list:
-    train_images.append()
+train_images = np.zeros((train_list.shape[0], h_tiles, num_obj))
+train_labels = np.zeros((train_label.shape[0]))
+test_images = np.zeros((test_list.shape[0]))
+test_labels = np.zeros((test_label.shape[0], h_tiles, num_obj))
+
+for i in range(train_list.shape[0]):
+    train_images[i] = process_frame(train_list[i])
+    train_labels[i] = process_label(train_label[i])
+
+for i in range(test_list.shape[0]):
+    test_images[i] = process_frame(train_list[i])
+    test_labels[i] = process_label(test_label[i])
 
 
-process_frame('/home/omossad/scratch/Gaming-Dataset/features/fifa/yolov3-tiny/ha_0/frame_00251.pt')
+#process_frame('/home/omossad/scratch/Gaming-Dataset/features/fifa/yolov3-tiny/ha_0/frame_00251.pt')
 # load the dataset
 model = keras.Sequential([
     keras.layers.Flatten(input_shape=(h_tiles,num_obj)),
@@ -122,7 +130,7 @@ predictions = probability_model.predict(test_images)
 print(predictions[0])
 print(np.argmax(predictions[0]))
 
-
+'''
 dataset = loadtxt('pima-indians-diabetes.csv', delimiter=',')
 # split into input (X) and output (y) variables
 X = dataset[:,0:8]
