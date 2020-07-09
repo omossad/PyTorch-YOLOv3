@@ -14,7 +14,7 @@ tile_w = W/h_tiles
 tile_h = H/v_tiles
 
 def process_frame(frame_name):
-    frame_features = np.zeros((w_tiles * num_obj))
+    frame_features = np.zeros((h_tiles * num_obj))
     frame_data = torch.load(frame_name, map_location=lambda storage, loc: storage)
     for i in frame_data:
         print(i[0])
