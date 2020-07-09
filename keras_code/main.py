@@ -36,7 +36,7 @@ def process_label(label_name):
     return target
 
 
-max_files = 2
+max_files = 10
 def read_info():
     file_names = []
     num_files = 0
@@ -67,7 +67,7 @@ test_list = []
 train_label = []
 test_label = []
 
-'''
+
 for f in all_filenames:
     images = sorted(glob.glob(data_dir + f + '/*'))
     labels = sorted(glob.glob(label_dir + f + '/*'))
@@ -80,17 +80,6 @@ for f in all_filenames:
     else:
         train_list.extend(images)
         train_label.extend(labels)
-'''
-for f in all_filenames:
-    images = sorted(glob.glob(data_dir + f + '/*'))
-    labels = sorted(glob.glob(label_dir + f + '/*'))
-    if f.startswith('ha_1'):
-        test_list.extend(images)
-        test_label.extend(labels)
-    else:
-        train_list.extend(images)
-        train_label.extend(labels)
-
 
 train_list = np.asarray(train_list)
 test_list  = np.asarray(test_list)
