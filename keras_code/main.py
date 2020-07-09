@@ -3,9 +3,26 @@ from keras.models import Sequential
 from keras.layers import Dense
 import torch
 
-data = torch.load('/home/omossad/scratch/Gaming-Dataset/features/fifa/yolov3-tiny/ha_0/frame_00251.pt',map_location=lambda storage, loc: storage)
-print(data)
+#data = torch.load('/home/omossad/scratch/Gaming-Dataset/features/fifa/yolov3-tiny/ha_0/frame_00251.pt',map_location=lambda storage, loc: storage)
+#print(data)
+W = 1920
+H = 1080
+h_tiles = 8
+v_tiles = 8
+num_obj = 3
+tile_w = W/h_tiles
+tile_h = H/v_tiles
+
+def process_frame(frame_name):
+    frame_features = np.zeros((w_tiles * num_obj))
+    frame_data = torch.load(frame_name, map_location=lambda storage, loc: storage)
+    for i in frame_data:
+        print(i[0])
+
+
+process_frame('/home/omossad/scratch/Gaming-Dataset/features/fifa/yolov3-tiny/ha_0/frame_00251.pt')
 # load the dataset
+'''
 dataset = loadtxt('pima-indians-diabetes.csv', delimiter=',')
 # split into input (X) and output (y) variables
 X = dataset[:,0:8]
@@ -24,3 +41,4 @@ predictions = model.predict_classes(X)
 # summarize the first 5 cases
 for i in range(5):
 	print('%s => %d (expected %d)' % (X[i].tolist(), predictions[i], y[i]))
+'''
