@@ -14,11 +14,17 @@ tile_w = W/h_tiles
 tile_h = H/v_tiles
 
 def process_frame(frame_name):
-    frame_features = np.zeros((h_tiles * num_obj))
+    frame_features = np.zeros((h_tiles,num_obj))
     frame_data = torch.load(frame_name, map_location=lambda storage, loc: storage)
     for i in frame_data:
-        print(i[0])
-
+        x1 = int(i[0]/tile_w)
+        x2 = int(i[2]/tile_w)
+        obj = int(i[6])
+        print(x1)
+        print(x2)
+        print(obj)
+        frame_features[x1:x2][obj] += 1
+    print(frame_features)
 
 process_frame('/home/omossad/scratch/Gaming-Dataset/features/fifa/yolov3-tiny/ha_0/frame_00251.pt')
 # load the dataset
