@@ -7,8 +7,8 @@ import numpy as np
 #print(data)
 W = 1920
 H = 1080
-h_tiles = 4
-v_tiles = 4
+h_tiles = 8
+v_tiles = 8
 num_obj = 3
 tile_w = W/h_tiles
 tile_h = H/v_tiles
