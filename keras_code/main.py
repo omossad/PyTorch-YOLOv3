@@ -22,8 +22,8 @@ def process_frame(frame_name):
     frame_features = np.zeros((h_tiles,num_obj))
     frame_data = torch.load(frame_name, map_location=lambda storage, loc: storage)
     for i in frame_data:
-        x1 = min(int(i[0]/tile_w), h_tiles)
-        x2 = min(int(i[2]/tile_w), h_tiles)
+        x1 = min(int(i[0]/tile_w), h_tiles-1)
+        x2 = min(int(i[2]/tile_w), h_tiles-1)
         obj = int(i[6])
         frame_features[x1][obj] += 1
         if x1 != x2:
