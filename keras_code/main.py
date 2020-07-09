@@ -100,7 +100,7 @@ for i in range(train_list.shape[0]):
     train_labels[i] = process_label(train_label[i])
 
 for i in range(test_list.shape[0]):
-    test_images[i] = process_frame(train_list[i])
+    test_images[i] = process_frame(test_list[i])
     test_labels[i] = process_label(test_label[i])
 
 
