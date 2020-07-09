@@ -98,6 +98,7 @@ test_labels = np.zeros((test_label.shape[0]))
 
 for i in range(train_list.shape[0]):
     train_images[i] = process_frame(train_list[i])
+    print(train_list[i])
     train_labels[i] = process_label(train_label[i])
 
 for i in range(test_list.shape[0]):
