@@ -2,6 +2,9 @@
 #from keras.models import Sequential
 #from keras.layers import Dense
 import torch
+#import tensorflow as tf
+#from tensorflow import keras
+
 import numpy as np
 #data = torch.load('/home/omossad/scratch/Gaming-Dataset/features/fifa/yolov3-tiny/ha_0/frame_00251.pt',map_location=lambda storage, loc: storage)
 #print(data)
@@ -27,11 +30,97 @@ def process_frame(frame_name):
         frame_features[x1][obj] += 1
         if x1 != x2:
             frame_features[x2][obj] += 1
-    print(frame_features)
+    return frame_features
+
+
+
+
+max_files = 10
+def read_info():
+    file_names = []
+    num_files = 0
+    with open('frames_info') as csv_file:
+        csv_reader = csv.reader(csv_file, delimiter=',')
+        for row in csv_reader:
+            if num_files == 0:
+                num_files += 1
+            elif num_files < max_files+1:
+                file_names.append(row[0])
+                num_files += 1
+            else:
+                break
+    print("Total number of files is:", num_files)
+    return file_names
+
+all_filenames = read_info()
+print(all_filenames)
+
+#data_dir  = '/home/omossad/projects/def-hefeeda/omossad/roi_detection/temporary_data/data/resnet/'
+#data_dir  = '/home/omossad/scratch/Gaming-Dataset/features/fifa/mobilenetV2/'
+data_dir  = '/home/omossad/scratch/Gaming-Dataset/features/fifa/yolov3-tiny/'
+#data_dir  = '/home/omossad/scratch/Gaming-Dataset/features/fifa/resnet152/'
+label_dir = '/home/omossad/scratch/Gaming-Dataset/frame_labels/fifa/'
+
+train_list = []
+test_list = []
+train_label = []
+test_label = []
+
+for f in all_filenames:
+    images = sorted(glob.glob(data_dir + f + '/*'))
+    labels = sorted(glob.glob(label_dir + f + '/*'))
+    if f.startswith('ha_8'):
+        test_list.extend(images)
+        test_label.extend(labels)
+    elif f.startswith('ha_9'):
+        test_list.extend(images)
+        test_label.extend(labels)
+    else:
+        train_list.extend(images)
+        train_label.extend(labels)
+
+train_list = np.asarray(train_list)
+test_list  = np.asarray(test_list)
+train_label = np.asarray(train_label)
+test_label = np.asarray(test_label)
+
+print(train_list.shape)
+print(train_label.shape)
+print(test_list.shape)
+print(test_label.shape)
+'''
+train_images = []
+train_labels = []
+test_images = []
+test_labels = []
+
+for i in train_list:
+    train_images.append()
+
 
 process_frame('/home/omossad/scratch/Gaming-Dataset/features/fifa/yolov3-tiny/ha_0/frame_00251.pt')
 # load the dataset
-'''
+model = keras.Sequential([
+    keras.layers.Flatten(input_shape=(h_tiles,num_obj)),
+    keras.layers.Dense(128, activation='relu'),
+    keras.layers.Dense(h_tiles)
+])
+model.compile(optimizer='adam',
+              loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
+              metrics=['accuracy'])
+model.fit(train_images, train_labels, epochs=10)
+test_loss, test_acc = model.evaluate(test_images,  test_labels, verbose=2)
+
+print('\nTest accuracy:', test_acc)
+
+
+probability_model = tf.keras.Sequential([model,
+                                         tf.keras.layers.Softmax()])
+predictions = probability_model.predict(test_images)
+print(predictions[0])
+print(np.argmax(predictions[0]))
+
+
 dataset = loadtxt('pima-indians-diabetes.csv', delimiter=',')
 # split into input (X) and output (y) variables
 X = dataset[:,0:8]
