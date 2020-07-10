@@ -82,22 +82,23 @@ if __name__ == "__main__":
     prev_time = time.time()
     for batch_i, (img_paths, input_imgs) in enumerate(dataloader):
         # Configure input
-        input_imgs = Variable(input_imgs.type(Tensor))
+        if batch_i < 5:
+            input_imgs = Variable(input_imgs.type(Tensor))
 
-        # Get detections
-        with torch.no_grad():
-            detections = model(input_imgs)
-            detections = non_max_suppression(detections, opt.conf_thres, opt.nms_thres)
+            # Get detections
+            with torch.no_grad():
+                detections = model(input_imgs)
+                detections = non_max_suppression(detections, opt.conf_thres, opt.nms_thres)
 
-        # Log progress
-        current_time = time.time()
-        inference_time = datetime.timedelta(seconds=current_time - prev_time)
-        prev_time = current_time
-        print("\t+ Batch %d, Inference Time: %s" % (batch_i, inference_time))
+            # Log progress
+            current_time = time.time()
+            inference_time = datetime.timedelta(seconds=current_time - prev_time)
+            prev_time = current_time
+            print("\t+ Batch %d, Inference Time: %s" % (batch_i, inference_time))
 
-        # Save image and detections
-        imgs.extend(img_paths)
-        img_detections.extend(detections)
+            # Save image and detections
+            imgs.extend(img_paths)
+            img_detections.extend(detections)
 
     # Bounding-box colors
     cmap = plt.get_cmap("tab20b")
