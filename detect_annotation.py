@@ -22,12 +22,14 @@ import matplotlib.patches as patches
 from matplotlib.ticker import NullLocator
 
 
-def get_tile(x,y):
+def get_tile(t_x,t_y):
     W = 1920.0
     H = 1080.0
     num_tiles = 8
     w_tile = W/num_tiles
     h_tile = H/num_tiles
+    x1 = t_x * w_tile
+    y1 = t_y * h_tile
     return x1, y1, w_tile, h_tile
 
 if __name__ == "__main__":
@@ -78,7 +80,7 @@ if __name__ == "__main__":
 
     print("\nPerforming object detection:")
     prev_time = time.time()
-    for batch_i, (img_paths, input_imgs) in enumerate(dataloader):
+    for batch_i, (img_paths, input_imgs) in enumerate(dataloader) and batch_i < 5:
         # Configure input
         input_imgs = Variable(input_imgs.type(Tensor))
 
@@ -112,8 +114,17 @@ if __name__ == "__main__":
         plt.figure()
         fig, ax = plt.subplots(1)
         ax.imshow(img)
-        filename = path.split("/")[-1].split(".")[0]
-        
+
+        label_file = path.replace('selected_frames','frame_labels')
+        label_file = label_file.replace('.jpg','.txt')
+        print(label_file)
+        f = open(label_file, "r")
+        f_line = f.readline()
+        x = min(int(f_line.split()[0]), 8)
+        print(x)
+        y = min(int(f_line.split()[1]), 8)
+        print(y)
+
         color = bbox_colors[3]
         [x1, y1, box_w, box_h] = get_tile(x,y)
         bbox = patches.Rectangle((x1, y1), box_w, box_h, linewidth=2, edgecolor=color, facecolor="none")
