@@ -82,23 +82,22 @@ if __name__ == "__main__":
     prev_time = time.time()
     for batch_i, (img_paths, input_imgs) in enumerate(dataloader):
         # Configure input
-        if batch_i < 5:
-            input_imgs = Variable(input_imgs.type(Tensor))
+        input_imgs = Variable(input_imgs.type(Tensor))
 
-            # Get detections
-            with torch.no_grad():
-                detections = model(input_imgs)
-                detections = non_max_suppression(detections, opt.conf_thres, opt.nms_thres)
+        # Get detections
+        with torch.no_grad():
+            detections = model(input_imgs)
+            detections = non_max_suppression(detections, opt.conf_thres, opt.nms_thres)
 
-            # Log progress
-            current_time = time.time()
-            inference_time = datetime.timedelta(seconds=current_time - prev_time)
-            prev_time = current_time
-            print("\t+ Batch %d, Inference Time: %s" % (batch_i, inference_time))
+        # Log progress
+        current_time = time.time()
+        inference_time = datetime.timedelta(seconds=current_time - prev_time)
+        prev_time = current_time
+        print("\t+ Batch %d, Inference Time: %s" % (batch_i, inference_time))
 
-            # Save image and detections
-            imgs.extend(img_paths)
-            img_detections.extend(detections)
+        # Save image and detections
+        imgs.extend(img_paths)
+        img_detections.extend(detections)
 
     # Bounding-box colors
     cmap = plt.get_cmap("tab20b")
@@ -118,13 +117,13 @@ if __name__ == "__main__":
 
         label_file = path.replace('selected_frames','frame_labels')
         label_file = label_file.replace('.jpg','.txt')
-        print(label_file)
+        #print(label_file)
         f = open(label_file, "r")
         f_line = f.readline()
         x = min(int(f_line.split()[0]), 8)
-        print(x)
+        #print(x)
         y = min(int(f_line.split()[1]), 8)
-        print(y)
+        #print(y)
 
         color = bbox_colors[3]
         [x1, y1, box_w, box_h] = get_tile(x,y)
@@ -140,7 +139,7 @@ if __name__ == "__main__":
             #bbox_colors = random.sample(colors, n_cls_preds)
             for x1, y1, x2, y2, conf, cls_conf, cls_pred in detections:
 
-                print("\t+ Label: %s, Conf: %.5f" % (classes[int(cls_pred)], cls_conf.item()))
+                #print("\t+ Label: %s, Conf: %.5f" % (classes[int(cls_pred)], cls_conf.item()))
 
                 box_w = x2 - x1
                 box_h = y2 - y1
