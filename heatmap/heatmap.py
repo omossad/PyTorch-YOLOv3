@@ -125,6 +125,8 @@ for ax, s in zip(axs.flatten(), sigmas):
         ax.set_title("Smoothing with  $\sigma$ = %d" % s)
 
 plt.show()
+
+'''
 py.ndimage.filters import gaussian_filter
 
 
@@ -154,3 +156,4 @@ for ax, s in zip(axs.flatten(), sigmas):
         ax.set_title("Smoothing with  $\sigma$ = %d" % s)
 
 plt.show()
+'''
