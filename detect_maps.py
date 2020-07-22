@@ -73,7 +73,7 @@ if __name__ == "__main__":
     bbox_colors = random.sample(colors, 4)
     print("\nSaving images:")
     # Iterate through images and save plot of detections
-    for img_i, (path, detections) in enumerate(zip(imgs, img_detections)):
+    for img_i, (path) in enumerate(zip(imgs)):
 
         print("(%d) Image: '%s'" % (img_i, path))
 
