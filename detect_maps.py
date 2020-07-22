@@ -59,15 +59,6 @@ if __name__ == "__main__":
     print("\nPerforming object detection:")
     prev_time = time.time()
     for batch_i, (img_paths, input_imgs) in enumerate(dataloader):
-        # Configure input
-        input_imgs = Variable(input_imgs.type(Tensor))
-
-        # Get detections
-        with torch.no_grad():
-            detections = model(input_imgs)
-            detections = non_max_suppression(detections, opt.conf_thres, opt.nms_thres)
-
-        # Log progress
         current_time = time.time()
         inference_time = datetime.timedelta(seconds=current_time - prev_time)
         prev_time = current_time
