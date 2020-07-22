@@ -1,6 +1,5 @@
 from __future__ import division
 
-from utils.utils import *
 from utils.datasets import *
 
 import os
