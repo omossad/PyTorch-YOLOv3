@@ -121,8 +121,10 @@ if __name__ == "__main__":
         f = open(label_file, "r")
         f_line = f.readline()
         x = min(int(f_line.split()[0]), 8)
+        x = x/2
         #print(x)
         y = min(int(f_line.split()[1]), 8)
+        y = y/2
         #print(y)
 
         color = bbox_colors[3]
