@@ -25,7 +25,7 @@ from matplotlib.ticker import NullLocator
 def get_tile(t_x,t_y):
     W = 1920.0
     H = 1080.0
-    num_tiles = 8
+    num_tiles = 4
     w_tile = W/num_tiles
     h_tile = H/num_tiles
     x1 = t_x * w_tile
