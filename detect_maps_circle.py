@@ -25,12 +25,9 @@ from matplotlib.ticker import NullLocator
 def get_tile(t_x,t_y):
     W = 1920.0
     H = 1080.0
-    num_tiles = 4
-    w_tile = W/num_tiles
-    h_tile = H/num_tiles
-    x1 = t_x * w_tile
-    y1 = t_y * h_tile
-    return x1, y1, w_tile, h_tile
+    x1 = t_x * W
+    y1 = t_y * H
+    return x1, y1
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -115,18 +112,18 @@ if __name__ == "__main__":
         fig, ax = plt.subplots(1)
         ax.imshow(img)
 
-        label_file = path.replace('selected_frames','frame_labels')
+        label_file = path.replace('selected_frames','frame_labels_txt')
         label_file = label_file.replace('.jpg','.txt')
         #print(label_file)
         f = open(label_file, "r")
         f_line = f.readline()
-        x = min(int(f_line.split()[0]), 8)
+        x = float(f_line.split()[0])
         #print(x)
-        y = min(int(f_line.split()[1]), 8)
+        y = float(f_line.split()[1])
         #print(y)
 
         color = bbox_colors[3]
-        [x1, y1, box_w, box_h] = get_tile(x,y)
+        [x1, y1] = get_tile(x,y)
         bbox = patches.Circle((x1, y1), 70, color='b', fill=False)
         #bbox = patches.Rectangle((x1, y1), box_w, box_h, linewidth=2, edgecolor=color, facecolor="none")
         ax.add_patch(bbox)
