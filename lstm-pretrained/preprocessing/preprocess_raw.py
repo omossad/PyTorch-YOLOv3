@@ -45,7 +45,7 @@ def get_tileXY(x,y):
 
 
 
-num_files = 2
+num_files = 0
 with open('frames_info', 'r') as f:
     for line in f:
         num_files += 1
