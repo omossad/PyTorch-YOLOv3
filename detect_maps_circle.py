@@ -34,7 +34,7 @@ def get_tile(t_x,t_y):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--image_folder", type=str, default="/home/omossad/scratch/Gaming-Dataset/selected_frames/fifa/ha_9/", help="path to dataset")
+    parser.add_argument("--image_folder", type=str, default="/home/omossad/scratch/Gaming-Dataset/selected_frames/fifa/ha_0/", help="path to dataset")
     parser.add_argument("--model_def", type=str, default="config/base_model.cfg", help="path to model definition file")
     parser.add_argument("--weights_path", type=str, default="checkpoints/tiny_yolo.pth", help="path to weights file")
     parser.add_argument("--class_path", type=str, default="data/custom/annotations/classes.names", help="path to class label file")
@@ -44,7 +44,7 @@ if __name__ == "__main__":
     parser.add_argument("--n_cpu", type=int, default=0, help="number of cpu threads to use during batch generation")
     parser.add_argument("--img_size", type=int, default=416, help="size of each image dimension")
     parser.add_argument("--checkpoint_model", type=str, help="path to checkpoint model")
-    parser.add_argument("--out_folder", type=str, default="/home/omossad/scratch/Gaming-Dataset/maps/fifa/ha_9/", help="path to dataset")
+    parser.add_argument("--out_folder", type=str, default="/home/omossad/scratch/Gaming-Dataset/maps/fifa/ha_0/", help="path to dataset")
     opt = parser.parse_args()
     print(opt)
 
@@ -127,7 +127,8 @@ if __name__ == "__main__":
 
         color = bbox_colors[3]
         [x1, y1, box_w, box_h] = get_tile(x,y)
-        bbox = patches.Rectangle((x1, y1), box_w, box_h, linewidth=2, edgecolor=color, facecolor="none")
+        bbox = patches.Circle((x1, y1), 70, color='b', fill=False)
+        #bbox = patches.Rectangle((x1, y1), box_w, box_h, linewidth=2, edgecolor=color, facecolor="none")
         ax.add_patch(bbox)
 
         # Draw bounding boxes and labels of detections
