@@ -124,7 +124,7 @@ if __name__ == "__main__":
 
         color = bbox_colors[3]
         [x1, y1] = get_tile(x,y)
-        bbox = patches.Circle((x1, y1), 70, color='b', fill=False)
+        bbox = patches.Circle((x1, y1), 170, color='b', fill=False)
         #bbox = patches.Rectangle((x1, y1), box_w, box_h, linewidth=2, edgecolor=color, facecolor="none")
         ax.add_patch(bbox)
 
