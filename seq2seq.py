@@ -154,11 +154,14 @@ def main():
     filenames = read_info()
     train_file_count = 0
     test_file_count = 0
+    counter = 0
     for f in filenames:
+        if counter > 9:
+            break
         print(f)
         data = read_file(f)
         labels = read_labels(f)
-        if f.startswith('se'):
+        if f.startswith('ha_9'):
             if test_file_count == 0:
                 test_data = np.asarray(process_data(data))
                 test_labels = np.asarray(process_labels(labels))
@@ -182,7 +185,7 @@ def main():
             #train_labels = np.vstack(train_data , process_labels(labels))
             #print(np.asarray(train_data).shape)
             #print(np.asarray(train_labels).shape)
-
+        counter = counter + 1
     model = lstm_model()
     #train_data = np.asarray(train_data)
     #train_labels = np.asarray(train_labels)
