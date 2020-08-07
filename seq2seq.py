@@ -307,7 +307,7 @@ def train(log_interval, model, device, train_loader, optimizer, epoch):
 
     return losses, scores
 
-main
+main()
 cnn_encoder = ResCNNEncoder(fc_hidden1=CNN_fc_hidden1, fc_hidden2=CNN_fc_hidden2, drop_p=dropout_p, CNN_embed_dim=CNN_embed_dim).to(device)
 rnn_decoder = DecoderRNN(CNN_embed_dim=CNN_embed_dim, h_RNN_layers=RNN_hidden_layers, h_RNN=RNN_hidden_nodes,
                          h_FC_dim=RNN_FC_dim, drop_p=dropout_p, num_classes=k).to(device)
