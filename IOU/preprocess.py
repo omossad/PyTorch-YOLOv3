@@ -57,7 +57,7 @@ def get_box_r(x, y):
         y2 = (y+1) * tile_height
         return [x1, y1, x2, y2]
 
-def get_box_c(c_x, x_y, d):
+def get_box_c(c_x, c_y, d):
         x1 = c_x - d/2
         x2 = c_x + d/2
         y1 = c_y - d/2
