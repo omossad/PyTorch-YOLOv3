@@ -109,9 +109,9 @@ for i in range(num_files):
         box_1 = get_box_r(sx_tile, sy_tile)
         box_2 = get_box_c(lbl_x, lbl_y, 70)
         iou_avg = iou_avg + iou(box_1, box_2)
-		counter =  counter + 1
-	iou_avg = iou_avg / counter
-	print(iou_avg)
+        counter =  counter + 1
+    iou_avg = iou_avg / counter
+    print(iou_avg)
 iou_avg = iou_avg / num_files
 print(iou_avg)
 		#print(lbl_x)
