@@ -100,6 +100,8 @@ for i in range(num_files):
     #current_tile = -1
     #
     #counters = []
+    print(len(labels))
+    thre = len(labels)*0.57
     counter = 0
     iou_avg = 0
 
@@ -107,8 +109,11 @@ for i in range(num_files):
         lbl_x = lbl[0] * W_ref
         lbl_y = lbl[1] * H_ref
         sx_tile, sy_tile = get_tileXY(lbl_x,lbl_y)
+        if counter > thre:
+                sx_tile = 4
+                sy_tile = 4
         box_1 = get_box_r(sx_tile, sy_tile)
-        box_2 = get_box_c(lbl_x, lbl_y, 70)
+        box_2 = get_box_c(lbl_x, lbl_y, 170)
         iou_avg = iou_avg + iou(box_1, box_2)
         counter =  counter + 1
     iou_avg = iou_avg / counter
