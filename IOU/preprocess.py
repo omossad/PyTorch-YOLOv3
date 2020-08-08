@@ -85,7 +85,6 @@ with open('frames_info') as csv_file:
             line_count += 1
         elif line_count < num_files+1:
             file_names.append(row[0])
-            os.mkdir(output_folder+row[0])
             frame_info[line_count-1] = [int(row[2]), int(row[3])]
             line_count += 1
         else:
