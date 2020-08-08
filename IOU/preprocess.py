@@ -114,8 +114,8 @@ for i in range(num_files):
         box_1 = get_box_r(sx_tile, sy_tile)
         #print(box_1)
         box_2 = get_box_c(lbl_x, lbl_y, 70)
-        #print(box_2)
 		iou_avg = iou_avg + iou(box_1, box_2)
+        #print(box_2)
         #print(iou(box_1, box_2))
         #current_tile = s_tile
         #if current_tile == previous_tile:
