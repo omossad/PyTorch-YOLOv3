@@ -103,19 +103,23 @@ for i in range(num_files):
     counter = 0
     iou_avg = 0
     for lbl in labels:
-        #previous_tile = current_tile
         lbl_x = lbl[0] * W_ref
         lbl_y = lbl[1] * H_ref
-        #print(lbl_x)
-        #print(lbl_y)
         sx_tile, sy_tile = get_tileXY(lbl_x,lbl_y)
-        #print(sx_tile)
-        #print(sy_tile)
         box_1 = get_box_r(sx_tile, sy_tile)
-        #print(box_1)
         box_2 = get_box_c(lbl_x, lbl_y, 70)
 		iou_avg = iou_avg + iou(box_1, box_2)
-        #print(box_2)
+        counter =  counter + 1
+	iou_avg = iou_avg / counter
+	print(iou_avg)
+iou_avg = iou_avg / num_files
+print(iou_avg)
+		#print(lbl_x)
+        #print(lbl_y)
+		#print(sx_tile)
+        #print(sy_tile)
+		#print(box_1)
+		#print(box_2)
         #print(iou(box_1, box_2))
         #current_tile = s_tile
         #if current_tile == previous_tile:
@@ -123,13 +127,10 @@ for i in range(num_files):
         #else:
         #    counters.append(counter)
         #    counter = 0
-        counter =  counter + 1
         #if counter == 1:
         #    break
-	iou_avg = iou_avg / counter
-	print(iou_avg)
 
-iou_avg = iou_avg / num_files
-print(iou_avg)
+
+
 
     #print(counters)
