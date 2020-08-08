@@ -91,7 +91,7 @@ with open('frames_info') as csv_file:
             break
 print(file_names)
 
-
+iou_tot = 0
 for i in range(num_files):
     labels = np.loadtxt(input_folder + file_names[i] + '.txt')
     start_frame = int(frame_info[i][0])
@@ -102,6 +102,7 @@ for i in range(num_files):
     #counters = []
     counter = 0
     iou_avg = 0
+
     for lbl in labels:
         lbl_x = lbl[0] * W_ref
         lbl_y = lbl[1] * H_ref
@@ -111,9 +112,10 @@ for i in range(num_files):
         iou_avg = iou_avg + iou(box_1, box_2)
         counter =  counter + 1
     iou_avg = iou_avg / counter
+	iou_tot = iou_tot + iou_avg
     print(iou_avg)
-iou_avg = iou_avg / num_files
-print(iou_avg)
+iou_tot = iou_tot / num_files
+print(iou_tot)
 		#print(lbl_x)
         #print(lbl_y)
 		#print(sx_tile)
