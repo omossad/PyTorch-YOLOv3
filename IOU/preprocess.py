@@ -108,14 +108,7 @@ for i in range(num_files):
         sx_tile, sy_tile = get_tileXY(lbl_x,lbl_y)
         box_1 = get_box_r(sx_tile, sy_tile)
         box_2 = get_box_c(lbl_x, lbl_y, 70)
-		print(iou(box_1, box_2))
-		a = iou(box_1, box_2)
-		iou_avg = iou_avg + a
-        counter =  counter + 1
-	iou_avg = iou_avg / counter
-	print(iou_avg)
-iou_avg = iou_avg / num_files
-print(iou_avg)
+		
 		#print(lbl_x)
         #print(lbl_y)
 		#print(sx_tile)
