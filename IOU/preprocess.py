@@ -112,7 +112,7 @@ for i in range(num_files):
         iou_avg = iou_avg + iou(box_1, box_2)
         counter =  counter + 1
     iou_avg = iou_avg / counter
-	iou_tot = iou_tot + iou_avg
+    iou_tot = iou_tot + iou_avg
     print(iou_avg)
 iou_tot = iou_tot / num_files
 print(iou_tot)
