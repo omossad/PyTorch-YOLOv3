@@ -139,7 +139,7 @@ if __name__ == "__main__":
                 dist = edistance(point, center)
                 if dist < radius:
                     temp_img[i][j] = 255 - edistance(point, center)
-        new_image = np.zeros((1080,1920,3), np.uint8)
+        new_img = np.zeros((1080,1920,3), np.uint8)
         new_img[:,:,0] = temp_img
         new_img[:,:,1] = temp_img
         new_img[:,:,2] = temp_img
