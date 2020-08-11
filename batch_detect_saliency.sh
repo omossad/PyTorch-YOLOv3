@@ -4,7 +4,6 @@ python detect_maps_saliency.py --image_folder /home/omossad/scratch/Gaming-Datas
 python detect_maps_saliency.py --image_folder /home/omossad/scratch/Gaming-Dataset/selected_frames/fifa/ha_5/ --out_folder /home/omossad/scratch/Gaming-Dataset/maps/fifa/ha_5/
 python detect_maps_saliency.py --image_folder /home/omossad/scratch/Gaming-Dataset/selected_frames/fifa/ha_7/ --out_folder /home/omossad/scratch/Gaming-Dataset/maps/fifa/ha_7/
 python detect_maps_saliency.py --image_folder /home/omossad/scratch/Gaming-Dataset/selected_frames/fifa/ha_9/ --out_folder /home/omossad/scratch/Gaming-Dataset/maps/fifa/ha_9/
-python detect_maps_saliency.py --image_folder /home/omossad/scratch/Gaming-Dataset/selected_frames/fifa/ha_0/ --out_folder /home/omossad/scratch/Gaming-Dataset/maps/fifa/ha_0/
 python detect_maps_saliency.py --image_folder /home/omossad/scratch/Gaming-Dataset/selected_frames/fifa/ha_2/ --out_folder /home/omossad/scratch/Gaming-Dataset/maps/fifa/ha_2/
 python detect_maps_saliency.py --image_folder /home/omossad/scratch/Gaming-Dataset/selected_frames/fifa/ha_4/ --out_folder /home/omossad/scratch/Gaming-Dataset/maps/fifa/ha_4/
 python detect_maps_saliency.py --image_folder /home/omossad/scratch/Gaming-Dataset/selected_frames/fifa/ha_6/ --out_folder /home/omossad/scratch/Gaming-Dataset/maps/fifa/ha_6/
