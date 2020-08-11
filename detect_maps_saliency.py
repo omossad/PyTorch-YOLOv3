@@ -128,8 +128,10 @@ if __name__ == "__main__":
 
         #color = bbox_colors[3]
         [x1, y1] = get_tile(x,y)
-        x1 = int(x1)
-        y1 = int(y1)
+        temp_x = x1
+        temp_y = y1
+        x1 = int(temp_y)
+        y1 = int(temp_x)
         temp_img = np.zeros((1080,1920), np.uint8)
         radius = 85
         for i in range(x1 - radius, x1 + radius+1):
