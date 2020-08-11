@@ -128,11 +128,13 @@ if __name__ == "__main__":
 
         #color = bbox_colors[3]
         [x1, y1] = get_tile(x,y)
+        x1 = int(x1)
+        y1 = int(y1)
         temp_img = np.zeros((1080,1920), np.uint8)
         radius = 85
         for i in range(x1 - radius, x1 + radius+1):
             for j in range(y1 - radius , y1 + radius+1):
-                center = (center_x, center_y)
+                center = (x1, y1)
                 point = (i,j)
                 dist = edistance(point, center)
                 if dist < radius:
