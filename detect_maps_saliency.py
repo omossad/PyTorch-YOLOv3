@@ -140,15 +140,18 @@ if __name__ == "__main__":
                 point = (i,j)
                 dist = edistance(point, center)
                 if dist < radius and i < 1080 and j < 1920:
-                    temp_img[i][j] = 255 - edistance(point, center)
+                    temp_img[i][j] = 255 - 5 * edistance(point, center)
         new_img = np.zeros((1080,1920,3), np.uint8)
         new_img[:,:,0] = temp_img
         new_img[:,:,1] = temp_img
         new_img[:,:,2] = temp_img
         filename = path.split("/")[-1].split(".")[0]
         filename = opt.out_folder + filename + '.png'
-        cv2.imwrite(filename, new_img)
-
+        saliency = cv2.saliency.StaticSaliencySpectralResidual_create()
+        (success, saliencyMap) = saliency.computeSaliency(image)
+        saliencyMap = (saliencyMap * 255).astype("uint8")
+        #cv2.imwrite(filename, new_img)
+        cv2.imwrite(filename, saliencyMap)
         #bbox = patches.Circle((x1, y1), 170, color='b', fill=False)
         #bbox = patches.Rectangle((x1, y1), box_w, box_h, linewidth=2, edgecolor=color, facecolor="none")
         #ax.add_patch(bbox)
