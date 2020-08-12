@@ -148,7 +148,7 @@ if __name__ == "__main__":
         filename = path.split("/")[-1].split(".")[0]
         filename = opt.out_folder + filename + '.png'
         saliency = cv2.saliency.StaticSaliencySpectralResidual_create()
-        (success, saliencyMap) = saliency.computeSaliency(image)
+        (success, saliencyMap) = saliency.computeSaliency(new_img)
         saliencyMap = (saliencyMap * 255).astype("uint8")
         #cv2.imwrite(filename, new_img)
         cv2.imwrite(filename, saliencyMap)
