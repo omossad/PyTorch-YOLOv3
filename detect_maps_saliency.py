@@ -53,16 +53,16 @@ if __name__ == "__main__":
     os.makedirs("output", exist_ok=True)
 
     # Set up model
-    model = Darknet(opt.model_def, img_size=opt.img_size).to(device)
+    #model = Darknet(opt.model_def, img_size=opt.img_size).to(device)
 
-    if opt.weights_path.endswith(".weights"):
+    #if opt.weights_path.endswith(".weights"):
         # Load darknet weights
-        model.load_darknet_weights(opt.weights_path)
-    else:
+    #    model.load_darknet_weights(opt.weights_path)
+    #else:
         # Load checkpoint weights
-        model.load_state_dict(torch.load(opt.weights_path))
+    #    model.load_state_dict(torch.load(opt.weights_path))
 
-    model.eval()  # Set in evaluation mode
+    #model.eval()  # Set in evaluation mode
 
     dataloader = DataLoader(
         ImageFolder(opt.image_folder, img_size=opt.img_size),
@@ -71,9 +71,9 @@ if __name__ == "__main__":
         num_workers=opt.n_cpu,
     )
 
-    classes = load_classes(opt.class_path)  # Extracts class labels from file
+    #classes = load_classes(opt.class_path)  # Extracts class labels from file
 
-    Tensor = torch.cuda.FloatTensor if torch.cuda.is_available() else torch.FloatTensor
+    #Tensor = torch.cuda.FloatTensor if torch.cuda.is_available() else torch.FloatTensor
 
     imgs = []  # Stores image paths
     img_detections = []  # Stores detections for each image index
