@@ -20,7 +20,7 @@ from torch.autograd import Variable
 #import matplotlib.pyplot as plt
 #import matplotlib.patches as patches
 #from matplotlib.ticker import NullLocator
-import cv2
+import cv2 as cv2
 
 def get_tile(t_x,t_y):
     W = 1920.0
