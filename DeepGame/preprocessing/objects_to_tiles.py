@@ -35,7 +35,7 @@ def fixation_to_tile(x,y):
 
 ### READ NUMBER OF FILES and NAMES ###
 num_files = 0
-with open('frames_info', 'r') as f:
+with open('..\\frames_info', 'r') as f:
     for line in f:
         num_files += 1
 # number of files is the number of files to be processed #
@@ -46,7 +46,7 @@ print("Total number of files is:", num_files)
 frame_time = np.zeros((num_files,1))
 file_names = []
 
-with open('frames_info') as csv_file:
+with open('..\\frames_info') as csv_file:
 	csv_reader = csv.reader(csv_file, delimiter=',')
 	line_count = 0
 	for row in csv_reader:

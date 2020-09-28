@@ -2,7 +2,6 @@
 
 from __future__ import print_function
 import numpy as np
-import csv
 import pickle
 import math
 import os
@@ -12,9 +11,13 @@ from torch import nn
 from torch.autograd import Variable
 from torch.utils.data import TensorDataset, DataLoader
 import math
+
+import sys, os
+sys.path.append(os.path.abspath(os.path.join('..')))
+print(sys.path)
+import utils
 ########################################
-### THIS FILE GENERATE FIXATIONS     ###
-### FOR 10 FRAMES AS DICTIONARY      ###
+###  THE DL Model for prediction     ###
 ########################################
 ## VARIABLES ###
 # input folder is where the selected data is located #
@@ -28,32 +31,11 @@ ts = 10
 test_ratio = 0.3
 
 ### READ NUMBER OF FILES and NAMES ###
-num_files = 0
-with open('..\\preprocessing\\frames_info', 'r') as f:
-    for line in f:
-        num_files += 1
-# number of files is the number of files to be processed #
-num_files = num_files - 1
-print("Total number of files is:", num_files)
+num_files = utils.get_no_files()
 
 ### READ NUMBER OF FRAMES in each FILE ###
-frame_time = np.zeros((num_files,1))
-file_names = []
 
-with open('..\\preprocessing\\frames_info') as csv_file:
-	csv_reader = csv.reader(csv_file, delimiter=',')
-	line_count = 0
-	for row in csv_reader:
-		if line_count == 0:
-			line_count += 1
-		elif line_count < num_files+1:
-			file_names.append(row[0])
-			frame_time[line_count-1] = int(row[5])
-			line_count += 1
-		else:
-			break
-print('Files read in order are')
-print(file_names)
+file_names = utils.get_files_list(num_files)
 
 train_dat = []
 test_dat  = []
@@ -62,8 +44,7 @@ test_lbl  = []
 
 
 for i in range(num_files):
-	dat = torch.load(objects_folder + file_names[i] + '_x.pt')
-	dat = dat.numpy()
+	dat = torch.load(objects_folder + file_names[i] + '_x.pt').numpy()
 	lbl = np.loadtxt(labels_folder + file_names[i] + '_x.txt')
 	no_test = int(test_ratio*len(dat))
 	no_train = len(dat) - no_test
@@ -174,6 +155,9 @@ for epoch in range(EPOCH):
     out = (test_output > 0.5).int()
     #print(out)
     pred_y = out.cpu().data.numpy().squeeze()
+    np.savetxt('..\\visualize\\predicted.txt', pred_y)
+    np.savetxt('..\\visualize\\labels.txt', test_lbl)
+    print(pred_y)
     #print(sum(sum(pred_y == test_lbl)))
     iou = 0
     corr_pre = 0
