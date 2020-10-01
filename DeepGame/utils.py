@@ -29,3 +29,12 @@ def get_files_list(num_files):
             print('Files read in order are')
             print(file_names)
     return file_names
+
+def fixation_to_tile(x,y, n_tiles):
+	#X = x*W
+	#Y = y*H
+	#tile_width  = W/num_tiles
+	#tile_height = H/num_tiles
+	X = min(n_tiles - 1, x * n_tiles)
+	Y = min(n_tiles - 1, y * n_tiles)
+	return [int(X), int(Y)]

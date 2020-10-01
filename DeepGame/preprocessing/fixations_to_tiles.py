@@ -22,13 +22,13 @@ num_tiles = 8
 ts = 10
 
 
-def fixation_to_tile(x,y):
+def fixation_to_tile(x,y, n_tiles):
 	#X = x*W
 	#Y = y*H
 	#tile_width  = W/num_tiles
 	#tile_height = H/num_tiles
-	X = min(num_tiles - 1, x * num_tiles)
-	Y = min(num_tiles - 1, y * num_tiles)
+	X = min(n_tiles - 1, x * n_tiles)
+	Y = min(n_tiles - 1, y * n_tiles)
 	return [int(X), int(Y)]
 
 
@@ -83,7 +83,7 @@ for i in range(num_files):
 			fixations = fixations.replace(']','')
 			x = float(fixations.split()[0])
 			y = float(fixations.split()[1])
-			[X,Y] = fixation_to_tile(x,y)
+			[X,Y] = fixation_to_tile(x,y, num_tiles)
 			tiles_array_x[X] = 1
 			tiles_array_y[Y] = 1
 		targets_x[fidx] = tiles_array_x

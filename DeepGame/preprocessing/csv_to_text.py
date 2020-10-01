@@ -15,6 +15,14 @@ input_folder = 'C:\\Users\\omossad\\Desktop\\dataset\\model_data\\labels\\csv_la
 # output folder is where the frame fixations will be stored#
 output_folder = 'C:\\Users\\omossad\\Desktop\\dataset\\model_data\\labels\\text_labels\\'
 fps = 10
+import sys, os
+sys.path.append(os.path.abspath(os.path.join('..')))
+import utils
+
+### READ NUMBER OF FILES and NAMES ###
+num_files = utils.get_no_files()
+file_names = utils.get_files_list(num_files)
+
 
 def find_nearest(array,value):
 	'''
@@ -27,33 +35,21 @@ def find_nearest(array,value):
 	else:
 		return idx
 
-### READ NUMBER OF FILES and NAMES ###
-num_files = 0
-with open('frames_info', 'r') as f:
-    for line in f:
-        num_files += 1
-# number of files is the number of files to be processed #
-num_files = num_files - 1
-print("Total number of files is:", num_files)
-
 
 ### READ NUMBER OF FRAMES in each FILE ###
 frame_time = np.zeros((num_files,1))
-file_names = []
-with open('frames_info') as csv_file:
+with open('..\\frames_info.csv') as csv_file:
 	csv_reader = csv.reader(csv_file, delimiter=',')
 	line_count = 0
 	for row in csv_reader:
 		if line_count == 0:
 			line_count += 1
 		elif line_count < num_files+1:
-			file_names.append(row[0])
 			frame_time[line_count-1] = int(row[5])
 			line_count += 1
 		else:
 			break
-print('Files read in order are')
-print(file_names)
+
 
 
 ### EXTRACT FIXATION PER FRAME ###
@@ -62,13 +58,27 @@ for i in range(num_files):
 	fixations_val  = []
 	with open(input_folder + file_names[i]+ '.csv') as csv_file:
 		csv_reader = csv.reader(csv_file, delimiter=',')
+		previous_x = float(0)
+		previous_y = float(0)
 		line_count = 0
 		for row in csv_reader:
 			if line_count == 0:
 				line_count += 1
 			else:
 				fixations_time.append(float(row[0]))
-				fixations_val.append([float(row[2]), float(row[3])])
+				if float(row[2]) < 0 or float(row[3]) < 0:
+					if float(row[2]) < 0 and float(row[3]) >= 0:
+						fixations_val.append([previous_x, float(row[3])])
+						previous_y = float(row[3])
+					elif float(row[2]) >= 0 and float(row[3]) < 0:
+						fixations_val.append([float(row[2]), previous_y])
+						previous_x = float(row[2])
+					else:
+						fixations_val.append([previous_x, previous_y])
+				else:
+					fixations_val.append([float(row[2]), float(row[3])])
+					previous_x = float(row[2])
+					previous_y = float(row[3])
 				line_count += 1
 		print(f'Real Fixations are {line_count}')
 
