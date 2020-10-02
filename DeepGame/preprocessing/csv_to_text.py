@@ -5,6 +5,9 @@ import numpy as np
 import csv
 import pickle
 import math
+import sys, os
+sys.path.append(os.path.abspath(os.path.join('..')))
+import utils
 ########################################
 ### THIS FILE CONVERTS FIXATION      ###
 ### FROM RAW TO FRAMES IN .TXT       ###
@@ -14,10 +17,8 @@ import math
 input_folder = 'C:\\Users\\omossad\\Desktop\\dataset\\model_data\\labels\\csv_labels\\'
 # output folder is where the frame fixations will be stored#
 output_folder = 'C:\\Users\\omossad\\Desktop\\dataset\\model_data\\labels\\text_labels\\'
-fps = 10
-import sys, os
-sys.path.append(os.path.abspath(os.path.join('..')))
-import utils
+fps = utils.get_fps()
+
 
 ### READ NUMBER OF FILES and NAMES ###
 num_files = utils.get_no_files()

@@ -8,6 +8,7 @@ import shutil
 
 input_path = 'C:\\Users\\omossad\\Desktop\\dataset\\model_data\\selected_frames\\'
 output_path = 'C:\\Users\\omossad\\Desktop\\dataset\\model_data\\selected_frames_new\\'
+
 def find_cut(list_no):
     cuts = []
     for i in range(len(list_no)-1):

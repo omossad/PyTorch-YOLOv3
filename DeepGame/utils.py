@@ -1,5 +1,27 @@
 import csv
 import numpy as np
+import configparser
+
+config = configparser.ConfigParser()
+config.read(['C:\\Users\\omossad\\Desktop\\codes\\ROI-PyTorch\\DeepGame\\config.ini'])
+
+def get_num_tiles():
+    return int(config.get("preprocessing", "num_tiles"))
+
+def get_img_dim():
+    W = float(config.get("data", "W"))
+    H = float(config.get("data", "H"))
+    return [W,H]
+
+def get_fps():
+    return int(config.get("data", "fps"))
+
+def get_model_conf():
+    ts = int(config.get("model", "input_frames"))
+    t_overlap = int(config.get("model", "sample_overlap"))
+    fut = int(config.get("model", "pred_frames"))
+    return [ts, t_overlap, fut]
+
 
 def get_no_files():
     num_files = 0
@@ -30,7 +52,8 @@ def get_files_list(num_files):
             print(file_names)
     return file_names
 
-def fixation_to_tile(x,y, n_tiles):
+def fixation_to_tile(x,y):
+	n_tiles = get_num_tiles()
 	#X = x*W
 	#Y = y*H
 	#tile_width  = W/num_tiles

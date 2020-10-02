@@ -27,7 +27,7 @@ labels_folder = 'C:\\Users\\omossad\\Desktop\\dataset\\model_data\\tiled_labels\
 
 W = 1920
 H = 1080
-num_tiles = 8
+num_tiles = utils.get_num_tiles()
 ts = 10
 test_ratio = 0.3
 

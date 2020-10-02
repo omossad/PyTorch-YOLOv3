@@ -7,6 +7,9 @@ import pickle
 import math
 import os
 from shapely.geometry import Polygon
+import sys, os
+sys.path.append(os.path.abspath(os.path.join('..')))
+import utils
 
 ########################################
 ### THIS FILE GENERATE FIXATIONS     ###
@@ -16,49 +19,15 @@ from shapely.geometry import Polygon
 # input folder is where the selected data is located #
 input_folder = 'C:\\Users\\omossad\\Desktop\\dataset\\model_data\\filenames\\'
 output_folder =  'C:\\Users\\omossad\\Desktop\\dataset\\model_data\\tiled_labels\\'
-W = 1920
-H = 1080
-num_tiles = 8
-ts = 10
 
-
-def fixation_to_tile(x,y, n_tiles):
-	#X = x*W
-	#Y = y*H
-	#tile_width  = W/num_tiles
-	#tile_height = H/num_tiles
-	X = min(n_tiles - 1, x * n_tiles)
-	Y = min(n_tiles - 1, y * n_tiles)
-	return [int(X), int(Y)]
+[W,H] = utils.get_img_dim()
+num_tiles = utils.get_num_tiles()
+[ts, t_overlap, fut] = utils.get_model_conf()
 
 
 ### READ NUMBER OF FILES and NAMES ###
-num_files = 0
-with open('..\\frames_info', 'r') as f:
-    for line in f:
-        num_files += 1
-# number of files is the number of files to be processed #
-num_files = num_files - 1
-print("Total number of files is:", num_files)
-
-### READ NUMBER OF FRAMES in each FILE ###
-frame_time = np.zeros((num_files,1))
-file_names = []
-
-with open('..\\frames_info') as csv_file:
-	csv_reader = csv.reader(csv_file, delimiter=',')
-	line_count = 0
-	for row in csv_reader:
-		if line_count == 0:
-			line_count += 1
-		elif line_count < num_files+1:
-			file_names.append(row[0])
-			frame_time[line_count-1] = int(row[5])
-			line_count += 1
-		else:
-			break
-print('Files read in order are')
-print(file_names)
+num_files = utils.get_no_files()
+file_names = utils.get_files_list(num_files)
 
 
 for i in range(num_files):
@@ -76,14 +45,16 @@ for i in range(num_files):
 		f = open(input_path + files[fidx], "r")
 		tiles_array_x = np.zeros((num_tiles))
 		tiles_array_y = np.zeros((num_tiles))
-		for l in range(ts):
-			line = f.readline()
-			fixations = line.split(',')[1]
+		for s in range(ts):
+			f.readline()
+		for l in range(fut):
+			fixations = f.readline()
+			#fixations = line.split(',')[1]
 			fixations = fixations.replace('[','')
 			fixations = fixations.replace(']','')
 			x = float(fixations.split()[0])
 			y = float(fixations.split()[1])
-			[X,Y] = fixation_to_tile(x,y, num_tiles)
+			[X,Y] = utils.fixation_to_tile(x,y)
 			tiles_array_x[X] = 1
 			tiles_array_y[Y] = 1
 		targets_x[fidx] = tiles_array_x

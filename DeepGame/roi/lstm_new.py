@@ -24,17 +24,14 @@ import utils
 objects_folder = 'C:\\Users\\omossad\\Desktop\\dataset\\model_data\\tiled_objects\\'
 labels_folder = 'C:\\Users\\omossad\\Desktop\\dataset\\model_data\\tiled_labels\\'
 
-W = 1920
-H = 1080
-num_tiles = 8
-ts = 10
+[W,H] = utils.get_img_dim()
+num_tiles = utils.get_num_tiles()
+[ts, t_overlap, fut] = utils.get_model_conf()
+
 test_ratio = 0.3
 
 ### READ NUMBER OF FILES and NAMES ###
 num_files = utils.get_no_files()
-
-### READ NUMBER OF FRAMES in each FILE ###
-
 file_names = utils.get_files_list(num_files)
 
 train_dat = []
