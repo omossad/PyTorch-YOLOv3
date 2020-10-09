@@ -19,7 +19,7 @@ import utils
 ## VARIABLES ###
 # input folder is where the selected data is located #
 input_folder = 'C:\\Users\\omossad\\Desktop\\dataset\\model_data\\filenames\\'
-output_folder =  'C:\\Users\\omossad\\Desktop\\dataset\\model_data\\tiled_labels\\'
+output_folder =  'C:\\Users\\omossad\\Desktop\\dataset\\model_data\\tiled_labels_intersection\\'
 
 [W,H] = utils.get_img_dim()
 num_tiles = utils.get_num_tiles()
@@ -41,13 +41,11 @@ for i in range(num_files):
 	#	print('directories already exist')
 	file_count = len(files)
 	#targets_x = np.zeros((file_count, fut, 2, num_tiles))
-	targets_x = torch.zeros([file_count, fut, 2, num_tiles], dtype=torch.int32)
+	targets = torch.zeros([file_count, fut, 2], dtype=torch.float)
 
 	#targets_y = np.zeros((file_count, num_tiles))
 	for fidx in range(file_count):
 		f = open(input_path + files[fidx], "r")
-		tiles_array_x = np.zeros((num_tiles))
-		tiles_array_y = np.zeros((num_tiles))
 		for s in range(ts):
 			f.readline()
 		for l in range(fut):
@@ -57,14 +55,13 @@ for i in range(num_files):
 			fixations = fixations.replace(']','')
 			x = float(fixations.split()[0])
 			y = float(fixations.split()[1])
-			[X,Y] = utils.fixation_to_tile(x,y)
 			#tiles_array_x[X] = 1
 			#tiles_array_y[Y] = 1
-			targets_x[fidx][l][0][X] = 1
-			targets_x[fidx][l][1][Y] = 1
+			targets[fidx][l][0] = x
+			targets[fidx][l][1] = y
 		#targets_x[fidx] = tiles_array_x
 		#targets_y[fidx] = tiles_array_y
-	torch.save(targets_x, output_folder + file_names[i] + '.pt')
+	torch.save(targets, output_folder + file_names[i] + '.pt')
 	#np.savetxt(output_folder + file_names[i] + '_x.txt', targets_x)
 	#np.savetxt(output_folder + file_names[i] + '_y.txt', targets_y)
 

@@ -19,7 +19,7 @@ import utils
 # input folder is where the selected data is located #
 input_folder = 'C:\\Users\\omossad\\Desktop\\dataset\\model_data\\filenames\\'
 objects_folder = 'C:\\Users\\omossad\\Desktop\\dataset\\model_data\\objects\\'
-output_folder =  'C:\\Users\\omossad\\Desktop\\dataset\\model_data\\tiled_objects\\'
+output_folder =  'C:\\Users\\omossad\\Desktop\\dataset\\model_data\\tiled_objects_intersection\\'
 
 [W,H] = utils.get_img_dim()
 num_tiles = utils.get_num_tiles()
@@ -40,7 +40,7 @@ for i in range(num_files):
 	#except:
 	#	print('directories already exist')
 	file_count = len(files)
-	objects_arr_x = torch.zeros([file_count, ts, 2, num_tiles, 3], dtype=torch.int32)
+	objects_arr = torch.zeros([file_count, ts, 2, num_tiles, 3], dtype=torch.float)
 	#objects_arr_y = torch.zeros([file_count, ts, 2, num_tiles, 3], dtype=torch.int32)
 	for fidx in range(file_count):
 		f = open(input_path + files[fidx], "r")
@@ -50,14 +50,17 @@ for i in range(num_files):
 			#frame_name = line.split(',')[0]
 			temp = torch.load(objects_folder + file_names[i] + '\\' + frame_name + '.pt')
 			for obj in range(len(temp)):
-				x1 = temp[obj][0]/W
-				y1 = temp[obj][1]/H
-				x2 = temp[obj][2]/W
-				y2 = temp[obj][3]/H
-				[X,Y] = utils.fixation_to_tile((x1+x2)/2.0,(y1+y2)/2.0)
-				objects_arr_x[fidx][l][0][X][int(temp[obj][6])] += 1
-				objects_arr_x[fidx][l][1][Y][int(temp[obj][6])] += 1
-	torch.save(objects_arr_x, output_folder + file_names[i] + '.pt')
+				#print(temp)
+				x1 = temp[obj][0]
+				y1 = temp[obj][1]
+				x2 = temp[obj][2]
+				y2 = temp[obj][3]
+				arr = utils.object_to_tile_intersection(x1,y1,x2,y2)
+				#print(arr)
+				for t in range(num_tiles):
+					objects_arr[fidx][l][0][t][int(temp[obj][6])] += arr[0][t]
+					objects_arr[fidx][l][1][t][int(temp[obj][6])] += arr[1][t]
+	torch.save(objects_arr, output_folder + file_names[i] + '.pt')
 				#objects_arr_x[fidx][l][X][int(temp[obj][6])] += 1
 				#objects_arr_y[fidx][l][Y][int(temp[obj][6])] += 1
 	#torch.save(objects_arr_x, output_folder + file_names[i] + '_x.pt')

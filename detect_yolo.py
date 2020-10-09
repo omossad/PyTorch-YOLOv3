@@ -23,16 +23,16 @@ from matplotlib.ticker import NullLocator
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--image_folder", type=str, default="C:\\Users\\omossad\\Desktop\\KUGVD", help="path to dataset")
+    parser.add_argument("--image_folder", type=str, default="C:\\Users\\omossad\\Desktop\\videopura\\gopro\\frames", help="path to dataset")
     parser.add_argument("--model_def", type=str, default="config\\yolov3.cfg", help="path to model definition file")
     parser.add_argument("--weights_path", type=str, default="weights\\yolov3.weights", help="path to weights file")
     parser.add_argument("--class_path", type=str, default="data\\custom\\classes.names", help="path to class label file")
-    parser.add_argument("--conf_thres", type=float, default=0.8, help="object confidence threshold")
+    parser.add_argument("--conf_thres", type=float, default=0.5, help="object confidence threshold")
     parser.add_argument("--nms_thres", type=float, default=0.4, help="iou thresshold for non-maximum suppression")
     parser.add_argument("--batch_size", type=int, default=1, help="size of the batches")
     parser.add_argument("--n_cpu", type=int, default=0, help="number of cpu threads to use during batch generation")
-    parser.add_argument("--img_size", type=int, default=416, help="size of each image dimension")
-    parser.add_argument("--out_folder", type=str, default="C:\\Users\\omossad\\Desktop\\KUGVD-lbl\\", help="path to dataset")
+    parser.add_argument("--img_size", type=int, default=608, help="size of each image dimension")
+    parser.add_argument("--out_folder", type=str, default="C:\\Users\\omossad\\Desktop\\videopura\\gopro\\labels\\", help="path to dataset")
 
     opt = parser.parse_args()
     print(opt)
@@ -110,7 +110,7 @@ if __name__ == "__main__":
         # Draw bounding boxes and labels of detections
         if detections is not None:
             # Rescale boxes to original image
-            img_shape = (1080, 1920)
+            img_shape = (2160, 3840)
             detections = rescale_boxes(detections, opt.img_size, img_shape)
             #print(detections)
             #unique_labels = detections[:, -1].cpu().unique()
@@ -121,13 +121,16 @@ if __name__ == "__main__":
 
             for x1, y1, x2, y2, conf, cls_conf, cls_pred in detections:
 
-                if classes[int(cls_pred)] == 'person' or classes[int(cls_pred)] == 'sports ball':
-                    print("\t+ Label: %s, Conf: %.5f" % (classes[int(cls_pred)], cls_conf.item()))
-                    c_x = (x1 + x2)/(2.0*1920)
-                    c_y = (y1 + y2)/(2.0*1080)
-                    box_w = (x2 - x1)/1920.0
-                    box_h = (y2 - y1)/1080.0
-                    f.write(str(int(cls_pred)) + " " + str(c_x.item()) + " " + str(c_y.item()) + " " + str(box_w.item()) + " " + str(box_h.item()) + "\n")
+                #if classes[int(cls_pred)] == 'person' or classes[int(cls_pred)] == 'sports ball':
+                print("\t+ Label: %s, Conf: %.5f" % (classes[int(cls_pred)], cls_conf.item()))
+                #c_x = (x1 + x2)/(2.0*3840)
+                #c_y = (y1 + y2)/(2.0*2160)
+                c_x = min(x1,x2)/(3840.0)
+                c_y = min(y1,y2)/(2160.0)
+                box_w = (x2 - x1)/3840.0
+                box_h = (y2 - y1)/2160.0
+                f.write("0 " + str(c_x.item()) + " " + str(c_y.item()) + " " + str(box_w.item()) + " " + str(box_h.item()) + "\n")
+                    #f.write(str(int(cls_pred)) + " " + str(c_x.item()) + " " + str(c_y.item()) + " " + str(box_w.item()) + " " + str(box_h.item()) + "\n")
                     #color = bbox_colors[int(np.where(unique_labels == int(cls_pred))[0])]
                     # Create a Rectangle patch
                     #bbox = patches.Rectangle((x1, y1), box_w, box_h, linewidth=2, edgecolor=color, facecolor="none")

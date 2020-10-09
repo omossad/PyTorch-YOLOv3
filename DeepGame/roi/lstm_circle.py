@@ -21,13 +21,12 @@ import utils
 ########################################
 ## VARIABLES ###
 # input folder is where the selected data is located #
-objects_folder = 'C:\\Users\\omossad\\Desktop\\dataset\\model_data\\tiled_objects\\'
-labels_folder = 'C:\\Users\\omossad\\Desktop\\dataset\\model_data\\tiled_labels\\'
+objects_folder = 'C:\\Users\\omossad\\Desktop\\dataset\\model_data\\tiled_objects_intersection\\'
+labels_folder = 'C:\\Users\\omossad\\Desktop\\dataset\\model_data\\tiled_labels_intersection\\'
 
 [W,H] = utils.get_img_dim()
 num_tiles = utils.get_num_tiles()
 [ts, t_overlap, fut] = utils.get_model_conf()
-
 test_ratio = 0.3
 
 ### READ NUMBER OF FILES and NAMES ###
@@ -80,7 +79,7 @@ test_dat = np.reshape(test_dat, (test_dat.shape[0], ts, 2, 24))
 
 test_dat = torch.Tensor(test_dat)
 test_dat = test_dat[:,:,0,:]
-test_lbl = test_lbl[:,0,0,:]
+test_lbl = test_lbl[:,:,0]
 
 print('Training data size ' + str(train_dat.shape) + ' , and labels ' + str(train_lbl.shape))
 print('Testing  data size ' + str(test_dat.shape) + ' , and labels ' + str(test_lbl.shape))
@@ -89,7 +88,7 @@ print('Testing  data size ' + str(test_dat.shape) + ' , and labels ' + str(test_
 
 torch.manual_seed(1)		# reproducible
 EPOCH = 30						   # train the training data n times, to save time, we just train 1 epoch
-BATCH_SIZE = 4
+BATCH_SIZE = 8
 TIME_STEP = 10				  # rnn time step / image height
 INPUT_SIZE = 24				 # rnn input size / image width
 LR = 0.01						   # learning rate
@@ -133,8 +132,35 @@ optimizer = torch.optim.Adam(rnn.parameters(), lr=LR)   # optimize all cnn param
 loss_func = nn.BCELoss()										   # the target label is not one-hotted
 def my_loss(output, target):
 		temp_out = (output > 0.5).float()
-		factor = torch.sum(torch.abs(temp_out - target))
-		loss = torch.mean((output - target)**2) + factor
+		loss_arr = torch.zeros([len(target)], dtype=torch.float)
+		#print(loss_arr)
+		r = 75
+		for i in range(len(temp_out)):
+			avg_iou = 0
+			for j in range(fut):
+				c_x = target[i][j]*W
+				c_y = target[i][j]*H
+				inter = 0
+				union = 0
+				for k in range(num_tiles):
+					if temp_out[i][k] == 1:
+						r_x1 = k*W/num_tiles
+						r_x2 = (k+1)*W/num_tiles
+						r_y1 = k*H/num_tiles
+						r_y2 = (k+1)*H/num_tiles
+						c_y = (r_y1 + r_y2) / 2.0
+						inter += utils.circleRectangleIntersectionArea(r, c_x, c_y, r_x1, r_x2, r_y1, r_y2)
+						union += (r_x2 - r_x1) * (r_y2 - r_y1)
+				union += math.pi * (r**2) - inter
+				iou = inter/union
+				avg_iou = avg_iou + iou
+			loss_arr[i] = 1 - avg_iou
+
+		#factor = torch.sum(torch.abs(temp_out - target))
+		#loss = torch.mean((output - target)**2) + factor
+		loss = torch.mean(loss_arr)
+		loss = Variable(loss, requires_grad = True)
+		#print(loss)
 		return loss
 # training and testing
 for epoch in range(EPOCH):
@@ -142,7 +168,7 @@ for epoch in range(EPOCH):
 				#print(x[:,:,0,:].shape)
 				#print(y[:,0,0,:].shape)
 				x = x[:,:,0,:]
-				y = y[:,0,0,:]
+				y = y[:,:,0]
 				b_x = Variable(x.view(-1, ts, 24)).cuda()						# reshape x to (batch, time_step, input_size)
 				b_y = Variable(y).cuda()															# batch y
 
@@ -168,18 +194,43 @@ for epoch in range(EPOCH):
 		out = (test_output > 0.5).int()
 		#print(out)
 		pred_y = out.cpu().data.numpy().squeeze()
-		np.savetxt('..\\visualize\\predicted.txt', pred_y)
-		np.savetxt('..\\visualize\\labels.txt', test_lbl)
+		#np.savetxt('..\\visualize\\predicted.txt', pred_y)
+		#np.savetxt('..\\visualize\\labels.txt', test_lbl)
 		#print(pred_y)
 		#print(sum(sum(pred_y == test_lbl)))
 		iou = 0
 		corr_pre = 0
 		fals_pre = 0
+		#print(pred_y)
+		total_iou = 0
+		r = 75
+		for i in range(len(pred_y)):
+			avg_iou = 0
+			for j in range(fut):
+				c_x = test_lbl[i][j]*W
+				c_y = test_lbl[i][j]*H
+				inter = 0
+				union = 0
+				for k in range(num_tiles):
+					if pred_y[i][k] == 1:
+						r_x1 = k*W/num_tiles
+						r_x2 = (k+1)*W/num_tiles
+						r_y1 = k*H/num_tiles
+						r_y2 = (k+1)*H/num_tiles
+						c_y = (r_y1 + r_y2) / 2.0
+						inter += utils.circleRectangleIntersectionArea(r, c_x, c_y, r_x1, r_x2, r_y1, r_y2)
+						union += (r_x2 - r_x1) * (r_y2 - r_y1)
+				union += math.pi * (r**2) - inter
+				iou = inter/union
+				avg_iou = avg_iou + iou
+			total_iou += avg_iou
+		accuracy = total_iou / len(pred_y)
+		'''
 		for pre in range(len(pred_y)):
 			intersection = 0
 			union = 0
-			print('predicted: ' + str(pred_y[pre]))
-			print('true: ' + str(test_lbl[pre]))
+			#print(pred_y[pre])
+			#print(test_lbl[pre])
 			for it in range(num_tiles):
 				if pred_y[pre][it] == 1 or test_lbl[pre][it] == 1:
 					if pred_y[pre][it] == test_lbl[pre][it]:
@@ -190,10 +241,10 @@ for epoch in range(EPOCH):
 				corr_pre +=1
 			else:
 				fals_pre +=1
-				#if epoch == 29:
-				#	print(pre)
-				#	print(pred_y[pre])
-				#	print(test_lbl[pre])
+				if epoch == EPOCH - 1:
+					print(pre)
+					print(pred_y[pre])
+					print(test_lbl[pre])
 			#print(iou_entry)
 			iou += iou_entry
 		print('total_corr: ', corr_pre)
@@ -202,6 +253,7 @@ for epoch in range(EPOCH):
 		accuracy = iou/len(pred_y)
 		#accuracy = sum(sum(pred_y == test_lbl)) / float(test_lbl.size)
 		#print(accuracy)
+		'''
 		print('Epoch: ', epoch, '| train loss: %.4f' % loss.item(), '| test accuracy: %.2f' % accuracy)
 		#test_output = rnn(test_dat[:10].view(-1, 10, 24))
 #pred_y = torch.max(test_output, 1)[1].data.numpy().squeeze()

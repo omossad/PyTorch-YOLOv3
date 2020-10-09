@@ -57,11 +57,17 @@ for i in range(num_files):
 			fixations = fixations.replace(']','')
 			x = float(fixations.split()[0])
 			y = float(fixations.split()[1])
-			[X,Y] = utils.fixation_to_tile(x,y)
+			x1 = x*W - W/(num_tiles*2)
+			x2 = x*W + W/(num_tiles*2)
+			y1 = y*H - H/(num_tiles*2)
+			y2 = y*H + H/(num_tiles*2)
+			arr = utils.object_to_tile_intersection(x1,y1,x2,y2)
+			for k in range(len(arr[0])):
+				if arr[0][k] > 0.01:
 			#tiles_array_x[X] = 1
 			#tiles_array_y[Y] = 1
-			targets_x[fidx][l][0][X] = 1
-			targets_x[fidx][l][1][Y] = 1
+					targets_x[fidx][l][0][k] = 1
+					targets_x[fidx][l][1][k] = 1
 		#targets_x[fidx] = tiles_array_x
 		#targets_y[fidx] = tiles_array_y
 	torch.save(targets_x, output_folder + file_names[i] + '.pt')
