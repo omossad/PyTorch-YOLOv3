@@ -56,10 +56,13 @@ for i in range(num_files):
 				x2 = temp[obj][2]
 				y2 = temp[obj][3]
 				arr = utils.object_to_tile_intersection(x1,y1,x2,y2)
+				#print('intersection array for : ' + str(l))
 				#print(arr)
 				for t in range(num_tiles):
 					objects_arr[fidx][l][0][t][int(temp[obj][6])] += arr[0][t]
 					objects_arr[fidx][l][1][t][int(temp[obj][6])] += arr[1][t]
+					#print('Object inter : ' + str(int(temp[obj][6])) + ' ' + str(arr[0][t]) + ' ' + str( arr[1][t]))
+					#print(objects_arr[fidx][l][0])
 	torch.save(objects_arr, output_folder + file_names[i] + '.pt')
 				#objects_arr_x[fidx][l][X][int(temp[obj][6])] += 1
 				#objects_arr_y[fidx][l][Y][int(temp[obj][6])] += 1
