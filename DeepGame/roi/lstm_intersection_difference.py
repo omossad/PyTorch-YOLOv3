@@ -81,7 +81,6 @@ test_dat = np.reshape(test_dat, (test_dat.shape[0], ts, 2, 24))
 test_dat = torch.Tensor(test_dat)
 test_dat = test_dat[:,:,0,:]
 test_lbl = test_lbl[:,0,0,:]
-
 print('Training data size ' + str(train_dat.shape) + ' , and labels ' + str(train_lbl.shape))
 print('Testing  data size ' + str(test_dat.shape) + ' , and labels ' + str(test_lbl.shape))
 
@@ -92,7 +91,7 @@ EPOCH = 30
 BATCH_SIZE = 4
 TIME_STEP = 10				  # rnn time step
 INPUT_SIZE = 24				  # rnn input size
-LR = 0.01					  # learning rate
+LR = 0.001					  # learning rate
 
 
 tensor_x = torch.Tensor(train_dat) # transform to torch tensor
@@ -106,13 +105,27 @@ class RNN(nn.Module):
 		def __init__(self):
 				super(RNN, self).__init__()
 
-				self.rnn = nn.LSTM(				 # if use nn.RNN(), it hardly learns
+				self.lstm = nn.LSTM(				 # if use nn.RNN(), it hardly learns
 						input_size=24,
 						hidden_size=64,				 # rnn hidden unit
 						num_layers=1,				   # number of rnn layer
 						batch_first=True,		   # input & output will has batch size as 1s dimension. e.g. (batch, time_step, input_size)
 				)
-				self.out = nn.Sequential(nn.Linear(64, 64), nn.ReLU(), nn.Linear(64,8), nn.Sigmoid())
+				self.fc = nn.Sequential(nn.Linear(64, 64), nn.ReLU(), nn.Linear(64,32), nn.ReLU())
+				#for i in range(num_tiles):
+				#	self.out.append(nn.Sequential(nn.Linear(32, 8), nn.ReLU(), nn.Linear(8,1), nn.Softmax()))
+				self.out_0 = nn.Sequential(nn.Linear(32, 8), nn.ReLU(), nn.Linear(8,1))
+				self.out_1 = nn.Sequential(nn.Linear(32, 8), nn.ReLU(), nn.Linear(8,1))
+				self.out_2 = nn.Sequential(nn.Linear(32, 8), nn.ReLU(), nn.Linear(8,1))
+				self.out_3 = nn.Sequential(nn.Linear(32, 8), nn.ReLU(), nn.Linear(8,1))
+				self.out_4 = nn.Sequential(nn.Linear(32, 8), nn.ReLU(), nn.Linear(8,1))
+				self.out_5 = nn.Sequential(nn.Linear(32, 8), nn.ReLU(), nn.Linear(8,1))
+				self.out_6 = nn.Sequential(nn.Linear(32, 8), nn.ReLU(), nn.Linear(8,1))
+				self.out_7 = nn.Sequential(nn.Linear(32, 8), nn.ReLU(), nn.Linear(8,1))
+				#for i in range(num_tiles):
+				#	self.out_arr[i] =
+				#self.out = nn.Sequential(nn.Linear(64, 64), nn.ReLU(), nn.Linear(64,8), nn.Sigmoid())
+				#return out
 
 
 		def forward(self, x):
@@ -120,22 +133,79 @@ class RNN(nn.Module):
 				# r_out shape (batch, time_step, output_size)
 				# h_n shape (n_layers, batch, hidden_size)
 				# h_c shape (n_layers, batch, hidden_size)
-				r_out, (h_n, h_c) = self.rnn(x, None)   # None represents zero initial hidden state
-
+				rnn_out, (h_n, h_c) = self.lstm(x, None)   # None represents zero initial hidden state
+				fc_out = self.fc(rnn_out)
+				out = torch.zeros([x.shape[0], num_tiles]).cuda()
+				out[:,0] = torch.transpose(self.out_0(fc_out)[:,-1], 0, 1)
+				out[:,1] = torch.transpose(self.out_1(fc_out)[:,-1], 0, 1)
+				out[:,2] = torch.transpose(self.out_2(fc_out)[:,-1], 0, 1)
+				out[:,3] = torch.transpose(self.out_3(fc_out)[:,-1], 0, 1)
+				out[:,4] = torch.transpose(self.out_4(fc_out)[:,-1], 0, 1)
+				out[:,5] = torch.transpose(self.out_5(fc_out)[:,-1], 0, 1)
+				out[:,6] = torch.transpose(self.out_6(fc_out)[:,-1], 0, 1)
+				out[:,7] = torch.transpose(self.out_7(fc_out)[:,-1], 0, 1)
 				# choose r_out at the last time step
-				out = self.out(r_out[:, -1, :])
+				#out = self.out(rnn_out[:, -1, :])
 				return out
 
 				#return out
 rnn = RNN().cuda()
 print(rnn)
 optimizer = torch.optim.Adam(rnn.parameters(), lr=LR)   # optimize all cnn parameters
-loss_func = nn.BCELoss()										   # the target label is not one-hotted
+loss_func = nn.BCEWithLogitsLoss()										   # the target label is not one-hotted
 def my_loss(output, target):
-		temp_out = (output > 0.5).float()
-		factor = torch.sum(torch.abs(temp_out - target))
-		loss = torch.mean((output - target)**2) + factor
-		return loss
+		#print(target)
+		#print(output)
+
+		total_loss = 0
+		for i in range(len(output)):
+			sample_loss = 0
+			for j in range(num_tiles):
+				sample_loss += loss_func(output[i][j], target[i][j])
+			total_loss += sample_loss
+		#total_loss = torch.mean(total_loss)
+		return total_loss
+
+def test_accuracy(pre, gt):
+	#print(pre)
+	#print(gt)
+	pre = (pre >= 0.5).int()
+	pre = pre.cpu().data.numpy().squeeze()
+	np.savetxt('..\\visualize\\predicted.txt', pre)
+	np.savetxt('..\\visualize\\labels.txt', gt)
+	total_intersection = 0
+	total_overshoot = 0
+	total_undershoot = 0
+	total_inter_norm = 0
+	for i in range(len(pre)):
+		intersection = 0
+		overshoot = 0
+		undershoot = 0
+		inter_norm = 0
+		for j in range(num_tiles):
+			if pre[i][j] == 1:
+				if gt[i][j] == 1:
+					intersection += 1
+				else:
+					overshoot +=1
+			else:
+				if gt[i][j] == 1:
+					undershoot += 1
+		if intersection == 0:
+			inter_norm = 0
+		else:
+			inter_norm = intersection/(intersection+undershoot)
+		total_intersection += intersection
+		total_overshoot += overshoot
+		total_undershoot += undershoot
+		total_inter_norm += inter_norm
+	print("number of samples: " + str(len(pre)))
+	print("intersection : " + str(total_intersection) + "-------" + str(total_intersection/len(pre)))
+	print("overshoot :" + str(total_overshoot) + "-------" + str(total_overshoot/len(pre)))
+	print("undershoot :" + str(total_undershoot) + "-------" + str(total_undershoot/len(pre)))
+	print("intersection normalized :" + str(total_inter_norm) + "-------" + str(total_inter_norm/len(pre)))
+
+
 # training and testing
 for epoch in range(EPOCH):
 		for step, (x, y) in enumerate(train_loader):
@@ -147,15 +217,6 @@ for epoch in range(EPOCH):
 				b_y = Variable(y).cuda()															# batch y
 
 				output = rnn(b_x)														   # rnn output
-				#print(output)
-				#print(b_y)
-				temp = (output > 0.5).float()
-				#print(temp)
-				#factor = torch.sum(torch.abs(temp - b_y))
-				#print(factor)
-				#print(output)
-				#print(b_y)
-				#loss = loss_func(output, b_y) 					# cross entropy loss
 				loss = my_loss(output, b_y)
 				optimizer.zero_grad()												   # clear gradients for this training step
 				loss.backward()																 # backpropagation, compute gradients
@@ -165,34 +226,9 @@ for epoch in range(EPOCH):
 
 		test_output = rnn(Variable(test_dat).cuda())								   # (samples, time_step, input_size)
 		#print(test_output)
-		out = (test_output > 0.5).int()
 		#print(out)
-		pred_y = out.cpu().data.numpy().squeeze()
-		np.savetxt('..\\visualize\\predicted.txt', pred_y)
-		np.savetxt('..\\visualize\\labels.txt', test_lbl)
+
 		#print(pred_y)
 		#print(sum(sum(pred_y == test_lbl)))
-		iou = 0
-		corr_pre = 0
-		fals_pre = 0
-		for pre in range(len(pred_y)):
-			intersection = 0
-			union = 0
-			print('predicted: ' + str(pred_y[pre]))
-			print('true: ' + str(test_lbl[pre]))
-			for it in range(num_tiles):
-				if pred_y[pre][it] == 1 or test_lbl[pre][it] == 1:
-					if pred_y[pre][it] == test_lbl[pre][it]:
-						intersection += 1
-					union += 1
-			iou_entry = intersection/union
-			if iou_entry >= 0.5:
-				corr_pre +=1
-			else:
-				fals_pre +=1
-			iou += iou_entry
-		print('total_corr: ', corr_pre)
-		print('total_fals: ', fals_pre)
-		print('total samp: ', len(pred_y))
-		accuracy = iou/len(pred_y)
-		print('Epoch: ', epoch, '| train loss: %.4f' % loss.item(), '| test accuracy: %.2f' % accuracy)
+		print('Epoch: ', epoch, '| train loss: %.4f' % loss.item())
+		test_accuracy(test_output, test_lbl)
