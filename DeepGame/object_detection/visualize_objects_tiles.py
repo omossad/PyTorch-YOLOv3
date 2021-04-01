@@ -1,7 +1,7 @@
 from __future__ import division
 
 from models import *
-from utils import *
+from yolo_utils import *
 from datasets import *
 
 import os
@@ -20,25 +20,35 @@ from torch.autograd import Variable
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 from matplotlib.ticker import NullLocator
+sys.path.append(os.path.abspath(os.path.join('..')))
+import utils
+
+#num_tiles = utils.get_num_tiles()
+num_tiles = 8
 
 def get_tile(x,y):
-    x_ = math.floor(x/0.125)
-    y_ = math.floor(y/0.125)
+    ratio = 1/num_tiles
+    x_ = math.floor(x/ratio)
+    y_ = math.floor(y/ratio)
     return [x_, y_]
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--image_folder", type=str, default="C:\\Users\\omossad\\Desktop\\dataset\\model_data\\selected_frames\\ha_9\\", help="path to dataset")
+    #parser.add_argument("--image_folder", type=str, default="C:\\Users\\omossad\\Desktop\\dataset\\model_data\\selected_frames\\pa_8\\", help="path to dataset")
+    #parser.add_argument("--image_folder", type=str, default="C:\\Users\\omossad\\Desktop\\dataset\\model_data\\selected_frames\\pa_8\\", help="path to dataset")
+    parser.add_argument("--image_folder", type=str, default="D:\\Encoding\\encoding_files\\fifa\\frames\\gzpt\\", help="path to dataset")
     parser.add_argument("--model_def", type=str, default="base_model.cfg", help="path to model definition file")
-    parser.add_argument("--weights_path", type=str, default="tiny_yolo.pth", help="path to weights file")
+    parser.add_argument("--weights_path", type=str, default="fifa.pth", help="path to weights file")
     parser.add_argument("--class_path", type=str, default="classes.names", help="path to class label file")
-    parser.add_argument("--conf_thres", type=float, default=0.8, help="object confidence threshold")
-    parser.add_argument("--nms_thres", type=float, default=0.3, help="iou thresshold for non-maximum suppression")
+    parser.add_argument("--conf_thres", type=float, default=0.05, help="object confidence threshold")
+    parser.add_argument("--nms_thres", type=float, default=0.1, help="iou thresshold for non-maximum suppression")
     parser.add_argument("--batch_size", type=int, default=1, help="size of the batches")
     parser.add_argument("--n_cpu", type=int, default=0, help="number of cpu threads to use during batch generation")
-    parser.add_argument("--img_size", type=int, default=608, help="size of each image dimension")
+    parser.add_argument("--img_size", type=int, default=416, help="size of each image dimension")
     parser.add_argument("--checkpoint_model", type=str, help="path to checkpoint model")
-    parser.add_argument("--out_folder", type=str, default="C:\\Users\\omossad\\Desktop\\dataset\\model_data\\visualization\\ha_9\\", help="path to output_folder")
+    #parser.add_argument("--out_folder", type=str, default="C:\\Users\\omossad\\Desktop\\dataset\\model_data\\objects\\pa_8\\", help="path to output_folder")
+    #parser.add_argument("--out_folder", type=str, default="C:\\Users\\omossad\\Desktop\\recorded_samples\\fifa\\model_data\\objects\\", help="path to output_folder")
+    parser.add_argument("--out_folder", type=str, default="D:\\Encoding\\encoding_files\\fifa\\model\\images\\", help="path to output_folder")
 
     opt = parser.parse_args()
     print(opt)
@@ -46,7 +56,7 @@ if __name__ == "__main__":
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     os.makedirs("output", exist_ok=True)
-    labels_file ='C:\\Users\\omossad\\Desktop\\dataset\\model_data\\labels\\text_labels\\ha_9.txt'
+    labels_file ='D:\\Encoding\\encoding_files\\fifa\\gazepoint\\labels.txt'
     labels = np.loadtxt(labels_file)
 
     # Set up model
@@ -78,8 +88,8 @@ if __name__ == "__main__":
     print("\nPerforming object detection:")
     prev_time = time.time()
     for batch_i, (img_paths, input_imgs) in enumerate(dataloader):
-        if batch_i > 2:
-            break
+        #if batch_i > 10:
+        #    break
         # Configure input
         input_imgs = Variable(input_imgs.type(Tensor))
 
@@ -111,7 +121,7 @@ if __name__ == "__main__":
         print("(%d) Image: '%s'" % (img_i, path))
         img_name = path.split("\\")[-1].split(".")[0]
         frame_num = int(img_name.replace('frame_',''))
-        img_name = opt.out_folder + img_name + '.png'
+        img_name = opt.out_folder + img_name + '.jpg'
         #print(img_name)
         # Create plot
         img = np.array(Image.open(path))
@@ -127,14 +137,21 @@ if __name__ == "__main__":
         #print(x)
         #y = min(int(f_line.split()[1]), 8)
         #print(y)
-        x = labels[frame_num-1][0]
-        y = labels[frame_num-1][1]
+        x = labels[frame_num+1][0]
+        y = labels[frame_num+1][1]
 
         color = bbox_colors[0]
         [x1, y1] = get_tile(x,y)
-        x1 = x1*1920.0/8 + 120
-        y1 = y1*1080.0/8 + 68
-        bbox = patches.Rectangle((x1, y1), 240, 135, linewidth=2, edgecolor=color, facecolor="none")
+        print(x1)
+        print(y1)
+
+        x1 = x1*2560.0/num_tiles
+        y1 = y1*1440.0/num_tiles
+        bbox = patches.Rectangle((x1, y1), 2560.0/num_tiles, 1440.0/num_tiles, linewidth=2, edgecolor=color, facecolor="none")
+        ax.add_patch(bbox)
+        print(x*1920.0)
+        print(y*1080.0)
+        bbox = patches.Rectangle((x*2560-20, y*1440-20), 40, 40, linewidth=2, edgecolor=color, facecolor="none")
         ax.add_patch(bbox)
 
         # Draw bounding boxes and labels of detections

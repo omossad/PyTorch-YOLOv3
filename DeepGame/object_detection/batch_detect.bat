@@ -1,4 +1,14 @@
 @ECHO OFF
+python detect.py --image_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data\\selected_frames\\pa_1\\ --out_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data\\objects\\pa_1\\
+python detect.py --image_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data\\selected_frames\\pa_3\\ --out_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data\\objects\\pa_3\\
+python detect.py --image_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data\\selected_frames\\pa_5\\ --out_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data\\objects\\pa_5\\
+python detect.py --image_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data\\selected_frames\\pa_7\\ --out_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data\\objects\\pa_7\\
+python detect.py --image_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data\\selected_frames\\pa_9\\ --out_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data\\objects\\pa_9\\
+python detect.py --image_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data\\selected_frames\\pa_0\\ --out_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data\\objects\\pa_0\\
+python detect.py --image_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data\\selected_frames\\pa_2\\ --out_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data\\objects\\pa_2\\
+python detect.py --image_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data\\selected_frames\\pa_4\\ --out_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data\\objects\\pa_4\\
+python detect.py --image_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data\\selected_frames\\pa_6\\ --out_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data\\objects\\pa_6\\
+python detect.py --image_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data\\selected_frames\\pa_8\\ --out_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data\\objects\\pa_8\\
 python detect.py --image_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data\\selected_frames\\am_0\\ --out_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data\\objects\\am_0\\
 python detect.py --image_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data\\selected_frames\\am_2\\ --out_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data\\objects\\am_2\\
 python detect.py --image_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data\\selected_frames\\ha_0\\ --out_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data\\objects\\ha_0\\
@@ -10,11 +20,6 @@ python detect.py --image_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data
 python detect.py --image_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data\\selected_frames\\kh_2\\ --out_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data\\objects\\kh_2\\
 python detect.py --image_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data\\selected_frames\\ma_1\\ --out_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data\\objects\\ma_1\\
 python detect.py --image_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data\\selected_frames\\ne_0\\ --out_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data\\objects\\ne_0\\
-python detect.py --image_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data\\selected_frames\\pa_1\\ --out_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data\\objects\\pa_1\\
-python detect.py --image_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data\\selected_frames\\pa_3\\ --out_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data\\objects\\pa_3\\
-python detect.py --image_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data\\selected_frames\\pa_5\\ --out_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data\\objects\\pa_5\\
-python detect.py --image_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data\\selected_frames\\pa_7\\ --out_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data\\objects\\pa_7\\
-python detect.py --image_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data\\selected_frames\\pa_9\\ --out_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data\\objects\\pa_9\\
 python detect.py --image_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data\\selected_frames\\pu_1\\ --out_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data\\objects\\pu_1\\
 python detect.py --image_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data\\selected_frames\\pu_3\\ --out_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data\\objects\\pu_3\\
 python detect.py --image_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data\\selected_frames\\pu_5\\ --out_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data\\objects\\pu_5\\
@@ -30,14 +35,10 @@ python detect.py --image_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data
 python detect.py --image_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data\\selected_frames\\kh_1\\ --out_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data\\objects\\kh_1\\
 python detect.py --image_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data\\selected_frames\\ma_0\\ --out_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data\\objects\\ma_0\\
 python detect.py --image_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data\\selected_frames\\ma_2\\ --out_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data\\objects\\ma_2\\
-python detect.py --image_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data\\selected_frames\\pa_0\\ --out_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data\\objects\\pa_0\\
-python detect.py --image_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data\\selected_frames\\pa_2\\ --out_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data\\objects\\pa_2\\
-python detect.py --image_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data\\selected_frames\\pa_4\\ --out_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data\\objects\\pa_4\\
-python detect.py --image_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data\\selected_frames\\pa_6\\ --out_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data\\objects\\pa_6\\
-python detect.py --image_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data\\selected_frames\\pa_8\\ --out_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data\\objects\\pa_8\\
 python detect.py --image_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data\\selected_frames\\pu_0\\ --out_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data\\objects\\pu_0\\
 python detect.py --image_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data\\selected_frames\\pu_2\\ --out_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data\\objects\\pu_2\\
 python detect.py --image_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data\\selected_frames\\pu_4\\ --out_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data\\objects\\pu_4\\
 python detect.py --image_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data\\selected_frames\\pu_6\\ --out_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data\\objects\\pu_6\\
 python detect.py --image_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data\\selected_frames\\se_0\\ --out_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data\\objects\\se_0\\
 python detect.py --image_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data\\selected_frames\\se_2\\ --out_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data\\objects\\se_2\\
+python detect.py --image_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data\\selected_frames\\ne_0\\ --out_folder C:\\Users\\omossad\\Desktop\\dataset\\model_data\\objects\\ne_0\\

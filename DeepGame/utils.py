@@ -14,6 +14,9 @@ def get_visual_pixels():
 def get_num_tiles():
 	return int(config.get("preprocessing", "num_tiles"))
 
+def get_intersection_threshold():
+	return float(config.get("preprocessing", "intersection_threshold"))
+
 def get_img_dim():
 	W = float(config.get("data", "W"))
 	H = float(config.get("data", "H"))
@@ -21,6 +24,8 @@ def get_img_dim():
 
 def get_fps():
 	return float(config.get("data", "fps"))
+
+
 
 def get_bitrate():
 	return float(config.get("data", "bitrate"))
@@ -58,9 +63,9 @@ def get_model_conf():
 
 
 
-def get_no_files():
+def get_no_files(game):
 	num_files = 0
-	with open('..\\frames_info.csv', 'r') as f:
+	with open('..\\frames_info_' + game + '.csv', 'r') as f:
 		for line in f:
 			num_files += 1
 		# number of files is the number of files to be processed #
@@ -68,10 +73,9 @@ def get_no_files():
 		print("Total number of files is:", num_files)
 	return num_files
 
-def get_files_list(num_files):
-	frame_time = np.zeros((num_files,1))
+def get_files_list(num_files, game):
 	file_names = []
-	with open('..\\frames_info.csv') as csv_file:
+	with open('..\\frames_info_' + game + '.csv') as csv_file:
 			csv_reader = csv.reader(csv_file, delimiter=',')
 			line_count = 0
 			for row in csv_reader:
@@ -79,7 +83,6 @@ def get_files_list(num_files):
 					line_count += 1
 				elif line_count < num_files+1:
 					file_names.append(row[0])
-					frame_time[line_count-1] = int(row[5])
 					line_count += 1
 				else:
 					break
@@ -168,10 +171,11 @@ def object_to_tile_intersection(x1,y1,x2,y2):
 		#tile_poly = Polygon([(i*tile_w, i*tile_h), ((i+1)*tile_w, i*tile_h), ((i+1)*tile_w, (i+1)*tile_h), (i*tile_w, (i+1)*tile_h)])
 		tile_poly_x = Polygon([(i*tile_w, y1), ((i+1)*tile_w, y1), ((i+1)*tile_w, y2), (i*tile_w, y2)])
 		tile_poly_y = Polygon([(x1, i*tile_h), (x2, i*tile_h), (x2, (i+1)*tile_h), (x1, (i+1)*tile_h)])
+		#print('poly coor : ' + str(i*tile_w) + ' ' + str((i+1)*tile_w) + ' ' + str(y1) + ' ' + str(y2))
 		intersection = object_poly.intersection(tile_poly_x)
-		arr_x[i] = intersection.area/(W)
+		arr_x[i] = intersection.area/(tile_w*(y2-y1))
 		intersection = object_poly.intersection(tile_poly_y)
-		arr_y[i] = intersection.area/(H)
+		arr_y[i] = intersection.area/(tile_h*(x2-x1))
 		#print('Object intersection with tile ' + str(i) + ' : ' + str(arr_x[i]) + ' ' + str(arr_y[i]))
 		#print(intersection.area/(W))
 	return [arr_x, arr_y]
